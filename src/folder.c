@@ -109,7 +109,7 @@ static void get_install_dir (char *install_dir, const char *exec_path)
 #if defined (_POSIX)
 static void get_profile_dir (char *profile_dir, const char *home_dir)
 {
-  snprintf (profile_dir, HCBUFSIZ_TINY, "%s/%s", home_dir, DOT_HASHCAT);
+  snprintf (profile_dir, HCBUFSIZ_TINY, "%s/%s", home_dir, DOT_hashdog);
 
   if (hc_path_is_directory (profile_dir)) return;
 
@@ -117,17 +117,17 @@ static void get_profile_dir (char *profile_dir, const char *home_dir)
 
   if (xdg_data_home)
   {
-    snprintf (profile_dir, HCBUFSIZ_TINY, "%s/hashcat", xdg_data_home);
+    snprintf (profile_dir, HCBUFSIZ_TINY, "%s/hashdog", xdg_data_home);
   }
   else
   {
-    snprintf (profile_dir, HCBUFSIZ_TINY, "%s/.local/share/hashcat", home_dir);
+    snprintf (profile_dir, HCBUFSIZ_TINY, "%s/.local/share/hashdog", home_dir);
   }
 }
 
 static void get_cache_dir (char *cache_dir, const char *home_dir)
 {
-  snprintf (cache_dir, HCBUFSIZ_TINY, "%s/%s", home_dir, DOT_HASHCAT);
+  snprintf (cache_dir, HCBUFSIZ_TINY, "%s/%s", home_dir, DOT_hashdog);
 
   if (hc_path_is_directory (cache_dir)) return;
 
@@ -135,11 +135,11 @@ static void get_cache_dir (char *cache_dir, const char *home_dir)
 
   if (xdg_cache_home)
   {
-    snprintf (cache_dir, HCBUFSIZ_TINY, "%s/hashcat", xdg_cache_home);
+    snprintf (cache_dir, HCBUFSIZ_TINY, "%s/hashdog", xdg_cache_home);
   }
   else
   {
-    snprintf (cache_dir, HCBUFSIZ_TINY, "%s/.cache/hashcat", home_dir);
+    snprintf (cache_dir, HCBUFSIZ_TINY, "%s/.cache/hashdog", home_dir);
   }
 }
 
@@ -297,23 +297,23 @@ char **scan_directory (const char *path)
   return files;
 }
 
-int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *install_folder, MAYBE_UNUSED const char *shared_folder)
+int folder_config_init (hashdog_ctx_t *hashdog_ctx, MAYBE_UNUSED const char *install_folder, MAYBE_UNUSED const char *shared_folder)
 {
-  folder_config_t *folder_config = hashcat_ctx->folder_config;
+  folder_config_t *folder_config = hashdog_ctx->folder_config;
 
   /**
    * There's some buggy OpenCL runtime that do not support -I.
    * A workaround is to chdir() to the OpenCL folder,
    * then compile the kernels,
    * then chdir() back to where we came from so we need to save it first
-   * - temporary disabled due to https://github.com/hashcat/hashcat/issues/2379
+   * - temporary disabled due to https://github.com/hashdog/hashdog/issues/2379
    */
 
   char *cwd = (char *) hcmalloc (HCBUFSIZ_TINY);
 
   if (getcwd (cwd, HCBUFSIZ_TINY - 1) == NULL)
   {
-    event_log_error (hashcat_ctx, "getcwd(): %s", strerror (errno));
+    event_log_error (hashdog_ctx, "getcwd(): %s", strerror (errno));
 
     hcfree (cwd);
 
@@ -321,7 +321,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
   }
 
   /**
-   * folders, as discussed on https://github.com/hashcat/hashcat/issues/20
+   * folders, as discussed on https://github.com/hashdog/hashdog/issues/20
    */
 
   const size_t exec_path_sz = 1024;
@@ -332,7 +332,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
 
   if (rc == -1)
   {
-    event_log_error (hashcat_ctx, "get_exec_path() failed.");
+    event_log_error (hashdog_ctx, "get_exec_path() failed.");
 
     hcfree (cwd);
 
@@ -356,7 +356,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
   This causes invalid error out if install_folder (/usr/local/bin) does not exist
   if (resolved_install_folder == NULL)
   {
-    event_log_error (hashcat_ctx, "%s: %s", resolved_install_folder, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", resolved_install_folder, strerror (errno));
 
     hcfree (cwd);
 
@@ -370,7 +370,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
 
   if (resolved_exec_path == NULL)
   {
-    event_log_error (hashcat_ctx, "%s: %s", exec_path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", exec_path, strerror (errno));
 
     hcfree (cwd);
 
@@ -448,7 +448,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
    * There are a lot of problems related to bad support of -I parameters when building the kernel.
    * Each OpenCL runtime handles it slightly differently.
    * The most problematic is with new AMD drivers on Windows, which cannot handle quote characters!
-   * The best workaround found so far is to modify the TMP variable (only inside hashcat process) before the runtime is loaded.
+   * The best workaround found so far is to modify the TMP variable (only inside hashdog process) before the runtime is loaded.
    */
 
   char *cpath = NULL;
@@ -469,7 +469,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
 
   if (realpath (cpath, cpath_real) == NULL)
   {
-    event_log_error (hashcat_ctx, "%s: %s", cpath, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", cpath, strerror (errno));
 
     hcfree (cwd);
 
@@ -513,7 +513,7 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
   hcfree (cpath);
 
   //if (getenv ("TMP") == NULL)
-  /* temporary disabled due to https://github.com/hashcat/hashcat/issues/2379
+  /* temporary disabled due to https://github.com/hashdog/hashdog/issues/2379
   if (true)
   {
     char *tmp;
@@ -560,9 +560,9 @@ int folder_config_init (hashcat_ctx_t *hashcat_ctx, MAYBE_UNUSED const char *ins
   return 0;
 }
 
-void folder_config_destroy (hashcat_ctx_t *hashcat_ctx)
+void folder_config_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  folder_config_t *folder_config = hashcat_ctx->folder_config;
+  folder_config_t *folder_config = hashdog_ctx->folder_config;
 
   hcfree (folder_config->cpath_real);
   hcfree (folder_config->cwd);

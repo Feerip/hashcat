@@ -8,10 +8,10 @@
 #include "memory.h"
 #include "cpt.h"
 
-int cpt_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int cpt_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  cpt_ctx_t      *cpt_ctx      = hashcat_ctx->cpt_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  cpt_ctx_t      *cpt_ctx      = hashdog_ctx->cpt_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   cpt_ctx->enabled = false;
 
@@ -35,9 +35,9 @@ int cpt_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void cpt_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void cpt_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  cpt_ctx_t *cpt_ctx = hashcat_ctx->cpt_ctx;
+  cpt_ctx_t *cpt_ctx = hashdog_ctx->cpt_ctx;
 
   if (cpt_ctx->enabled == false) return;
 
@@ -46,9 +46,9 @@ void cpt_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
   memset (cpt_ctx, 0, sizeof (cpt_ctx_t));
 }
 
-void cpt_ctx_reset (hashcat_ctx_t *hashcat_ctx)
+void cpt_ctx_reset (hashdog_ctx_t *hashdog_ctx)
 {
-  cpt_ctx_t *cpt_ctx = hashcat_ctx->cpt_ctx;
+  cpt_ctx_t *cpt_ctx = hashdog_ctx->cpt_ctx;
 
   if (cpt_ctx->enabled == false) return;
 

@@ -48,11 +48,11 @@ int sort_by_dictstat (const void *s1, const void *s2)
   return rc_memcmp;
 }
 
-int dictstat_init (hashcat_ctx_t *hashcat_ctx)
+int dictstat_init (hashdog_ctx_t *hashdog_ctx)
 {
-  dictstat_ctx_t  *dictstat_ctx  = hashcat_ctx->dictstat_ctx;
-  folder_config_t *folder_config = hashcat_ctx->folder_config;
-  user_options_t  *user_options  = hashcat_ctx->user_options;
+  dictstat_ctx_t  *dictstat_ctx  = hashdog_ctx->dictstat_ctx;
+  folder_config_t *folder_config = hashdog_ctx->folder_config;
+  user_options_t  *user_options  = hashdog_ctx->user_options;
 
   dictstat_ctx->enabled = false;
 
@@ -77,9 +77,9 @@ int dictstat_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void dictstat_destroy (hashcat_ctx_t *hashcat_ctx)
+void dictstat_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  dictstat_ctx_t *dictstat_ctx = hashcat_ctx->dictstat_ctx;
+  dictstat_ctx_t *dictstat_ctx = hashdog_ctx->dictstat_ctx;
 
   if (dictstat_ctx->enabled == false) return;
 
@@ -89,10 +89,10 @@ void dictstat_destroy (hashcat_ctx_t *hashcat_ctx)
   memset (dictstat_ctx, 0, sizeof (dictstat_ctx_t));
 }
 
-void dictstat_read (hashcat_ctx_t *hashcat_ctx)
+void dictstat_read (hashdog_ctx_t *hashdog_ctx)
 {
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  dictstat_ctx_t *dictstat_ctx = hashcat_ctx->dictstat_ctx;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  dictstat_ctx_t *dictstat_ctx = hashdog_ctx->dictstat_ctx;
 
   if (dictstat_ctx->enabled == false) return;
 
@@ -117,7 +117,7 @@ void dictstat_read (hashcat_ctx_t *hashcat_ctx)
 
   if ((nread1 != 1) || (nread2 != 1))
   {
-    event_log_error (hashcat_ctx, "%s: Invalid header", dictstat_ctx->filename);
+    event_log_error (hashdog_ctx, "%s: Invalid header", dictstat_ctx->filename);
 
     hc_fclose (&fp);
 
@@ -129,7 +129,7 @@ void dictstat_read (hashcat_ctx_t *hashcat_ctx)
 
   if ((v & 0xffffffffffffff00) != (DICTSTAT_VERSION & 0xffffffffffffff00))
   {
-    event_log_error (hashcat_ctx, "%s: Invalid header, ignoring content", dictstat_ctx->filename);
+    event_log_error (hashdog_ctx, "%s: Invalid header, ignoring content", dictstat_ctx->filename);
 
     hc_fclose (&fp);
 
@@ -138,7 +138,7 @@ void dictstat_read (hashcat_ctx_t *hashcat_ctx)
 
   if (z != 0)
   {
-    event_log_error (hashcat_ctx, "%s: Invalid header, ignoring content", dictstat_ctx->filename);
+    event_log_error (hashdog_ctx, "%s: Invalid header, ignoring content", dictstat_ctx->filename);
 
     hc_fclose (&fp);
 
@@ -147,7 +147,7 @@ void dictstat_read (hashcat_ctx_t *hashcat_ctx)
 
   if ((v & 0xff) < (DICTSTAT_VERSION & 0xff))
   {
-    event_log_warning (hashcat_ctx, "%s: Outdated header version, ignoring content", dictstat_ctx->filename);
+    event_log_warning (hashdog_ctx, "%s: Outdated header version, ignoring content", dictstat_ctx->filename);
 
     hc_fclose (&fp);
 
@@ -168,7 +168,7 @@ void dictstat_read (hashcat_ctx_t *hashcat_ctx)
 
     if (dictstat_ctx->cnt == MAX_DICTSTAT)
     {
-      event_log_error (hashcat_ctx, "There are too many entries in the %s database. You have to remove/rename it.", dictstat_ctx->filename);
+      event_log_error (hashdog_ctx, "There are too many entries in the %s database. You have to remove/rename it.", dictstat_ctx->filename);
 
       break;
     }
@@ -177,10 +177,10 @@ void dictstat_read (hashcat_ctx_t *hashcat_ctx)
   hc_fclose (&fp);
 }
 
-int dictstat_write (hashcat_ctx_t *hashcat_ctx)
+int dictstat_write (hashdog_ctx_t *hashdog_ctx)
 {
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  dictstat_ctx_t *dictstat_ctx = hashcat_ctx->dictstat_ctx;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  dictstat_ctx_t *dictstat_ctx = hashdog_ctx->dictstat_ctx;
 
   if (dictstat_ctx->enabled == false) return 0;
 
@@ -190,7 +190,7 @@ int dictstat_write (hashcat_ctx_t *hashcat_ctx)
 
   if (hc_fopen (&fp, dictstat_ctx->filename, "wb") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", dictstat_ctx->filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", dictstat_ctx->filename, strerror (errno));
 
     return -1;
   }
@@ -199,7 +199,7 @@ int dictstat_write (hashcat_ctx_t *hashcat_ctx)
   {
     hc_fclose (&fp);
 
-    event_log_error (hashcat_ctx, "%s: %s", dictstat_ctx->filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", dictstat_ctx->filename, strerror (errno));
 
     return -1;
   }
@@ -223,7 +223,7 @@ int dictstat_write (hashcat_ctx_t *hashcat_ctx)
   {
     hc_fclose (&fp);
 
-    event_log_error (hashcat_ctx, "%s: %s", dictstat_ctx->filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", dictstat_ctx->filename, strerror (errno));
 
     return -1;
   }
@@ -233,10 +233,10 @@ int dictstat_write (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-u64 dictstat_find (hashcat_ctx_t *hashcat_ctx, dictstat_t *d)
+u64 dictstat_find (hashdog_ctx_t *hashdog_ctx, dictstat_t *d)
 {
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  dictstat_ctx_t *dictstat_ctx = hashcat_ctx->dictstat_ctx;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  dictstat_ctx_t *dictstat_ctx = hashdog_ctx->dictstat_ctx;
 
   if (dictstat_ctx->enabled == false) return 0;
 
@@ -249,10 +249,10 @@ u64 dictstat_find (hashcat_ctx_t *hashcat_ctx, dictstat_t *d)
   return d_cache->cnt;
 }
 
-void dictstat_append (hashcat_ctx_t *hashcat_ctx, dictstat_t *d)
+void dictstat_append (hashdog_ctx_t *hashdog_ctx, dictstat_t *d)
 {
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  dictstat_ctx_t *dictstat_ctx = hashcat_ctx->dictstat_ctx;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  dictstat_ctx_t *dictstat_ctx = hashdog_ctx->dictstat_ctx;
 
   if (dictstat_ctx->enabled == false) return;
 
@@ -260,7 +260,7 @@ void dictstat_append (hashcat_ctx_t *hashcat_ctx, dictstat_t *d)
 
   if (dictstat_ctx->cnt == MAX_DICTSTAT)
   {
-    event_log_error (hashcat_ctx, "There are too many entries in the %s database. You have to remove/rename it.", dictstat_ctx->filename);
+    event_log_error (hashdog_ctx, "There are too many entries in the %s database. You have to remove/rename it.", dictstat_ctx->filename);
 
     return;
   }

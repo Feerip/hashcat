@@ -25,7 +25,7 @@ static const u32   OPTI_TYPE      = OPTI_TYPE_ZERO_BYTE
 static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_PT_ADD06;
 static const u32   SALT_TYPE      = SALT_TYPE_NONE;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "412ef78534ba6ab0e9b1607d3e9767a25c1ea9d5e83176b4c2817a6c";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }

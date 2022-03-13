@@ -47,11 +47,11 @@ int brain_logging (FILE *stream, const int client_idx, const char *format, ...)
   return len;
 }
 
-u32 brain_compute_session (hashcat_ctx_t *hashcat_ctx)
+u32 brain_compute_session (hashdog_ctx_t *hashdog_ctx)
 {
-  hashes_t       *hashes       = hashcat_ctx->hashes;
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  hashes_t       *hashes       = hashdog_ctx->hashes;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->brain_session != 0) return user_options->brain_session;
 
@@ -112,7 +112,7 @@ u32 brain_compute_session (hashcat_ctx_t *hashcat_ctx)
 
       for (u32 digest_idx = 0; digest_idx < salt_buf->digests_cnt; digest_idx++)
       {
-        const int out_len = hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf, HCBUFSIZ_LARGE, salts_idx, digest_idx);
+        const int out_len = hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf, HCBUFSIZ_LARGE, salts_idx, digest_idx);
 
         string_sized_buf[string_sized_cnt].buf = (char *) hcmalloc (out_len + 1);
         string_sized_buf[string_sized_cnt].len = out_len;
@@ -144,13 +144,13 @@ u32 brain_compute_session (hashcat_ctx_t *hashcat_ctx)
   return session;
 }
 
-u32 brain_compute_attack (hashcat_ctx_t *hashcat_ctx)
+u32 brain_compute_attack (hashdog_ctx_t *hashdog_ctx)
 {
-  const combinator_ctx_t *combinator_ctx = hashcat_ctx->combinator_ctx;
-  const hashconfig_t     *hashconfig     = hashcat_ctx->hashconfig;
-  const mask_ctx_t       *mask_ctx       = hashcat_ctx->mask_ctx;
-  const straight_ctx_t   *straight_ctx   = hashcat_ctx->straight_ctx;
-  const user_options_t   *user_options   = hashcat_ctx->user_options;
+  const combinator_ctx_t *combinator_ctx = hashdog_ctx->combinator_ctx;
+  const hashconfig_t     *hashconfig     = hashdog_ctx->hashconfig;
+  const mask_ctx_t       *mask_ctx       = hashdog_ctx->mask_ctx;
+  const straight_ctx_t   *straight_ctx   = hashdog_ctx->straight_ctx;
+  const user_options_t   *user_options   = hashdog_ctx->user_options;
 
   XXH64_state_t *state = XXH64_createState ();
 
@@ -1540,7 +1540,7 @@ bool brain_server_read_hash_dumps (brain_server_dbs_t *brain_server_dbs, const c
 {
   brain_server_dbs->hash_cnt = 0;
 
-  /* temporary disabled due to https://github.com/hashcat/hashcat/issues/2379
+  /* temporary disabled due to https://github.com/hashdog/hashdog/issues/2379
   if (chdir (path) == -1)
   {
     brain_logging (stderr, 0, "%s: %s\n", path, strerror (errno));
@@ -1739,7 +1739,7 @@ bool brain_server_read_attack_dumps (brain_server_dbs_t *brain_server_dbs, const
 {
   brain_server_dbs->attack_cnt = 0;
 
-  /* temporary disabled due to https://github.com/hashcat/hashcat/issues/2379
+  /* temporary disabled due to https://github.com/hashdog/hashdog/issues/2379
   if (chdir (path) == -1)
   {
     brain_logging (stderr, 0, "%s: %s\n", path, strerror (errno));
@@ -2443,7 +2443,7 @@ void *brain_server_handle_client (void *p)
      * already in both the short-term and the long-term memory otherwise we end up in a
      * corrupted database.
      * Therefor, as a first step after the data has been sorted, we need to remove all duplicates.
-     * Such duplicates can occur easily in hashcat, for example if hashcat uses a 's' rule.
+     * Such duplicates can occur easily in hashdog, for example if hashdog uses a 's' rule.
      * If such a 's' rule searches for a character which does not exist in the base word
      * the password is not changed.
      * If we have multiple of such rules we create lots of duplicates.
@@ -3375,10 +3375,10 @@ int brain_server (const char *listen_host, const int listen_port, const char *br
   return 0;
 }
 
-int brain_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int brain_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  brain_ctx_t    *brain_ctx    = hashcat_ctx->brain_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  brain_ctx_t    *brain_ctx    = hashdog_ctx->brain_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   #ifdef WITH_BRAIN
   brain_ctx->support = true;
@@ -3401,9 +3401,9 @@ int brain_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void brain_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void brain_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  brain_ctx_t *brain_ctx = hashcat_ctx->brain_ctx;
+  brain_ctx_t *brain_ctx = hashdog_ctx->brain_ctx;
 
   if (brain_ctx->support == false) return;
 

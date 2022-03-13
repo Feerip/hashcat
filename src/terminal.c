@@ -13,7 +13,7 @@
 #include "shared.h"
 #include "hwmon.h"
 #include "interface.h"
-#include "hashcat.h"
+#include "hashdog.h"
 #include "timer.h"
 #include "terminal.h"
 
@@ -22,9 +22,9 @@ static const size_t TERMINAL_LINE_LENGTH = 79;
 static const char *const PROMPT_ACTIVE = "[s]tatus [p]ause [b]ypass [c]heckpoint [f]inish [q]uit => ";
 static const char *const PROMPT_PAUSED = "[s]tatus [r]esume [b]ypass [c]heckpoint [f]inish [q]uit => ";
 
-void welcome_screen (hashcat_ctx_t *hashcat_ctx, const char *version_tag)
+void welcome_screen (hashdog_ctx_t *hashdog_ctx, const char *version_tag)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->quiet       == true) return;
   if (user_options->keyspace    == true) return;
@@ -35,79 +35,79 @@ void welcome_screen (hashcat_ctx_t *hashcat_ctx, const char *version_tag)
 
   if (user_options->usage == true)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in help mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in help mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else if (user_options->benchmark == true)
   {
     if (user_options->machine_readable == false)
     {
-      event_log_info (hashcat_ctx, "%s (%s) starting in benchmark mode", PROGNAME, version_tag);
+      event_log_info (hashdog_ctx, "%s (%s) starting in benchmark mode", PROGNAME, version_tag);
 
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, NULL);
 
       if (user_options->workload_profile_chgd == false)
       {
-        event_log_advice (hashcat_ctx, "Benchmarking uses hand-optimized kernel code by default.");
-        event_log_advice (hashcat_ctx, "You can use it in your cracking session by setting the -O option.");
-        event_log_advice (hashcat_ctx, "Note: Using optimized kernel code limits the maximum supported password length.");
-        event_log_advice (hashcat_ctx, "To disable the optimized kernel code in benchmark mode, use the -w option.");
-        event_log_advice (hashcat_ctx, NULL);
+        event_log_advice (hashdog_ctx, "Benchmarking uses hand-optimized kernel code by default.");
+        event_log_advice (hashdog_ctx, "You can use it in your cracking session by setting the -O option.");
+        event_log_advice (hashdog_ctx, "Note: Using optimized kernel code limits the maximum supported password length.");
+        event_log_advice (hashdog_ctx, "To disable the optimized kernel code in benchmark mode, use the -w option.");
+        event_log_advice (hashdog_ctx, NULL);
       }
     }
     else
     {
-      event_log_info (hashcat_ctx, "# version: %s", version_tag);
+      event_log_info (hashdog_ctx, "# version: %s", version_tag);
     }
   }
   else if (user_options->restore == true)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in restore mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in restore mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else if (user_options->speed_only == true)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in speed-only mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in speed-only mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else if (user_options->progress_only == true)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in progress-only mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in progress-only mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else if (user_options->backend_info > 0)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in backend information mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in backend information mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else if (user_options->hash_mode_chgd == false)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in autodetect mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in autodetect mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else if (user_options->hash_info == true)
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting in hash-info mode", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting in hash-info mode", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
   else
   {
-    event_log_info (hashcat_ctx, "%s (%s) starting", PROGNAME, version_tag);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "%s (%s) starting", PROGNAME, version_tag);
+    event_log_info (hashdog_ctx, NULL);
   }
 
   if (user_options->force == true)
   {
-    event_log_warning (hashcat_ctx, "You have enabled --force to bypass dangerous warnings and errors!");
-    event_log_warning (hashcat_ctx, "This can hide serious problems and should only be done when debugging.");
-    event_log_warning (hashcat_ctx, "Do not report hashcat issues encountered when using --force.");
-    event_log_warning (hashcat_ctx, NULL);
+    event_log_warning (hashdog_ctx, "You have enabled --force to bypass dangerous warnings and errors!");
+    event_log_warning (hashdog_ctx, "This can hide serious problems and should only be done when debugging.");
+    event_log_warning (hashdog_ctx, "Do not report hashdog issues encountered when using --force.");
+    event_log_warning (hashdog_ctx, NULL);
   }
 }
 
-void goodbye_screen (hashcat_ctx_t *hashcat_ctx, const time_t proc_start, const time_t proc_stop)
+void goodbye_screen (hashdog_ctx_t *hashdog_ctx, const time_t proc_start, const time_t proc_stop)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->quiet       == true) return;
   if (user_options->keyspace    == true) return;
@@ -119,8 +119,8 @@ void goodbye_screen (hashcat_ctx_t *hashcat_ctx, const time_t proc_start, const 
   char start_buf[32]; memset (start_buf, 0, sizeof (start_buf));
   char stop_buf[32];  memset (stop_buf,  0, sizeof (stop_buf));
 
-  event_log_info_nn (hashcat_ctx, "Started: %s", ctime_r (&proc_start, start_buf));
-  event_log_info_nn (hashcat_ctx, "Stopped: %s", ctime_r (&proc_stop,  stop_buf));
+  event_log_info_nn (hashdog_ctx, "Started: %s", ctime_r (&proc_start, start_buf));
+  event_log_info_nn (hashdog_ctx, "Stopped: %s", ctime_r (&proc_stop,  stop_buf));
 }
 
 int setup_console ()
@@ -153,9 +153,9 @@ int setup_console ()
   return 0;
 }
 
-void send_prompt (hashcat_ctx_t *hashcat_ctx)
+void send_prompt (hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   if (status_ctx->devices_status == STATUS_PAUSED)
   {
@@ -169,9 +169,9 @@ void send_prompt (hashcat_ctx_t *hashcat_ctx)
   fflush (stdout);
 }
 
-void clear_prompt (hashcat_ctx_t *hashcat_ctx)
+void clear_prompt (hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   size_t prompt_sz = 0;
 
@@ -196,10 +196,10 @@ void clear_prompt (hashcat_ctx_t *hashcat_ctx)
   fflush (stdout);
 }
 
-static void keypress (hashcat_ctx_t *hashcat_ctx)
+static void keypress (hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t   *status_ctx   = hashcat_ctx->status_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  status_ctx_t   *status_ctx   = hashdog_ctx->status_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   // this is required, because some of the variables down there are not initialized at that point
   while (status_ctx->devices_status == STATUS_INIT) usleep (100000);
@@ -216,14 +216,14 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
 
     if (ch ==  0) continue;
 
-    //https://github.com/hashcat/hashcat/issues/302
+    //https://github.com/hashdog/hashdog/issues/302
     //#if defined (_POSIX)
     //if (ch != '\n')
     //#endif
 
     hc_thread_mutex_lock (status_ctx->mux_display);
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
 
     switch (ch)
     {
@@ -231,27 +231,27 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
       case '\r':
       case '\n':
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        status_display (hashcat_ctx);
+        status_display (hashdog_ctx);
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
 
       case 'b':
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        bypass (hashcat_ctx);
+        bypass (hashdog_ctx);
 
-        event_log_info (hashcat_ctx, "Next dictionary / mask in queue selected. Bypassing current one.");
+        event_log_info (hashdog_ctx, "Next dictionary / mask in queue selected. Bypassing current one.");
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
 
@@ -259,13 +259,13 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
 
         if (status_ctx->devices_status != STATUS_PAUSED)
         {
-          event_log_info (hashcat_ctx, NULL);
+          event_log_info (hashdog_ctx, NULL);
 
           time_t now;
 
           time (&now);
 
-          SuspendThreads (hashcat_ctx);
+          SuspendThreads (hashdog_ctx);
 
           if (status_ctx->devices_status == STATUS_PAUSED)
           {
@@ -278,13 +278,13 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
             if (pause_time[pause_time_len - 1] == '\n') pause_time[pause_time_len - 1] = 0;
             if (pause_time[pause_time_len - 2] == '\r') pause_time[pause_time_len - 2] = 0;
 
-            event_log_info (hashcat_ctx, "Paused at %s", pause_time);
+            event_log_info (hashdog_ctx, "Paused at %s", pause_time);
           }
 
-          event_log_info (hashcat_ctx, NULL);
+          event_log_info (hashdog_ctx, NULL);
         }
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
 
@@ -292,7 +292,7 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
 
         if (status_ctx->devices_status == STATUS_PAUSED)
         {
-          event_log_info (hashcat_ctx, NULL);
+          event_log_info (hashdog_ctx, NULL);
 
           time_t now;
 
@@ -300,7 +300,7 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
 
           const double msec_paused = hc_timer_get (status_ctx->timer_paused);
 
-          ResumeThreads (hashcat_ctx);
+          ResumeThreads (hashdog_ctx);
 
           if (status_ctx->devices_status != STATUS_PAUSED)
           {
@@ -324,76 +324,76 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
 
             format_timer_display (tmp, display_pause, HCBUFSIZ_TINY);
 
-            event_log_info (hashcat_ctx, "Resumed at %s (paused for %s)", resume_time, display_pause);
+            event_log_info (hashdog_ctx, "Resumed at %s (paused for %s)", resume_time, display_pause);
 
             hcfree (display_pause);
           }
 
-          event_log_info (hashcat_ctx, NULL);
+          event_log_info (hashdog_ctx, NULL);
         }
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
 
       case 'c':
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        stop_at_checkpoint (hashcat_ctx);
+        stop_at_checkpoint (hashdog_ctx);
 
         if (status_ctx->checkpoint_shutdown == true)
         {
-          event_log_info (hashcat_ctx, "Checkpoint enabled. Will quit at next restore-point update.");
+          event_log_info (hashdog_ctx, "Checkpoint enabled. Will quit at next restore-point update.");
         }
         else
         {
-          event_log_info (hashcat_ctx, "Checkpoint disabled. Restore-point updates will no longer be monitored.");
+          event_log_info (hashdog_ctx, "Checkpoint disabled. Restore-point updates will no longer be monitored.");
         }
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
 
       case 'f':
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        finish_after_attack (hashcat_ctx);
+        finish_after_attack (hashdog_ctx);
 
         if (status_ctx->finish_shutdown == true)
         {
-          event_log_info (hashcat_ctx, "Finish enabled. Will quit after this attack.");
+          event_log_info (hashdog_ctx, "Finish enabled. Will quit after this attack.");
         }
         else
         {
-          event_log_info (hashcat_ctx, "Finish disabled. Will continue after this attack.");
+          event_log_info (hashdog_ctx, "Finish disabled. Will continue after this attack.");
         }
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
 
       case 'q':
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
 
-        myquit (hashcat_ctx);
+        myquit (hashdog_ctx);
 
         break;
 
       default:
 
-        if (quiet == false) send_prompt (hashcat_ctx);
+        if (quiet == false) send_prompt (hashdog_ctx);
 
         break;
     }
 
-    //https://github.com/hashcat/hashcat/issues/302
+    //https://github.com/hashdog/hashdog/issues/302
     //#if defined (_POSIX)
     //if (ch != '\n')
     //#endif
@@ -406,9 +406,9 @@ static void keypress (hashcat_ctx_t *hashcat_ctx)
 
 HC_API_CALL void *thread_keypress (void *p)
 {
-  hashcat_ctx_t *hashcat_ctx = (hashcat_ctx_t *) p;
+  hashdog_ctx_t *hashdog_ctx = (hashdog_ctx_t *) p;
 
-  keypress (hashcat_ctx);
+  keypress (hashdog_ctx);
 
   return NULL;
 }
@@ -623,44 +623,44 @@ void compress_terminal_line_length (char *out_buf, const size_t keep_from_beginn
   *ptr1 = 0;
 }
 
-void hash_info_single (hashcat_ctx_t *hashcat_ctx, user_options_extra_t *user_options_extra)
+void hash_info_single (hashdog_ctx_t *hashdog_ctx, user_options_extra_t *user_options_extra)
 {
-  if (hashconfig_init (hashcat_ctx) == 0)
+  if (hashconfig_init (hashdog_ctx) == 0)
   {
-    hashconfig_t *hashconfig = hashcat_ctx->hashconfig;
+    hashconfig_t *hashconfig = hashdog_ctx->hashconfig;
 
-    event_log_info (hashcat_ctx, "Hash mode #%u", hashconfig->hash_mode);
-    event_log_info (hashcat_ctx, "  Name................: %s", hashconfig->hash_name);
-    event_log_info (hashcat_ctx, "  Category............: %s", strhashcategory (hashconfig->hash_category));
-    event_log_info (hashcat_ctx, "  Slow.Hash...........: %s", (hashconfig->attack_exec == ATTACK_EXEC_INSIDE_KERNEL) ? "No" : "Yes");
+    event_log_info (hashdog_ctx, "Hash mode #%u", hashconfig->hash_mode);
+    event_log_info (hashdog_ctx, "  Name................: %s", hashconfig->hash_name);
+    event_log_info (hashdog_ctx, "  Category............: %s", strhashdogegory (hashconfig->hash_category));
+    event_log_info (hashdog_ctx, "  Slow.Hash...........: %s", (hashconfig->attack_exec == ATTACK_EXEC_INSIDE_KERNEL) ? "No" : "Yes");
 
-    event_log_info (hashcat_ctx, "  Password.Len.Min....: %d", hashconfig->pw_min);
-    event_log_info (hashcat_ctx, "  Password.Len.Max....: %d", hashconfig->pw_max);
+    event_log_info (hashdog_ctx, "  Password.Len.Min....: %d", hashconfig->pw_min);
+    event_log_info (hashdog_ctx, "  Password.Len.Max....: %d", hashconfig->pw_max);
 
     if (hashconfig->is_salted == true)
     {
       u32 t = hashconfig->salt_type;
       const char *t_desc = (t == SALT_TYPE_EMBEDDED) ? "Embedded\0" : (t == SALT_TYPE_GENERIC) ? "Generic\0" : "Virtual\0";
-      event_log_info (hashcat_ctx, "  Salt.Type...........: %s", t_desc);
-      event_log_info (hashcat_ctx, "  Salt.Len.Min........: %d", hashconfig->salt_min);
-      event_log_info (hashcat_ctx, "  Salt.Len.Max........: %d", hashconfig->salt_max);
+      event_log_info (hashdog_ctx, "  Salt.Type...........: %s", t_desc);
+      event_log_info (hashdog_ctx, "  Salt.Len.Min........: %d", hashconfig->salt_min);
+      event_log_info (hashdog_ctx, "  Salt.Len.Max........: %d", hashconfig->salt_max);
     }
 
     // almost always 1 and -1
-    //event_log_info (hashcat_ctx, "  Hashes.Count.Min....: %d", hashconfig->hashes_count_min);
-    //event_log_info (hashcat_ctx, "  Hashes.Count.Max....: %u", hashconfig->hashes_count_max);
+    //event_log_info (hashdog_ctx, "  Hashes.Count.Min....: %d", hashconfig->hashes_count_min);
+    //event_log_info (hashdog_ctx, "  Hashes.Count.Max....: %u", hashconfig->hashes_count_max);
 
     if ((hashconfig->has_pure_kernel) && (hashconfig->has_optimized_kernel))
     {
-      event_log_info (hashcat_ctx, "  Kernel.Type(s)......: pure, optimized");
+      event_log_info (hashdog_ctx, "  Kernel.Type(s)......: pure, optimized");
     }
     else if (hashconfig->has_pure_kernel)
     {
-      event_log_info (hashcat_ctx, "  Kernel.Type(s)......: pure");
+      event_log_info (hashdog_ctx, "  Kernel.Type(s)......: pure");
     }
     else if (hashconfig->has_optimized_kernel)
     {
-      event_log_info (hashcat_ctx, "  Kernel.Type(s)......: optimized");
+      event_log_info (hashdog_ctx, "  Kernel.Type(s)......: optimized");
     }
 
     if ((hashconfig->st_hash != NULL) && (hashconfig->st_pass != NULL))
@@ -669,18 +669,18 @@ void hash_info_single (hashcat_ctx_t *hashcat_ctx, user_options_extra_t *user_op
       {
         if (hashconfig->opts_type & OPTS_TYPE_BINARY_HASHFILE_OPTIONAL)
         {
-          event_log_info (hashcat_ctx, "  Example.Hash.Format.: hex-encoded");
+          event_log_info (hashdog_ctx, "  Example.Hash.Format.: hex-encoded");
         }
         else
         {
-          event_log_info (hashcat_ctx, "  Example.Hash.Format.: hex-encoded (binary file only)");
+          event_log_info (hashdog_ctx, "  Example.Hash.Format.: hex-encoded (binary file only)");
         }
-        event_log_info (hashcat_ctx, "  Example.Hash........: %s", hashconfig->st_hash);
+        event_log_info (hashdog_ctx, "  Example.Hash........: %s", hashconfig->st_hash);
       }
       else
       {
-        event_log_info (hashcat_ctx, "  Example.Hash.Format.: plain");
-        event_log_info (hashcat_ctx, "  Example.Hash........: %s", hashconfig->st_hash);
+        event_log_info (hashdog_ctx, "  Example.Hash.Format.: plain");
+        event_log_info (hashdog_ctx, "  Example.Hash........: %s", hashconfig->st_hash);
       }
 
       if (need_hexify ((const u8 *) hashconfig->st_pass, strlen (hashconfig->st_pass), user_options_extra->separator, false))
@@ -702,7 +702,7 @@ void hash_info_single (hashcat_ctx_t *hashcat_ctx, user_options_extra_t *user_op
         tmp_buf[tmp_len++] = ']';
         tmp_buf[tmp_len++] = 0;
 
-        event_log_info (hashcat_ctx, "  Example.Pass........: %s", tmp_buf);
+        event_log_info (hashdog_ctx, "  Example.Pass........: %s", tmp_buf);
 
         hcfree (tmp_buf);
       }
@@ -716,67 +716,67 @@ void hash_info_single (hashcat_ctx_t *hashcat_ctx, user_options_extra_t *user_op
 
         uppercase ((u8 *) tmp_buf, st_pass_len);
 
-        event_log_info (hashcat_ctx, "  Example.Pass........: %s", tmp_buf);
+        event_log_info (hashdog_ctx, "  Example.Pass........: %s", tmp_buf);
 
         hcfree (tmp_buf);
       }
       else
       {
-        event_log_info (hashcat_ctx, "  Example.Pass........: %s", hashconfig->st_pass);
+        event_log_info (hashdog_ctx, "  Example.Pass........: %s", hashconfig->st_pass);
       }
     }
     else
     {
-      event_log_info (hashcat_ctx, "  Example.Hash.Format.: N/A");
-      event_log_info (hashcat_ctx, "  Example.Hash........: N/A");
-      event_log_info (hashcat_ctx, "  Example.Pass........: N/A");
+      event_log_info (hashdog_ctx, "  Example.Hash.Format.: N/A");
+      event_log_info (hashdog_ctx, "  Example.Hash........: N/A");
+      event_log_info (hashdog_ctx, "  Example.Pass........: N/A");
     }
 
     if (hashconfig->benchmark_mask != NULL)
     {
-      event_log_info (hashcat_ctx, "  Benchmark.Mask......: %s", hashconfig->benchmark_mask);
+      event_log_info (hashdog_ctx, "  Benchmark.Mask......: %s", hashconfig->benchmark_mask);
     }
     else
     {
-      event_log_info (hashcat_ctx, "  Benchmark.Mask......: N/A");
+      event_log_info (hashdog_ctx, "  Benchmark.Mask......: N/A");
     }
 
-    event_log_info (hashcat_ctx, "  Autodetect.Enabled..: %s", (hashconfig->opts_type & OPTS_TYPE_AUTODETECT_DISABLE) ? "No" : "Yes");
-    event_log_info (hashcat_ctx, "  Self.Test.Enabled...: %s", (hashconfig->opts_type & OPTS_TYPE_SELF_TEST_DISABLE) ? "No" : "Yes");
-    event_log_info (hashcat_ctx, "  Potfile.Enabled.....: %s", (hashconfig->opts_type & OPTS_TYPE_POTFILE_NOPASS) ? "No" : "Yes");
+    event_log_info (hashdog_ctx, "  Autodetect.Enabled..: %s", (hashconfig->opts_type & OPTS_TYPE_AUTODETECT_DISABLE) ? "No" : "Yes");
+    event_log_info (hashdog_ctx, "  Self.Test.Enabled...: %s", (hashconfig->opts_type & OPTS_TYPE_SELF_TEST_DISABLE) ? "No" : "Yes");
+    event_log_info (hashdog_ctx, "  Potfile.Enabled.....: %s", (hashconfig->opts_type & OPTS_TYPE_POTFILE_NOPASS) ? "No" : "Yes");
 
     if (hashconfig->opts_type & OPTS_TYPE_PT_ALWAYS_ASCII)
     {
-      event_log_info (hashcat_ctx, "  Plaintext.Encoding..: ASCII only");
+      event_log_info (hashdog_ctx, "  Plaintext.Encoding..: ASCII only");
     }
     else if (hashconfig->opts_type & OPTS_TYPE_PT_ALWAYS_HEXIFY)
     {
-      event_log_info (hashcat_ctx, "  Plaintext.Encoding..: HEX only");
+      event_log_info (hashdog_ctx, "  Plaintext.Encoding..: HEX only");
     }
     else
     {
-      event_log_info (hashcat_ctx, "  Plaintext.Encoding..: ASCII, HEX");
+      event_log_info (hashdog_ctx, "  Plaintext.Encoding..: ASCII, HEX");
     }
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
   }
 
-  hashconfig_destroy (hashcat_ctx);
+  hashconfig_destroy (hashdog_ctx);
 }
 
-void hash_info (hashcat_ctx_t *hashcat_ctx)
+void hash_info (hashdog_ctx_t *hashdog_ctx)
 {
-  folder_config_t      *folder_config      = hashcat_ctx->folder_config;
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  folder_config_t      *folder_config      = hashdog_ctx->folder_config;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
-  event_log_info (hashcat_ctx, "Hash Info:");
-  event_log_info (hashcat_ctx, "==========");
-  event_log_info (hashcat_ctx, NULL);
+  event_log_info (hashdog_ctx, "Hash Info:");
+  event_log_info (hashdog_ctx, "==========");
+  event_log_info (hashdog_ctx, NULL);
 
   if (user_options->hash_mode_chgd == true)
   {
-    hash_info_single (hashcat_ctx, user_options_extra);
+    hash_info_single (hashdog_ctx, user_options_extra);
   }
   else
   {
@@ -790,31 +790,31 @@ void hash_info (hashcat_ctx_t *hashcat_ctx)
 
       if (hc_path_exist (modulefile) == false) continue;
 
-      hash_info_single (hashcat_ctx, user_options_extra);
+      hash_info_single (hashdog_ctx, user_options_extra);
     }
 
     hcfree (modulefile);
   }
 }
 
-void backend_info (hashcat_ctx_t *hashcat_ctx)
+void backend_info (hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t   *backend_ctx   = hashcat_ctx->backend_ctx;
-  const user_options_t  *user_options  = hashcat_ctx->user_options;
-  const folder_config_t *folder_config = hashcat_ctx->folder_config;
+  const backend_ctx_t   *backend_ctx   = hashdog_ctx->backend_ctx;
+  const user_options_t  *user_options  = hashdog_ctx->user_options;
+  const folder_config_t *folder_config = hashdog_ctx->folder_config;
 
   if (user_options->backend_info > 1)
   {
-    event_log_info (hashcat_ctx, "System Info:");
-    event_log_info (hashcat_ctx, "============");
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "System Info:");
+    event_log_info (hashdog_ctx, "============");
+    event_log_info (hashdog_ctx, NULL);
 
     #if defined (_WIN) || defined (__CYGWIN__) || defined (__MSYS__)
     // TODO
-    event_log_info (hashcat_ctx, "OS.Name......: Windows");
-    event_log_info (hashcat_ctx, "OS.Release...: N/A");
-    event_log_info (hashcat_ctx, "HW.Platform..: N/A");
-    event_log_info (hashcat_ctx, "HW.Model.....: N/A");
+    event_log_info (hashdog_ctx, "OS.Name......: Windows");
+    event_log_info (hashdog_ctx, "OS.Release...: N/A");
+    event_log_info (hashdog_ctx, "HW.Platform..: N/A");
+    event_log_info (hashdog_ctx, "HW.Model.....: N/A");
     #else
 
     struct utsname utsbuf;
@@ -851,10 +851,10 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
       rc_uname = true;
     }
 
-    event_log_info (hashcat_ctx, "OS.Name......: %s", (rc_uname  == true) ? utsbuf.sysname : "N/A");
-    event_log_info (hashcat_ctx, "OS.Release...: %s", (rc_uname  == true) ? utsbuf.release : "N/A");
-    event_log_info (hashcat_ctx, "HW.Model.....: %s", (rc_sysctl == true) ? hw_model_buf   : "N/A");
-    event_log_info (hashcat_ctx, "HW.Platform..: %s", (rc_uname  == true) ? utsbuf.machine : "N/A");
+    event_log_info (hashdog_ctx, "OS.Name......: %s", (rc_uname  == true) ? utsbuf.sysname : "N/A");
+    event_log_info (hashdog_ctx, "OS.Release...: %s", (rc_uname  == true) ? utsbuf.release : "N/A");
+    event_log_info (hashdog_ctx, "HW.Model.....: %s", (rc_sysctl == true) ? hw_model_buf   : "N/A");
+    event_log_info (hashdog_ctx, "HW.Platform..: %s", (rc_uname  == true) ? utsbuf.machine : "N/A");
 
     if (rc_sysctl == true)
     {
@@ -862,34 +862,34 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
     }
     #endif // _WIN || __CYGWIN__ || __MSYS__
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
 
-    event_log_info (hashcat_ctx, "Environment Info:");
-    event_log_info (hashcat_ctx, "=================");
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "Environment Info:");
+    event_log_info (hashdog_ctx, "=================");
+    event_log_info (hashdog_ctx, NULL);
 
-    event_log_info (hashcat_ctx, "Cur.Work.Dir.: %s", folder_config->cwd);
-    event_log_info (hashcat_ctx, "Install.Dir..: %s", folder_config->install_dir);
-    event_log_info (hashcat_ctx, "Profile.Dir..: %s", folder_config->profile_dir);
-    event_log_info (hashcat_ctx, "Cache.Dir....: %s", folder_config->cache_dir);
-    event_log_info (hashcat_ctx, "Session.Dir..: %s", folder_config->session_dir);
-    event_log_info (hashcat_ctx, "Shared.Dir...: %s", folder_config->shared_dir);
-    event_log_info (hashcat_ctx, "CL.Inc.Path..: %s", folder_config->cpath_real);
+    event_log_info (hashdog_ctx, "Cur.Work.Dir.: %s", folder_config->cwd);
+    event_log_info (hashdog_ctx, "Install.Dir..: %s", folder_config->install_dir);
+    event_log_info (hashdog_ctx, "Profile.Dir..: %s", folder_config->profile_dir);
+    event_log_info (hashdog_ctx, "Cache.Dir....: %s", folder_config->cache_dir);
+    event_log_info (hashdog_ctx, "Session.Dir..: %s", folder_config->session_dir);
+    event_log_info (hashdog_ctx, "Shared.Dir...: %s", folder_config->shared_dir);
+    event_log_info (hashdog_ctx, "CL.Inc.Path..: %s", folder_config->cpath_real);
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
   }
 
   if (backend_ctx->cuda)
   {
-    event_log_info (hashcat_ctx, "CUDA Info:");
-    event_log_info (hashcat_ctx, "==========");
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "CUDA Info:");
+    event_log_info (hashdog_ctx, "==========");
+    event_log_info (hashdog_ctx, NULL);
 
     int cuda_devices_cnt    = backend_ctx->cuda_devices_cnt;
     int cuda_driver_version = backend_ctx->cuda_driver_version;
 
-    event_log_info (hashcat_ctx, "CUDA.Version.: %d.%d", cuda_driver_version / 1000, (cuda_driver_version % 100) / 10);
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "CUDA.Version.: %d.%d", cuda_driver_version / 1000, (cuda_driver_version % 100) / 10);
+    event_log_info (hashdog_ctx, NULL);
 
     for (int cuda_devices_idx = 0; cuda_devices_idx < cuda_devices_cnt; cuda_devices_idx++)
     {
@@ -911,29 +911,29 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
 
       if (device_param->device_id_alias_cnt)
       {
-        event_log_info (hashcat_ctx, "Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
+        event_log_info (hashdog_ctx, "Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
       }
       else
       {
-        event_log_info (hashcat_ctx, "Backend Device ID #%d", device_id + 1);
+        event_log_info (hashdog_ctx, "Backend Device ID #%d", device_id + 1);
       }
 
-      event_log_info (hashcat_ctx, "  Name...........: %s", device_name);
-      event_log_info (hashcat_ctx, "  Processor(s)...: %u", device_processors);
-      event_log_info (hashcat_ctx, "  Clock..........: %u", device_maxclock_frequency);
-      event_log_info (hashcat_ctx, "  Memory.Total...: %" PRIu64 " MB", device_global_mem / 1024 / 1024);
-      event_log_info (hashcat_ctx, "  Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
-      event_log_info (hashcat_ctx, "  Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
-      event_log_info (hashcat_ctx, "  PCI.Addr.BDFe..: %04x:%02x:%02x.%d", (u16) pcie_domain, pcie_bus, pcie_device, pcie_function);
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, "  Name...........: %s", device_name);
+      event_log_info (hashdog_ctx, "  Processor(s)...: %u", device_processors);
+      event_log_info (hashdog_ctx, "  Clock..........: %u", device_maxclock_frequency);
+      event_log_info (hashdog_ctx, "  Memory.Total...: %" PRIu64 " MB", device_global_mem / 1024 / 1024);
+      event_log_info (hashdog_ctx, "  Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
+      event_log_info (hashdog_ctx, "  Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
+      event_log_info (hashdog_ctx, "  PCI.Addr.BDFe..: %04x:%02x:%02x.%d", (u16) pcie_domain, pcie_bus, pcie_device, pcie_function);
+      event_log_info (hashdog_ctx, NULL);
     }
   }
 
   if (backend_ctx->hip)
   {
-    event_log_info (hashcat_ctx, "HIP Info:");
-    event_log_info (hashcat_ctx, "=========");
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "HIP Info:");
+    event_log_info (hashdog_ctx, "=========");
+    event_log_info (hashdog_ctx, NULL);
 
     int hip_devices_cnt    = backend_ctx->hip_devices_cnt;
     int hip_runtimeVersion = backend_ctx->hip_runtimeVersion;
@@ -944,13 +944,13 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
       int hip_version_minor = (hip_runtimeVersion - (hip_version_major * 10000000)) / 100000;
       int hip_version_patch = (hip_runtimeVersion - (hip_version_major * 10000000) - (hip_version_minor * 100000));
 
-      event_log_info (hashcat_ctx, "HIP.Version.: %d.%d.%d", hip_version_major, hip_version_minor, hip_version_patch);
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, "HIP.Version.: %d.%d.%d", hip_version_major, hip_version_minor, hip_version_patch);
+      event_log_info (hashdog_ctx, NULL);
     }
     else
     {
-      event_log_info (hashcat_ctx, "HIP.Version.: %d.%d", hip_runtimeVersion / 100, hip_runtimeVersion % 10);
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, "HIP.Version.: %d.%d", hip_runtimeVersion / 100, hip_runtimeVersion % 10);
+      event_log_info (hashdog_ctx, NULL);
     }
 
     for (int hip_devices_idx = 0; hip_devices_idx < hip_devices_cnt; hip_devices_idx++)
@@ -973,30 +973,30 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
 
       if (device_param->device_id_alias_cnt)
       {
-        event_log_info (hashcat_ctx, "Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
+        event_log_info (hashdog_ctx, "Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
       }
       else
       {
-        event_log_info (hashcat_ctx, "Backend Device ID #%d", device_id + 1);
+        event_log_info (hashdog_ctx, "Backend Device ID #%d", device_id + 1);
       }
 
-      event_log_info (hashcat_ctx, "  Name...........: %s", device_name);
-      event_log_info (hashcat_ctx, "  Processor(s)...: %u", device_processors);
-      event_log_info (hashcat_ctx, "  Clock..........: %u", device_maxclock_frequency);
-      event_log_info (hashcat_ctx, "  Memory.Total...: %" PRIu64 " MB", device_global_mem / 1024 / 1024);
-      event_log_info (hashcat_ctx, "  Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
-      event_log_info (hashcat_ctx, "  Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
-      event_log_info (hashcat_ctx, "  PCI.Addr.BDFe..: %04x:%02x:%02x.%d", (u16) pcie_domain, pcie_bus, pcie_device, pcie_function);
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, "  Name...........: %s", device_name);
+      event_log_info (hashdog_ctx, "  Processor(s)...: %u", device_processors);
+      event_log_info (hashdog_ctx, "  Clock..........: %u", device_maxclock_frequency);
+      event_log_info (hashdog_ctx, "  Memory.Total...: %" PRIu64 " MB", device_global_mem / 1024 / 1024);
+      event_log_info (hashdog_ctx, "  Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
+      event_log_info (hashdog_ctx, "  Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
+      event_log_info (hashdog_ctx, "  PCI.Addr.BDFe..: %04x:%02x:%02x.%d", (u16) pcie_domain, pcie_bus, pcie_device, pcie_function);
+      event_log_info (hashdog_ctx, NULL);
     }
   }
 
   #if defined (__APPLE__)
   if (backend_ctx->mtl)
   {
-    event_log_info (hashcat_ctx, "Metal Info:");
-    event_log_info (hashcat_ctx, "===========");
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "Metal Info:");
+    event_log_info (hashdog_ctx, "===========");
+    event_log_info (hashdog_ctx, NULL);
 
     int metal_devices_cnt = backend_ctx->metal_devices_cnt;
     int metal_runtimeVersion = backend_ctx->metal_runtimeVersion;
@@ -1004,14 +1004,14 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
 
     if (metal_runtimeVersionStr != NULL)
     {
-      event_log_info (hashcat_ctx, "Metal.Version.: %s", metal_runtimeVersionStr);
+      event_log_info (hashdog_ctx, "Metal.Version.: %s", metal_runtimeVersionStr);
     }
     else
     {
-      event_log_info (hashcat_ctx, "Metal.Version.: %d", metal_runtimeVersion);
+      event_log_info (hashdog_ctx, "Metal.Version.: %d", metal_runtimeVersion);
     }
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
 
     for (int metal_devices_idx = 0; metal_devices_idx < metal_devices_cnt; metal_devices_idx++)
     {
@@ -1045,63 +1045,63 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
 
       if (device_param->device_id_alias_cnt)
       {
-        event_log_info (hashcat_ctx, "Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
+        event_log_info (hashdog_ctx, "Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
       }
       else
       {
-        event_log_info (hashcat_ctx, "Backend Device ID #%d", device_id + 1);
+        event_log_info (hashdog_ctx, "Backend Device ID #%d", device_id + 1);
       }
 
-      event_log_info (hashcat_ctx, "  Type...........: %s", ((opencl_device_type & CL_DEVICE_TYPE_CPU) ? "CPU" : ((opencl_device_type & CL_DEVICE_TYPE_GPU) ? "GPU" : "Accelerator")));
-      event_log_info (hashcat_ctx, "  Vendor.ID......: %u", opencl_device_vendor_id);
-      event_log_info (hashcat_ctx, "  Vendor.........: %s", opencl_device_vendor);
-      event_log_info (hashcat_ctx, "  Name...........: %s", device_name);
-      event_log_info (hashcat_ctx, "  Processor(s)...: %u", device_processors);
-      event_log_info (hashcat_ctx, "  Clock..........: N/A");
-      event_log_info (hashcat_ctx, "  Memory.Total...: %" PRIu64 " MB (limited to %" PRIu64 " MB allocatable in one block)", device_global_mem / 1024 / 1024, device_maxmem_alloc / 1024 / 1024);
-      event_log_info (hashcat_ctx, "  Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
-      event_log_info (hashcat_ctx, "  Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
+      event_log_info (hashdog_ctx, "  Type...........: %s", ((opencl_device_type & CL_DEVICE_TYPE_CPU) ? "CPU" : ((opencl_device_type & CL_DEVICE_TYPE_GPU) ? "GPU" : "Accelerator")));
+      event_log_info (hashdog_ctx, "  Vendor.ID......: %u", opencl_device_vendor_id);
+      event_log_info (hashdog_ctx, "  Vendor.........: %s", opencl_device_vendor);
+      event_log_info (hashdog_ctx, "  Name...........: %s", device_name);
+      event_log_info (hashdog_ctx, "  Processor(s)...: %u", device_processors);
+      event_log_info (hashdog_ctx, "  Clock..........: N/A");
+      event_log_info (hashdog_ctx, "  Memory.Total...: %" PRIu64 " MB (limited to %" PRIu64 " MB allocatable in one block)", device_global_mem / 1024 / 1024, device_maxmem_alloc / 1024 / 1024);
+      event_log_info (hashdog_ctx, "  Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
+      event_log_info (hashdog_ctx, "  Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
 
       switch (device_physical_location)
       {
-        case MTL_DEVICE_LOCATION_BUILTIN:     event_log_info (hashcat_ctx, "  Phys.Location..: built-in"); break;
-        case MTL_DEVICE_LOCATION_SLOT:        event_log_info (hashcat_ctx, "  Phys.Location..: connected to slot %d", device_location_number); break;
-        case MTL_DEVICE_LOCATION_EXTERNAL:    event_log_info (hashcat_ctx, "  Phys.Location..: connected via an external interface (port %d)", device_location_number); break;
-        case MTL_DEVICE_LOCATION_UNSPECIFIED: event_log_info (hashcat_ctx, "  Phys.Location..: unspecified"); break;
-        default:                              event_log_info (hashcat_ctx, "  Phys.Location..: N/A"); break;
+        case MTL_DEVICE_LOCATION_BUILTIN:     event_log_info (hashdog_ctx, "  Phys.Location..: built-in"); break;
+        case MTL_DEVICE_LOCATION_SLOT:        event_log_info (hashdog_ctx, "  Phys.Location..: connected to slot %d", device_location_number); break;
+        case MTL_DEVICE_LOCATION_EXTERNAL:    event_log_info (hashdog_ctx, "  Phys.Location..: connected via an external interface (port %d)", device_location_number); break;
+        case MTL_DEVICE_LOCATION_UNSPECIFIED: event_log_info (hashdog_ctx, "  Phys.Location..: unspecified"); break;
+        default:                              event_log_info (hashdog_ctx, "  Phys.Location..: N/A"); break;
       }
 
       if (device_mtl_maj > 0 && device_mtl_min > 0)
       {
-        event_log_info (hashcat_ctx, "  Feature.Set....: macOS GPU Family %d v%d", device_mtl_maj, device_mtl_min);
+        event_log_info (hashdog_ctx, "  Feature.Set....: macOS GPU Family %d v%d", device_mtl_maj, device_mtl_min);
       }
       else
       {
-        event_log_info (hashcat_ctx, "  Feature.Set....: N/A");
+        event_log_info (hashdog_ctx, "  Feature.Set....: N/A");
       }
 
-      event_log_info (hashcat_ctx, "  Registry.ID....: %d", device_registryID);
+      event_log_info (hashdog_ctx, "  Registry.ID....: %d", device_registryID);
 
       if (device_physical_location != MTL_DEVICE_LOCATION_BUILTIN)
       {
-        event_log_info (hashcat_ctx, "  Max.TX.Rate....: %d MB/sec", device_max_transfer_rate);
+        event_log_info (hashdog_ctx, "  Max.TX.Rate....: %d MB/sec", device_max_transfer_rate);
       }
       else
       {
-        event_log_info (hashcat_ctx, "  Max.TX.Rate....: N/A");
+        event_log_info (hashdog_ctx, "  Max.TX.Rate....: N/A");
       }
 
-      event_log_info (hashcat_ctx, "  GPU.Properties.: headless %d, low-power %d, removable %d", device_is_headless, device_is_low_power, device_is_removable);
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, "  GPU.Properties.: headless %d, low-power %d, removable %d", device_is_headless, device_is_low_power, device_is_removable);
+      event_log_info (hashdog_ctx, NULL);
     }
   }
   #endif
 
   if (backend_ctx->ocl)
   {
-    event_log_info (hashcat_ctx, "OpenCL Info:");
-    event_log_info (hashcat_ctx, "============");
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, "OpenCL Info:");
+    event_log_info (hashdog_ctx, "============");
+    event_log_info (hashdog_ctx, NULL);
 
     cl_uint   opencl_platforms_cnt         = backend_ctx->opencl_platforms_cnt;
     cl_uint  *opencl_platforms_devices_cnt = backend_ctx->opencl_platforms_devices_cnt;
@@ -1116,11 +1116,11 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
       char     *opencl_platform_version      = opencl_platforms_version[opencl_platforms_idx];
       cl_uint   opencl_platform_devices_cnt  = opencl_platforms_devices_cnt[opencl_platforms_idx];
 
-      event_log_info (hashcat_ctx, "OpenCL Platform ID #%u", opencl_platforms_idx + 1);
-      event_log_info (hashcat_ctx, "  Vendor..: %s",  opencl_platform_vendor);
-      event_log_info (hashcat_ctx, "  Name....: %s",  opencl_platform_name);
-      event_log_info (hashcat_ctx, "  Version.: %s",  opencl_platform_version);
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, "OpenCL Platform ID #%u", opencl_platforms_idx + 1);
+      event_log_info (hashdog_ctx, "  Vendor..: %s",  opencl_platform_vendor);
+      event_log_info (hashdog_ctx, "  Name....: %s",  opencl_platform_name);
+      event_log_info (hashdog_ctx, "  Version.: %s",  opencl_platform_version);
+      event_log_info (hashdog_ctx, NULL);
 
       for (cl_uint opencl_platform_devices_idx = 0; opencl_platform_devices_idx < opencl_platform_devices_cnt; opencl_platform_devices_idx++)
       {
@@ -1145,25 +1145,25 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
 
         if (device_param->device_id_alias_cnt)
         {
-          event_log_info (hashcat_ctx, "  Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
+          event_log_info (hashdog_ctx, "  Backend Device ID #%d (Alias: #%d)", device_id + 1, device_param->device_id_alias_buf[0] + 1);
         }
         else
         {
-          event_log_info (hashcat_ctx, "  Backend Device ID #%d", device_id + 1);
+          event_log_info (hashdog_ctx, "  Backend Device ID #%d", device_id + 1);
         }
 
-        event_log_info (hashcat_ctx, "    Type...........: %s", ((opencl_device_type & CL_DEVICE_TYPE_CPU) ? "CPU" : ((opencl_device_type & CL_DEVICE_TYPE_GPU) ? "GPU" : "Accelerator")));
-        event_log_info (hashcat_ctx, "    Vendor.ID......: %u", opencl_device_vendor_id);
-        event_log_info (hashcat_ctx, "    Vendor.........: %s", opencl_device_vendor);
-        event_log_info (hashcat_ctx, "    Name...........: %s", device_name);
-        event_log_info (hashcat_ctx, "    Version........: %s", opencl_device_version);
-        event_log_info (hashcat_ctx, "    Processor(s)...: %u", device_processors);
-        event_log_info (hashcat_ctx, "    Clock..........: %u", device_maxclock_frequency);
-        event_log_info (hashcat_ctx, "    Memory.Total...: %" PRIu64 " MB (limited to %" PRIu64 " MB allocatable in one block)", device_global_mem / 1024 / 1024, device_maxmem_alloc / 1024 / 1024);
-        event_log_info (hashcat_ctx, "    Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
-        event_log_info (hashcat_ctx, "    Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
-        event_log_info (hashcat_ctx, "    OpenCL.Version.: %s", opencl_device_c_version);
-        event_log_info (hashcat_ctx, "    Driver.Version.: %s", opencl_driver_version);
+        event_log_info (hashdog_ctx, "    Type...........: %s", ((opencl_device_type & CL_DEVICE_TYPE_CPU) ? "CPU" : ((opencl_device_type & CL_DEVICE_TYPE_GPU) ? "GPU" : "Accelerator")));
+        event_log_info (hashdog_ctx, "    Vendor.ID......: %u", opencl_device_vendor_id);
+        event_log_info (hashdog_ctx, "    Vendor.........: %s", opencl_device_vendor);
+        event_log_info (hashdog_ctx, "    Name...........: %s", device_name);
+        event_log_info (hashdog_ctx, "    Version........: %s", opencl_device_version);
+        event_log_info (hashdog_ctx, "    Processor(s)...: %u", device_processors);
+        event_log_info (hashdog_ctx, "    Clock..........: %u", device_maxclock_frequency);
+        event_log_info (hashdog_ctx, "    Memory.Total...: %" PRIu64 " MB (limited to %" PRIu64 " MB allocatable in one block)", device_global_mem / 1024 / 1024, device_maxmem_alloc / 1024 / 1024);
+        event_log_info (hashdog_ctx, "    Memory.Free....: %" PRIu64 " MB", device_available_mem / 1024 / 1024);
+        event_log_info (hashdog_ctx, "    Local.Memory...: %" PRIu64 " KB", device_local_mem_size / 1024);
+        event_log_info (hashdog_ctx, "    OpenCL.Version.: %s", opencl_device_c_version);
+        event_log_info (hashdog_ctx, "    Driver.Version.: %s", opencl_driver_version);
 
         if (device_param->opencl_device_type & CL_DEVICE_TYPE_GPU)
         {
@@ -1173,25 +1173,25 @@ void backend_info (hashcat_ctx_t *hashcat_ctx)
 
           if ((device_param->opencl_platform_vendor_id == VENDOR_ID_AMD) && (device_param->opencl_device_vendor_id == VENDOR_ID_AMD))
           {
-            event_log_info (hashcat_ctx, "    PCI.Addr.BDF...: %02x:%02x.%d", pcie_bus, pcie_device, pcie_function);
+            event_log_info (hashdog_ctx, "    PCI.Addr.BDF...: %02x:%02x.%d", pcie_bus, pcie_device, pcie_function);
           }
 
           if ((device_param->opencl_platform_vendor_id == VENDOR_ID_NV) && (device_param->opencl_device_vendor_id == VENDOR_ID_NV))
           {
-            event_log_info (hashcat_ctx, "    PCI.Addr.BDF...: %02x:%02x.%d", pcie_bus, pcie_device, pcie_function);
+            event_log_info (hashdog_ctx, "    PCI.Addr.BDF...: %02x:%02x.%d", pcie_bus, pcie_device, pcie_function);
           }
         }
 
-        event_log_info (hashcat_ctx, NULL);
+        event_log_info (hashdog_ctx, NULL);
       }
     }
   }
 }
 
-void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
+void backend_info_compact (hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t  *backend_ctx  = hashcat_ctx->backend_ctx;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const backend_ctx_t  *backend_ctx  = hashdog_ctx->backend_ctx;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->quiet            == true) return;
   if (user_options->machine_readable == true) return;
@@ -1206,7 +1206,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
     int cuda_devices_cnt    = backend_ctx->cuda_devices_cnt;
     int cuda_driver_version = backend_ctx->cuda_driver_version;
 
-    const size_t len = event_log_info (hashcat_ctx, "CUDA API (CUDA %d.%d)", cuda_driver_version / 1000, (cuda_driver_version % 100) / 10);
+    const size_t len = event_log_info (hashdog_ctx, "CUDA API (CUDA %d.%d)", cuda_driver_version / 1000, (cuda_driver_version % 100) / 10);
 
     char line[HCBUFSIZ_TINY] = { 0 };
 
@@ -1214,7 +1214,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
     line[len] = 0;
 
-    event_log_info (hashcat_ctx, "%s", line);
+    event_log_info (hashdog_ctx, "%s", line);
 
     for (int cuda_devices_idx = 0; cuda_devices_idx < cuda_devices_cnt; cuda_devices_idx++)
     {
@@ -1230,7 +1230,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
       if ((device_param->skipped == false) && (device_param->skipped_warning == false))
       {
-        event_log_info (hashcat_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB, %uMCU",
+        event_log_info (hashdog_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB, %uMCU",
                   device_id + 1,
                   device_name,
                   device_available_mem / 1024 / 1024,
@@ -1239,13 +1239,13 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
       }
       else
       {
-        event_log_info (hashcat_ctx, "* Device #%u: %s, skipped",
+        event_log_info (hashdog_ctx, "* Device #%u: %s, skipped",
                   device_id + 1,
                   device_name);
       }
     }
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
   }
 
   /**
@@ -1265,11 +1265,11 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
       int hip_version_minor = (hip_runtimeVersion - (hip_version_major * 10000000)) / 100000;
       int hip_version_patch = (hip_runtimeVersion - (hip_version_major * 10000000) - (hip_version_minor * 100000));
 
-      len = event_log_info (hashcat_ctx, "HIP API (HIP %d.%d.%d)", hip_version_major, hip_version_minor, hip_version_patch);
+      len = event_log_info (hashdog_ctx, "HIP API (HIP %d.%d.%d)", hip_version_major, hip_version_minor, hip_version_patch);
     }
     else
     {
-      len = event_log_info (hashcat_ctx, "HIP API (HIP %d.%d)", hip_runtimeVersion / 100, hip_runtimeVersion % 10);
+      len = event_log_info (hashdog_ctx, "HIP API (HIP %d.%d)", hip_runtimeVersion / 100, hip_runtimeVersion % 10);
     }
 
     char line[HCBUFSIZ_TINY] = { 0 };
@@ -1278,7 +1278,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
     line[len] = 0;
 
-    event_log_info (hashcat_ctx, "%s", line);
+    event_log_info (hashdog_ctx, "%s", line);
 
     for (int hip_devices_idx = 0; hip_devices_idx < hip_devices_cnt; hip_devices_idx++)
     {
@@ -1294,7 +1294,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
       if ((device_param->skipped == false) && (device_param->skipped_warning == false))
       {
-        event_log_info (hashcat_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB, %uMCU",
+        event_log_info (hashdog_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB, %uMCU",
                   device_id + 1,
                   device_name,
                   device_available_mem / 1024 / 1024,
@@ -1303,13 +1303,13 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
       }
       else
       {
-        event_log_info (hashcat_ctx, "* Device #%u: %s, skipped",
+        event_log_info (hashdog_ctx, "* Device #%u: %s, skipped",
                   device_id + 1,
                   device_name);
       }
     }
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
   }
 
   #if defined (__APPLE__)
@@ -1322,7 +1322,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
     int metal_devices_cnt    = backend_ctx->metal_devices_cnt;
     char *metal_runtimeVersionStr = backend_ctx->metal_runtimeVersionStr;
 
-    size_t len = event_log_info (hashcat_ctx, "METAL API (Metal %s)", metal_runtimeVersionStr);
+    size_t len = event_log_info (hashdog_ctx, "METAL API (Metal %s)", metal_runtimeVersionStr);
 
     char line[HCBUFSIZ_TINY] = { 0 };
 
@@ -1330,7 +1330,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
     line[len] = 0;
 
-    event_log_info (hashcat_ctx, "%s", line);
+    event_log_info (hashdog_ctx, "%s", line);
 
     for (int metal_devices_idx = 0; metal_devices_idx < metal_devices_cnt; metal_devices_idx++)
     {
@@ -1346,7 +1346,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
       if ((device_param->skipped == false) && (device_param->skipped_warning == false))
       {
-        event_log_info (hashcat_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB, %uMCU",
+        event_log_info (hashdog_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB, %uMCU",
                   device_id + 1,
                   device_name,
                   device_available_mem / 1024 / 1024,
@@ -1355,13 +1355,13 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
       }
       else
       {
-        event_log_info (hashcat_ctx, "* Device #%u: %s, skipped",
+        event_log_info (hashdog_ctx, "* Device #%u: %s, skipped",
                   device_id + 1,
                   device_name);
       }
     }
 
-    event_log_info (hashcat_ctx, NULL);
+    event_log_info (hashdog_ctx, NULL);
   }
   #endif
 
@@ -1385,7 +1385,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
       // hide empty OpenCL platforms
       if (opencl_platform_devices_cnt == 0) continue;
 
-      const size_t len = event_log_info (hashcat_ctx, "OpenCL API (%s) - Platform #%u [%s]", opencl_platform_version, opencl_platforms_idx + 1, opencl_platform_vendor);
+      const size_t len = event_log_info (hashdog_ctx, "OpenCL API (%s) - Platform #%u [%s]", opencl_platform_version, opencl_platforms_idx + 1, opencl_platform_vendor);
 
       char line[HCBUFSIZ_TINY] = { 0 };
 
@@ -1393,7 +1393,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
       line[len] = 0;
 
-      event_log_info (hashcat_ctx, "%s", line);
+      event_log_info (hashdog_ctx, "%s", line);
 
       for (cl_uint opencl_platform_devices_idx = 0; opencl_platform_devices_idx < opencl_platform_devices_cnt; opencl_platform_devices_idx++)
       {
@@ -1416,7 +1416,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
 
             const char *device_type_desc = ((opencl_device_type & CL_DEVICE_TYPE_CPU) ? "CPU" : ((opencl_device_type & CL_DEVICE_TYPE_GPU) ? "GPU" : "Accelerator"));
 
-            event_log_info (hashcat_ctx, "* Device #%u: %s, %s, %" PRIu64 "/%" PRIu64 " MB (%" PRIu64 " MB allocatable), %uMCU",
+            event_log_info (hashdog_ctx, "* Device #%u: %s, %s, %" PRIu64 "/%" PRIu64 " MB (%" PRIu64 " MB allocatable), %uMCU",
                       device_id + 1,
                       device_name,
                       device_type_desc,
@@ -1427,7 +1427,7 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
           }
           else
           {
-            event_log_info (hashcat_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB (%" PRIu64 " MB allocatable), %uMCU",
+            event_log_info (hashdog_ctx, "* Device #%u: %s, %" PRIu64 "/%" PRIu64 " MB (%" PRIu64 " MB allocatable), %uMCU",
                       device_id + 1,
                       device_name,
                       device_available_mem / 1024 / 1024,
@@ -1438,37 +1438,37 @@ void backend_info_compact (hashcat_ctx_t *hashcat_ctx)
         }
         else
         {
-          event_log_info (hashcat_ctx, "* Device #%u: %s, skipped",
+          event_log_info (hashdog_ctx, "* Device #%u: %s, skipped",
                     device_id + 1,
                     device_name);
         }
       }
 
-      event_log_info (hashcat_ctx, NULL);
+      event_log_info (hashdog_ctx, NULL);
     }
   }
 }
 
-void status_display_machine_readable (hashcat_ctx_t *hashcat_ctx)
+void status_display_machine_readable (hashdog_ctx_t *hashdog_ctx)
 {
-  const hwmon_ctx_t *hwmon_ctx = hashcat_ctx->hwmon_ctx;
+  const hwmon_ctx_t *hwmon_ctx = hashdog_ctx->hwmon_ctx;
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  printf ("STATUS\t%d\t", hashcat_status->status_number);
+  printf ("STATUS\t%d\t", hashdog_status->status_number);
 
   printf ("SPEED\t");
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
@@ -1481,9 +1481,9 @@ void status_display_machine_readable (hashcat_ctx_t *hashcat_ctx)
 
   printf ("EXEC_RUNTIME\t");
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
@@ -1491,45 +1491,45 @@ void status_display_machine_readable (hashcat_ctx_t *hashcat_ctx)
     printf ("%f\t", device_info->exec_msec_dev);
   }
 
-  printf ("CURKU\t%" PRIu64 "\t", hashcat_status->restore_point);
+  printf ("CURKU\t%" PRIu64 "\t", hashdog_status->restore_point);
 
-  printf ("PROGRESS\t%" PRIu64 "\t%" PRIu64 "\t", hashcat_status->progress_cur_relative_skip, hashcat_status->progress_end_relative_skip);
+  printf ("PROGRESS\t%" PRIu64 "\t%" PRIu64 "\t", hashdog_status->progress_cur_relative_skip, hashdog_status->progress_end_relative_skip);
 
-  printf ("RECHASH\t%d\t%d\t", hashcat_status->digests_done, hashcat_status->digests_cnt);
+  printf ("RECHASH\t%d\t%d\t", hashdog_status->digests_done, hashdog_status->digests_cnt);
 
-  printf ("RECSALT\t%d\t%d\t", hashcat_status->salts_done, hashcat_status->salts_cnt);
+  printf ("RECSALT\t%d\t%d\t", hashdog_status->salts_done, hashdog_status->salts_cnt);
 
   if (hwmon_ctx->enabled == true)
   {
     printf ("TEMP\t");
 
-    for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+    for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
     {
-      const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+      const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
       if (device_info->skipped_dev == true) continue;
       if (device_info->skipped_warning_dev == true) continue;
 
-      const int temp = hm_get_temperature_with_devices_idx (hashcat_ctx, device_id);
+      const int temp = hm_get_temperature_with_devices_idx (hashdog_ctx, device_id);
 
       printf ("%d\t", temp);
     }
   }
 
-  printf ("REJECTED\t%" PRIu64 "\t", hashcat_status->progress_rejected);
+  printf ("REJECTED\t%" PRIu64 "\t", hashdog_status->progress_rejected);
 
   printf ("UTIL\t");
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
     // ok, little cheat here again...
 
-    const int util = hm_get_utilization_with_devices_idx (hashcat_ctx, device_id);
+    const int util = hm_get_utilization_with_devices_idx (hashdog_ctx, device_id);
 
     printf ("%d\t", util);
   }
@@ -1538,22 +1538,22 @@ void status_display_machine_readable (hashcat_ctx_t *hashcat_ctx)
 
   fflush (stdout);
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_display_status_json (hashcat_ctx_t *hashcat_ctx)
+void status_display_status_json (hashdog_ctx_t *hashdog_ctx)
 {
-  const hwmon_ctx_t *hwmon_ctx = hashcat_ctx->hwmon_ctx;
+  const hwmon_ctx_t *hwmon_ctx = hashdog_ctx->hwmon_ctx;
 
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
@@ -1564,7 +1564,7 @@ void status_display_status_json (hashcat_ctx_t *hashcat_ctx)
 
   time_t end;
 
-  time_t sec_etc = status_get_sec_etc (hashcat_ctx);
+  time_t sec_etc = status_get_sec_etc (hashdog_ctx);
 
   if (overflow_check_u64_add (time_now, sec_etc) == false)
   {
@@ -1582,13 +1582,13 @@ void status_display_status_json (hashcat_ctx_t *hashcat_ctx)
    * are getting escaped before being printed.
    */
 
-  char *target_json_encoded = (char *) hcmalloc (strlen (hashcat_status->hash_target) * 2);
+  char *target_json_encoded = (char *) hcmalloc (strlen (hashdog_status->hash_target) * 2);
 
   unsigned long i, j;
 
-  for (i = 0, j = 0; i < strlen (hashcat_status->hash_target); i++, j++)
+  for (i = 0, j = 0; i < strlen (hashdog_status->hash_target); i++, j++)
   {
-    char c = hashcat_status->hash_target[i];
+    char c = hashdog_status->hash_target[i];
 
     switch (c)
     {
@@ -1606,41 +1606,41 @@ void status_display_status_json (hashcat_ctx_t *hashcat_ctx)
 
   target_json_encoded[j] = 0;
 
-  printf ("{ \"session\": \"%s\",", hashcat_status->session);
+  printf ("{ \"session\": \"%s\",", hashdog_status->session);
   printf (" \"guess\": {");
-  if (hashcat_status->guess_base)
-    printf (" \"guess_base\": \"%s\",", hashcat_status->guess_base);
+  if (hashdog_status->guess_base)
+    printf (" \"guess_base\": \"%s\",", hashdog_status->guess_base);
   else
     printf (" \"guess_base\": null,");
-  printf (" \"guess_base_count\": %d,", hashcat_status->guess_base_count);
-  printf (" \"guess_base_offset\": %d,", hashcat_status->guess_base_offset);
-  printf (" \"guess_base_percent\": %.02f,", hashcat_status->guess_base_percent);
-  printf (" \"guess_mask_length\": %d,", hashcat_status->guess_mask_length);
-  if (hashcat_status->guess_mod)
-    printf (" \"guess_mod\": \"%s\",", hashcat_status->guess_mod);
+  printf (" \"guess_base_count\": %d,", hashdog_status->guess_base_count);
+  printf (" \"guess_base_offset\": %d,", hashdog_status->guess_base_offset);
+  printf (" \"guess_base_percent\": %.02f,", hashdog_status->guess_base_percent);
+  printf (" \"guess_mask_length\": %d,", hashdog_status->guess_mask_length);
+  if (hashdog_status->guess_mod)
+    printf (" \"guess_mod\": \"%s\",", hashdog_status->guess_mod);
   else
     printf (" \"guess_mod\": null,");
-  printf (" \"guess_mod_count\": %d,", hashcat_status->guess_mod_count);
-  printf (" \"guess_mod_offset\": %d,", hashcat_status->guess_mod_offset);
-  printf (" \"guess_mod_percent\": %.02f,", hashcat_status->guess_mod_percent);
-  printf (" \"guess_mode\": %d", hashcat_status->guess_mode);
+  printf (" \"guess_mod_count\": %d,", hashdog_status->guess_mod_count);
+  printf (" \"guess_mod_offset\": %d,", hashdog_status->guess_mod_offset);
+  printf (" \"guess_mod_percent\": %.02f,", hashdog_status->guess_mod_percent);
+  printf (" \"guess_mode\": %d", hashdog_status->guess_mode);
   printf (" },");
-  printf (" \"status\": %d,", hashcat_status->status_number);
+  printf (" \"status\": %d,", hashdog_status->status_number);
   printf (" \"target\": \"%s\",", target_json_encoded);
-  printf (" \"progress\": [%" PRIu64 ", %" PRIu64 "],", hashcat_status->progress_cur_relative_skip, hashcat_status->progress_end_relative_skip);
-  printf (" \"restore_point\": %" PRIu64 ",", hashcat_status->restore_point);
-  printf (" \"recovered_hashes\": [%d, %d],", hashcat_status->digests_done, hashcat_status->digests_cnt);
-  printf (" \"recovered_salts\": [%d, %d],", hashcat_status->salts_done, hashcat_status->salts_cnt);
-  printf (" \"rejected\": %" PRIu64 ",", hashcat_status->progress_rejected);
+  printf (" \"progress\": [%" PRIu64 ", %" PRIu64 "],", hashdog_status->progress_cur_relative_skip, hashdog_status->progress_end_relative_skip);
+  printf (" \"restore_point\": %" PRIu64 ",", hashdog_status->restore_point);
+  printf (" \"recovered_hashes\": [%d, %d],", hashdog_status->digests_done, hashdog_status->digests_cnt);
+  printf (" \"recovered_salts\": [%d, %d],", hashdog_status->salts_done, hashdog_status->salts_cnt);
+  printf (" \"rejected\": %" PRIu64 ",", hashdog_status->progress_rejected);
   printf (" \"devices\": [");
 
   hcfree (target_json_encoded);
 
   int device_num = 0;
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
@@ -1655,12 +1655,12 @@ void status_display_status_json (hashcat_ctx_t *hashcat_ctx)
 
     if (hwmon_ctx->enabled == true)
     {
-      const int temp = hm_get_temperature_with_devices_idx (hashcat_ctx, device_id);
+      const int temp = hm_get_temperature_with_devices_idx (hashdog_ctx, device_id);
 
       printf (" \"temp\": %d,", temp);
     }
 
-    const int util = hm_get_utilization_with_devices_idx (hashcat_ctx, device_id);
+    const int util = hm_get_utilization_with_devices_idx (hashdog_ctx, device_id);
 
     printf (" \"util\": %d }", util);
 
@@ -1674,36 +1674,36 @@ void status_display_status_json (hashcat_ctx_t *hashcat_ctx)
 
   fflush (stdout);
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_display (hashcat_ctx_t *hashcat_ctx)
+void status_display (hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const hwmon_ctx_t    *hwmon_ctx    = hashcat_ctx->hwmon_ctx;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const hwmon_ctx_t    *hwmon_ctx    = hashdog_ctx->hwmon_ctx;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->machine_readable == true)
   {
-    status_display_machine_readable (hashcat_ctx);
+    status_display_machine_readable (hashdog_ctx);
 
     return;
   }
 
   if (user_options->status_json == true)
   {
-    status_display_status_json (hashcat_ctx);
+    status_display_status_json (hashdog_ctx);
 
     return;
   }
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
@@ -1715,210 +1715,210 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
   #ifdef WITH_BRAIN
   if (user_options->brain_client == true)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Session..........: %s (Brain Session/Attack:0x%08x/0x%08x)",
-      hashcat_status->session,
-      hashcat_status->brain_session,
-      hashcat_status->brain_attack);
+      hashdog_status->session,
+      hashdog_status->brain_session,
+      hashdog_status->brain_attack);
   }
   else
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Session..........: %s",
-      hashcat_status->session);
+      hashdog_status->session);
   }
   #else
-  event_log_info (hashcat_ctx,
+  event_log_info (hashdog_ctx,
     "Session..........: %s",
-    hashcat_status->session);
+    hashdog_status->session);
   #endif
 
-  event_log_info (hashcat_ctx,
+  event_log_info (hashdog_ctx,
     "Status...........: %s",
-    hashcat_status->status_string);
+    hashdog_status->status_string);
 
-  event_log_info (hashcat_ctx,
+  event_log_info (hashdog_ctx,
     "Hash.Mode........: %d (%s)",
     hashconfig->hash_mode,
-    hashcat_status->hash_name);
+    hashdog_status->hash_name);
 
-  event_log_info (hashcat_ctx,
+  event_log_info (hashdog_ctx,
     "Hash.Target......: %s",
-    hashcat_status->hash_target);
+    hashdog_status->hash_target);
 
   if (user_options->force == true)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
     "Time.Started.....: %s, (%s)",
-    hashcat_status->time_started_absolute,
-    hashcat_status->time_started_relative);
+    hashdog_status->time_started_absolute,
+    hashdog_status->time_started_relative);
   }
   else
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
     "Time.Started.....: %s (%s)",
-    hashcat_status->time_started_absolute,
-    hashcat_status->time_started_relative);
+    hashdog_status->time_started_absolute,
+    hashdog_status->time_started_relative);
   }
 
   if (user_options->force == true)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
     "Time.Estimated...: %s, (%s)",
-    hashcat_status->time_estimated_absolute,
-    hashcat_status->time_estimated_relative);
+    hashdog_status->time_estimated_absolute,
+    hashdog_status->time_estimated_relative);
   }
   else
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
     "Time.Estimated...: %s (%s)",
-    hashcat_status->time_estimated_absolute,
-    hashcat_status->time_estimated_relative);
+    hashdog_status->time_estimated_absolute,
+    hashdog_status->time_estimated_relative);
   }
 
   if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
   {
-    event_log_info (hashcat_ctx, "Kernel.Feature...: Optimized Kernel");
+    event_log_info (hashdog_ctx, "Kernel.Feature...: Optimized Kernel");
   }
   else
   {
-    event_log_info (hashcat_ctx, "Kernel.Feature...: Pure Kernel");
+    event_log_info (hashdog_ctx, "Kernel.Feature...: Pure Kernel");
   }
 
-  switch (hashcat_status->guess_mode)
+  switch (hashdog_status->guess_mode)
   {
     case GUESS_MODE_STRAIGHT_FILE:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s)",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
       break;
 
     case GUESS_MODE_STRAIGHT_FILE_RULES_FILE:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s)",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: Rules (%s)",
-        hashcat_status->guess_mod);
+        hashdog_status->guess_mod);
 
       break;
 
     case GUESS_MODE_STRAIGHT_FILE_RULES_GEN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s)",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: Rules (Generated)");
 
       break;
 
     case GUESS_MODE_STRAIGHT_STDIN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: Pipe");
 
       break;
 
     case GUESS_MODE_STRAIGHT_STDIN_RULES_FILE:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: Pipe");
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: Rules (%s)",
-        hashcat_status->guess_mod);
+        hashdog_status->guess_mod);
 
       break;
 
     case GUESS_MODE_STRAIGHT_STDIN_RULES_GEN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: Pipe");
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: Rules (Generated)");
 
       break;
 
     case GUESS_MODE_COMBINATOR_BASE_LEFT:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s), Left Side",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: File (%s), Right Side",
-        hashcat_status->guess_mod);
+        hashdog_status->guess_mod);
 
       break;
 
     case GUESS_MODE_COMBINATOR_BASE_RIGHT:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s), Right Side",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: File (%s), Left Side",
-        hashcat_status->guess_mod);
+        hashdog_status->guess_mod);
 
       break;
 
     case GUESS_MODE_MASK:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mask.......: %s [%d]",
-        hashcat_status->guess_base,
-        hashcat_status->guess_mask_length);
+        hashdog_status->guess_base,
+        hashdog_status->guess_mask_length);
 
       break;
 
     case GUESS_MODE_MASK_CS:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mask.......: %s [%d]",
-        hashcat_status->guess_base,
-        hashcat_status->guess_mask_length);
+        hashdog_status->guess_base,
+        hashdog_status->guess_mask_length);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Charset....: %s ",
-        hashcat_status->guess_charset);
+        hashdog_status->guess_charset);
 
       break;
 
     case GUESS_MODE_HYBRID1:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s), Left Side",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: Mask (%s) [%d], Right Side",
-        hashcat_status->guess_mod,
-        hashcat_status->guess_mask_length);
+        hashdog_status->guess_mod,
+        hashdog_status->guess_mask_length);
 
       break;
 
     case GUESS_MODE_HYBRID1_CS:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Base.......: File (%s), Left Side",
-        hashcat_status->guess_base);
+        hashdog_status->guess_base);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Mod........: Mask (%s) [%d], Right Side",
-        hashcat_status->guess_mod,
-        hashcat_status->guess_mask_length);
+        hashdog_status->guess_mod,
+        hashdog_status->guess_mask_length);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Charset....: %s",
-        hashcat_status->guess_charset);
+        hashdog_status->guess_charset);
 
       break;
 
@@ -1926,25 +1926,25 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
 
       if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Base.......: Mask (%s) [%d], Left Side",
-          hashcat_status->guess_base,
-          hashcat_status->guess_mask_length);
+          hashdog_status->guess_base,
+          hashdog_status->guess_mask_length);
 
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Mod........: File (%s), Right Side",
-          hashcat_status->guess_mod);
+          hashdog_status->guess_mod);
       }
       else
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Base.......: File (%s), Right Side",
-          hashcat_status->guess_base);
+          hashdog_status->guess_base);
 
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Mod........: Mask (%s) [%d], Left Side",
-          hashcat_status->guess_mod,
-          hashcat_status->guess_mask_length);
+          hashdog_status->guess_mod,
+          hashdog_status->guess_mask_length);
       }
 
       break;
@@ -1953,131 +1953,131 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
 
       if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Base.......: Mask (%s) [%d], Left Side",
-          hashcat_status->guess_base,
-          hashcat_status->guess_mask_length);
+          hashdog_status->guess_base,
+          hashdog_status->guess_mask_length);
 
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Mod........: File (%s), Right Side",
-          hashcat_status->guess_mod);
+          hashdog_status->guess_mod);
 
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Charset....: %s",
-          hashcat_status->guess_charset);
+          hashdog_status->guess_charset);
       }
       else
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Base.......: File (%s), Right Side",
-          hashcat_status->guess_base);
+          hashdog_status->guess_base);
 
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Mod........: Mask (%s) [%d], Left Side",
-          hashcat_status->guess_mod,
-          hashcat_status->guess_mask_length);
+          hashdog_status->guess_mod,
+          hashdog_status->guess_mask_length);
 
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Guess.Charset....: %s",
-          hashcat_status->guess_charset);
+          hashdog_status->guess_charset);
       }
 
       break;
   }
 
-  switch (hashcat_status->guess_mode)
+  switch (hashdog_status->guess_mode)
   {
     case GUESS_MODE_STRAIGHT_FILE:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue......: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
       break;
 
     case GUESS_MODE_STRAIGHT_FILE_RULES_FILE:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue......: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
       break;
 
     case GUESS_MODE_STRAIGHT_FILE_RULES_GEN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue......: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
       break;
 
     case GUESS_MODE_MASK:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue......: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
       break;
 
     case GUESS_MODE_MASK_CS:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue......: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
       break;
 
     case GUESS_MODE_HYBRID1:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue.Base.: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue.Mod..: %d/%d (%.02f%%)",
-        hashcat_status->guess_mod_offset,
-        hashcat_status->guess_mod_count,
-        hashcat_status->guess_mod_percent);
+        hashdog_status->guess_mod_offset,
+        hashdog_status->guess_mod_count,
+        hashdog_status->guess_mod_percent);
 
       break;
 
     case GUESS_MODE_HYBRID2:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue.Base.: %d/%d (%.02f%%)",
-        hashcat_status->guess_base_offset,
-        hashcat_status->guess_base_count,
-        hashcat_status->guess_base_percent);
+        hashdog_status->guess_base_offset,
+        hashdog_status->guess_base_count,
+        hashdog_status->guess_base_percent);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Guess.Queue.Mod..: %d/%d (%.02f%%)",
-        hashcat_status->guess_mod_offset,
-        hashcat_status->guess_mod_count,
-        hashcat_status->guess_mod_percent);
+        hashdog_status->guess_mod_offset,
+        hashdog_status->guess_mod_count,
+        hashdog_status->guess_mod_percent);
 
       break;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Speed.#%d.........: %9sH/s (%0.2fms) @ Accel:%d Loops:%d Thr:%d Vec:%d", device_id + 1,
       device_info->speed_sec_dev,
       device_info->exec_msec_dev,
@@ -2087,108 +2087,108 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
       device_info->vector_width_dev);
   }
 
-  if (hashcat_status->device_info_active > 1)
+  if (hashdog_status->device_info_active > 1)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Speed.#*.........: %9sH/s",
-      hashcat_status->speed_sec_all);
+      hashdog_status->speed_sec_all);
   }
-  if (hashcat_status->digests_done_pot > 0)
+  if (hashdog_status->digests_done_pot > 0)
   {
-    if (hashcat_status->salts_cnt > 1)
+    if (hashdog_status->salts_cnt > 1)
     {
-      const int digests_new = hashcat_status->digests_done - hashcat_status->digests_done_pot;
-      const double digests_new_perc = (double) digests_new / (double) hashcat_status->digests_cnt * 100;
+      const int digests_new = hashdog_status->digests_done - hashdog_status->digests_done_pot;
+      const double digests_new_perc = (double) digests_new / (double) hashdog_status->digests_cnt * 100;
 
       if (digests_new > 1)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Recovered.Total..: %d/%d (%.2f%%) Digests, %d/%d (%.2f%%) Salts",
-          hashcat_status->digests_done,
-          hashcat_status->digests_cnt,
-          hashcat_status->digests_percent,
-          hashcat_status->salts_done,
-          hashcat_status->salts_cnt,
-          hashcat_status->salts_percent);
-        event_log_info (hashcat_ctx,
+          hashdog_status->digests_done,
+          hashdog_status->digests_cnt,
+          hashdog_status->digests_percent,
+          hashdog_status->salts_done,
+          hashdog_status->salts_cnt,
+          hashdog_status->salts_percent);
+        event_log_info (hashdog_ctx,
           "Recovered.New....: %d/%d (%.2f%%) Digests",
           digests_new,
-          hashcat_status->digests_cnt,
+          hashdog_status->digests_cnt,
           digests_new_perc);
       }
       else
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Recovered.Total..: %d/%d (%.2f%%) Digests, %d/%d (%.2f%%) Salts",
-          hashcat_status->digests_done,
-          hashcat_status->digests_cnt,
-          hashcat_status->digests_percent,
-          hashcat_status->salts_done,
-          hashcat_status->salts_cnt,
-          hashcat_status->salts_percent);
+          hashdog_status->digests_done,
+          hashdog_status->digests_cnt,
+          hashdog_status->digests_percent,
+          hashdog_status->salts_done,
+          hashdog_status->salts_cnt,
+          hashdog_status->salts_percent);
       }
     }
     else
     {
-      const int digests_new = hashcat_status->digests_done - hashcat_status->digests_done_pot;
-      const double digests_new_perc = (double) digests_new / (double) hashcat_status->digests_cnt * 100;
+      const int digests_new = hashdog_status->digests_done - hashdog_status->digests_done_pot;
+      const double digests_new_perc = (double) digests_new / (double) hashdog_status->digests_cnt * 100;
 
       if (digests_new > 1)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Recovered.Total..: %d/%d (%.2f%%) Digests",
-          hashcat_status->digests_done,
-          hashcat_status->digests_cnt,
-          hashcat_status->digests_percent);
-        event_log_info (hashcat_ctx,
+          hashdog_status->digests_done,
+          hashdog_status->digests_cnt,
+          hashdog_status->digests_percent);
+        event_log_info (hashdog_ctx,
           "Recovered.New....: %d/%d (%.2f%%) Digests",
           digests_new,
-          hashcat_status->digests_cnt,
+          hashdog_status->digests_cnt,
           digests_new_perc);
       }
       else
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Recovered.Total..: %d/%d (%.2f%%) Digests",
-          hashcat_status->digests_done,
-          hashcat_status->digests_cnt,
-          hashcat_status->digests_percent);
+          hashdog_status->digests_done,
+          hashdog_status->digests_cnt,
+          hashdog_status->digests_percent);
       }
     }
   }
   else
   {
-    if (hashcat_status->salts_cnt > 1)
+    if (hashdog_status->salts_cnt > 1)
     {
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Recovered.Total..: %d/%d (%.2f%%) Digests, %d/%d (%.2f%%) Salts",
-        hashcat_status->digests_done,
-        hashcat_status->digests_cnt,
-        hashcat_status->digests_percent,
-        hashcat_status->salts_done,
-        hashcat_status->salts_cnt,
-        hashcat_status->salts_percent);
+        hashdog_status->digests_done,
+        hashdog_status->digests_cnt,
+        hashdog_status->digests_percent,
+        hashdog_status->salts_done,
+        hashdog_status->salts_cnt,
+        hashdog_status->salts_percent);
     }
     else
     {
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Recovered.Total..: %d/%d (%.2f%%) Digests",
-        hashcat_status->digests_done,
-        hashcat_status->digests_cnt,
-        hashcat_status->digests_percent);
+        hashdog_status->digests_done,
+        hashdog_status->digests_cnt,
+        hashdog_status->digests_percent);
     }
   }
-  if (hashcat_status->digests_cnt > 1000)
+  if (hashdog_status->digests_cnt > 1000)
   {
-    const int    digests_remain         = hashcat_status->digests_cnt - hashcat_status->digests_done;
-    const double digests_remain_percent = (double) digests_remain / (double) hashcat_status->digests_cnt * 100;
+    const int    digests_remain         = hashdog_status->digests_cnt - hashdog_status->digests_done;
+    const double digests_remain_percent = (double) digests_remain / (double) hashdog_status->digests_cnt * 100;
 
-    const int    salts_remain           = hashcat_status->salts_cnt - hashcat_status->salts_done;
-    const double salts_remain_percent   = (double) salts_remain / (double) hashcat_status->salts_cnt * 100;
+    const int    salts_remain           = hashdog_status->salts_cnt - hashdog_status->salts_done;
+    const double salts_remain_percent   = (double) salts_remain / (double) hashdog_status->salts_cnt * 100;
 
-    if (hashcat_status->salts_cnt > 1)
+    if (hashdog_status->salts_cnt > 1)
     {
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Remaining........: %d (%.2f%%) Digests, %d (%.2f%%) Salts",
         digests_remain,
         digests_remain_percent,
@@ -2197,47 +2197,47 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
     }
     else
     {
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Remaining........: %d (%.2f%%) Digests",
         digests_remain,
         digests_remain_percent);
     }
   }
 
-  if (hashcat_status->digests_cnt > 1000)
+  if (hashdog_status->digests_cnt > 1000)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Recovered/Time...: %s",
-      hashcat_status->cpt);
+      hashdog_status->cpt);
   }
 
-  switch (hashcat_status->progress_mode)
+  switch (hashdog_status->progress_mode)
   {
     case PROGRESS_MODE_KEYSPACE_KNOWN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Progress.........: %" PRIu64 "/%" PRIu64 " (%.02f%%)",
-        hashcat_status->progress_cur_relative_skip,
-        hashcat_status->progress_end_relative_skip,
-        hashcat_status->progress_finished_percent);
+        hashdog_status->progress_cur_relative_skip,
+        hashdog_status->progress_end_relative_skip,
+        hashdog_status->progress_finished_percent);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Rejected.........: %" PRIu64 "/%" PRIu64 " (%.02f%%)",
-        hashcat_status->progress_rejected,
-        hashcat_status->progress_cur_relative_skip,
-        hashcat_status->progress_rejected_percent);
+        hashdog_status->progress_rejected,
+        hashdog_status->progress_cur_relative_skip,
+        hashdog_status->progress_rejected_percent);
 
       break;
 
     case PROGRESS_MODE_KEYSPACE_UNKNOWN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Progress.........: %" PRIu64,
-        hashcat_status->progress_cur_relative_skip);
+        hashdog_status->progress_cur_relative_skip);
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Rejected.........: %" PRIu64,
-        hashcat_status->progress_rejected);
+        hashdog_status->progress_rejected);
 
       break;
   }
@@ -2245,21 +2245,21 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
   #ifdef WITH_BRAIN
   if (user_options->brain_client == true)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Brain.Link.All...: RX: %sB, TX: %sB",
-      hashcat_status->brain_rx_all,
-      hashcat_status->brain_tx_all);
+      hashdog_status->brain_rx_all,
+      hashdog_status->brain_tx_all);
 
-    for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+    for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
     {
-      const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+      const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
       if (device_info->skipped_dev == true) continue;
       if (device_info->skipped_warning_dev == true) continue;
 
       if (device_info->brain_link_status_dev == BRAIN_LINK_STATUS_CONNECTED)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Brain.Link.#%d....: RX: %sB (%sbps), TX: %sB (%sbps), idle", device_id + 1,
           device_info->brain_link_recv_bytes_dev,
           device_info->brain_link_recv_bytes_sec_dev,
@@ -2268,7 +2268,7 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
       }
       else if (device_info->brain_link_status_dev == BRAIN_LINK_STATUS_RECEIVING)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Brain.Link.#%d....: RX: %sB (%sbps), TX: %sB (%sbps), receiving", device_id + 1,
           device_info->brain_link_recv_bytes_dev,
           device_info->brain_link_recv_bytes_sec_dev,
@@ -2277,7 +2277,7 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
       }
       else if (device_info->brain_link_status_dev == BRAIN_LINK_STATUS_SENDING)
       {
-        event_log_info (hashcat_ctx,
+        event_log_info (hashdog_ctx,
           "Brain.Link.#%d....: RX: %sB (%sbps), TX: %sB (%sbps), sending", device_id + 1,
           device_info->brain_link_recv_bytes_dev,
           device_info->brain_link_recv_bytes_sec_dev,
@@ -2288,7 +2288,7 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
       {
         if ((device_info->brain_link_time_recv_dev > 0) && (device_info->brain_link_time_send_dev > 0))
         {
-          event_log_info (hashcat_ctx,
+          event_log_info (hashdog_ctx,
             "Brain.Link.#%d....: RX: %sB (%sbps), TX: %sB (%sbps)", device_id + 1,
             device_info->brain_link_recv_bytes_dev,
             device_info->brain_link_recv_bytes_sec_dev,
@@ -2297,7 +2297,7 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
         }
         else
         {
-          event_log_info (hashcat_ctx,
+          event_log_info (hashdog_ctx,
             "Brain.Link.#%d....: N/A", device_id + 1);
         }
       }
@@ -2305,35 +2305,35 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
   }
   #endif
 
-  switch (hashcat_status->progress_mode)
+  switch (hashdog_status->progress_mode)
   {
     case PROGRESS_MODE_KEYSPACE_KNOWN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Restore.Point....: %" PRIu64 "/%" PRIu64 " (%.02f%%)",
-        hashcat_status->restore_point,
-        hashcat_status->restore_total,
-        hashcat_status->restore_percent);
+        hashdog_status->restore_point,
+        hashdog_status->restore_total,
+        hashdog_status->restore_percent);
 
       break;
 
     case PROGRESS_MODE_KEYSPACE_UNKNOWN:
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Restore.Point....: %" PRIu64,
-        hashcat_status->restore_point);
+        hashdog_status->restore_point);
 
       break;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Restore.Sub.#%d...: Salt:%d Amplifier:%d-%d Iteration:%d-%d", device_id + 1,
       device_info->salt_pos_dev,
       device_info->innerloop_pos_dev,
@@ -2345,23 +2345,23 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
   //if (hashconfig->opts_type & OPTS_TYPE_SLOW_CANDIDATES)
   if (user_options->slow_candidates == true)
   {
-    event_log_info (hashcat_ctx, "Candidate.Engine.: Host Generator + PCIe");
+    event_log_info (hashdog_ctx, "Candidate.Engine.: Host Generator + PCIe");
   }
   else
   {
-    event_log_info (hashcat_ctx, "Candidate.Engine.: Device Generator");
+    event_log_info (hashdog_ctx, "Candidate.Engine.: Device Generator");
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
     if (device_info->guess_candidates_dev == NULL) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Candidates.#%d....: %s", device_id + 1,
       device_info->guess_candidates_dev);
   }
@@ -2372,9 +2372,9 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
     bool first_dev = true;
     #endif
 
-    for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+    for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
     {
-      const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+      const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
       if (device_info->skipped_dev == true) continue;
       if (device_info->skipped_warning_dev == true) continue;
@@ -2384,80 +2384,80 @@ void status_display (hashcat_ctx_t *hashcat_ctx)
       #if defined(__APPLE__)
       if (first_dev && strlen (device_info->hwmon_fan_dev) > 0)
       {
-        event_log_info (hashcat_ctx, "Hardware.Mon.SMC.: %s", device_info->hwmon_fan_dev);
+        event_log_info (hashdog_ctx, "Hardware.Mon.SMC.: %s", device_info->hwmon_fan_dev);
         first_dev = false;
       }
       #endif
 
-      event_log_info (hashcat_ctx,
+      event_log_info (hashdog_ctx,
         "Hardware.Mon.#%d..: %s", device_id + 1,
         device_info->hwmon_dev);
     }
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_benchmark_machine_readable (hashcat_ctx_t *hashcat_ctx)
+void status_benchmark_machine_readable (hashdog_ctx_t *hashdog_ctx)
 {
-  hashconfig_t *hashconfig = hashcat_ctx->hashconfig;
+  hashconfig_t *hashconfig = hashdog_ctx->hashconfig;
 
   const u32 hash_mode = hashconfig->hash_mode;
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx, "%d:%u:%d:%d:%.2f:%" PRIu64, device_id + 1, hash_mode, device_info->corespeed_dev, device_info->memoryspeed_dev, device_info->exec_msec_dev, (u64) (device_info->hashes_msec_dev_benchmark * 1000));
+    event_log_info (hashdog_ctx, "%d:%u:%d:%d:%.2f:%" PRIu64, device_id + 1, hash_mode, device_info->corespeed_dev, device_info->memoryspeed_dev, device_info->exec_msec_dev, (u64) (device_info->hashes_msec_dev_benchmark * 1000));
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_benchmark (hashcat_ctx_t *hashcat_ctx)
+void status_benchmark (hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->machine_readable == true)
   {
-    status_benchmark_machine_readable (hashcat_ctx);
+    status_benchmark_machine_readable (hashdog_ctx);
 
     return;
   }
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Speed.#%d.........: %9sH/s (%0.2fms) @ Accel:%d Loops:%d Thr:%d Vec:%d", device_id + 1,
       device_info->speed_sec_dev,
       device_info->exec_msec_dev,
@@ -2467,51 +2467,51 @@ void status_benchmark (hashcat_ctx_t *hashcat_ctx)
       device_info->vector_width_dev);
   }
 
-  if (hashcat_status->device_info_active > 1)
+  if (hashdog_status->device_info_active > 1)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Speed.#*.........: %9sH/s",
-      hashcat_status->speed_sec_all);
+      hashdog_status->speed_sec_all);
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_speed_machine_readable (hashcat_ctx_t *hashcat_ctx)
+void status_speed_machine_readable (hashdog_ctx_t *hashdog_ctx)
 {
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx, "%d:%" PRIu64, device_id + 1, (u64) (device_info->hashes_msec_dev_benchmark * 1000));
+    event_log_info (hashdog_ctx, "%d:%" PRIu64, device_id + 1, (u64) (device_info->hashes_msec_dev_benchmark * 1000));
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_speed_json (hashcat_ctx_t *hashcat_ctx)
+void status_speed_json (hashdog_ctx_t *hashdog_ctx)
 {
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
@@ -2520,9 +2520,9 @@ void status_speed_json (hashcat_ctx_t *hashcat_ctx)
 
   int device_num = 0;
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
@@ -2539,96 +2539,96 @@ void status_speed_json (hashcat_ctx_t *hashcat_ctx)
 
   printf (" ] }");
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_speed (hashcat_ctx_t *hashcat_ctx)
+void status_speed (hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->machine_readable == true)
   {
-    status_speed_machine_readable (hashcat_ctx);
+    status_speed_machine_readable (hashdog_ctx);
 
     return;
   }
 
   if (user_options->status_json == true)
   {
-    status_speed_json (hashcat_ctx);
+    status_speed_json (hashdog_ctx);
 
     return;
   }
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Speed.#%d.........: %9sH/s (%0.2fms)", device_id + 1,
       device_info->speed_sec_dev,
       device_info->exec_msec_dev);
   }
 
-  if (hashcat_status->device_info_active > 1)
+  if (hashdog_status->device_info_active > 1)
   {
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Speed.#*.........: %9sH/s",
-      hashcat_status->speed_sec_all);
+      hashdog_status->speed_sec_all);
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_progress_machine_readable (hashcat_ctx_t *hashcat_ctx)
+void status_progress_machine_readable (hashdog_ctx_t *hashdog_ctx)
 {
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx, "%d:%" PRIu64 ":%0.2f", device_id + 1, device_info->progress_dev, device_info->runtime_msec_dev);
+    event_log_info (hashdog_ctx, "%d:%" PRIu64 ":%0.2f", device_id + 1, device_info->progress_dev, device_info->runtime_msec_dev);
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_progress_json (hashcat_ctx_t *hashcat_ctx)
+void status_progress_json (hashdog_ctx_t *hashdog_ctx)
 {
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
@@ -2637,9 +2637,9 @@ void status_progress_json (hashcat_ctx_t *hashcat_ctx)
 
   int device_num = 0;
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
@@ -2657,63 +2657,63 @@ void status_progress_json (hashcat_ctx_t *hashcat_ctx)
 
   printf (" ] }");
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }
 
-void status_progress (hashcat_ctx_t *hashcat_ctx)
+void status_progress (hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->machine_readable == true)
   {
-    status_progress_machine_readable (hashcat_ctx);
+    status_progress_machine_readable (hashdog_ctx);
 
     return;
   }
 
   if (user_options->status_json == true)
   {
-    status_progress_json (hashcat_ctx);
+    status_progress_json (hashdog_ctx);
 
     return;
   }
 
-  hashcat_status_t *hashcat_status = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  hashdog_status_t *hashdog_status = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
-  if (hashcat_get_status (hashcat_ctx, hashcat_status) == -1)
+  if (hashdog_get_status (hashdog_ctx, hashdog_status) == -1)
   {
-    hcfree (hashcat_status);
+    hcfree (hashdog_status);
 
     return;
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Progress.#%d......: %" PRIu64, device_id + 1,
       device_info->progress_dev);
   }
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    const device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    const device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     if (device_info->skipped_dev == true) continue;
     if (device_info->skipped_warning_dev == true) continue;
 
-    event_log_info (hashcat_ctx,
+    event_log_info (hashdog_ctx,
       "Runtime.#%d.......: %0.2fms", device_id + 1,
       device_info->runtime_msec_dev);
   }
 
-  status_status_destroy (hashcat_ctx, hashcat_status);
+  status_status_destroy (hashdog_ctx, hashdog_status);
 
-  hcfree (hashcat_status);
+  hcfree (hashdog_status);
 }

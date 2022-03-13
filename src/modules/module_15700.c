@@ -27,7 +27,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_SELF_TEST_DISABLE
                                   | OPTS_TYPE_ST_HEX;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$ethereum$s*262144*8*1*3134313837333434333838303231333633373433323633373534333136363537*73da7f80ec3bd4f2a128c3a815cfb4d576ecb1a9b47024c902e62ea926f7795b*910e0f8dc1f7ba41959e1089bb769f3e919109591913cc33ba03953d7a905efd";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
@@ -460,11 +460,11 @@ Find the right -n value for your GPU:
 
 1. For example, to find the value for 15700, first create a valid hash for 15700 as follows:
 
-$ ./hashcat --example-hashes -m 15700 | grep Example.Hash | grep -v Format | cut -b 25- > tmp.hash.15700
+$ ./hashdog --example-hashes -m 15700 | grep Example.Hash | grep -v Format | cut -b 25- > tmp.hash.15700
 
 2. Now let it iterate through all -n values to a certain point. In this case, I'm using 200, but in general it's a value that is at least twice that of the multiprocessor. If you don't mind you can just leave it as it is, it just runs a little longer.
 
-$ export i=1; while [ $i -ne 201 ]; do echo $i; ./hashcat --quiet tmp.hash.15700 --keep-guessing --self-test-disable --markov-disable --restore-disable --outfile-autohex-disable --wordlist-autohex-disable --potfile-disable --logfile-disable --hwmon-disable --status --status-timer 1 --runtime 28 --machine-readable --optimized-kernel-enable --workload-profile 3 --hash-type 15700 --attack-mode 3 ?b?b?b?b?b?b?b --backend-devices 1 --force -n $i; i=$(($i+1)); done | tee x
+$ export i=1; while [ $i -ne 201 ]; do echo $i; ./hashdog --quiet tmp.hash.15700 --keep-guessing --self-test-disable --markov-disable --restore-disable --outfile-autohex-disable --wordlist-autohex-disable --potfile-disable --logfile-disable --hwmon-disable --status --status-timer 1 --runtime 28 --machine-readable --optimized-kernel-enable --workload-profile 3 --hash-type 15700 --attack-mode 3 ?b?b?b?b?b?b?b --backend-devices 1 --force -n $i; i=$(($i+1)); done | tee x
 
 3. Determine the highest measured H/s speed. But don't just use the highest value. Instead, use the number that seems most stable, usually at the beginning.
 

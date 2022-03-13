@@ -8,10 +8,10 @@ assignees: ''
 ---
 
 **GitHub is for bugs and features - not for support**
-For support, please use the hashcat forums https://hashcat.net/forum/
+For support, please use the hashdog forums https://hashdog.net/forum/
 
 **Check the FAQ**
-Some items that might appear to be issues are not issues. Please review the hashcat FAQ https://hashcat.net/wiki/doku.php?id=frequently_asked_questions before submitting a bug report.
+Some items that might appear to be issues are not issues. Please review the hashdog FAQ https://hashdog.net/wiki/doku.php?id=frequently_asked_questions before submitting a bug report.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -28,7 +28,7 @@ A clear and concise description of what you expected to happen.
 - OpenCL/CUDA driver version: [e.g. 465.21]
 - OpenCL/CUDA driver source: [e.g. runtime installer/.exe installer]
 
-**Hashcat version (please complete the following information):**
+**hashdog version (please complete the following information):**
  - OS: [e.g. Linux]
  - Distribution: [e.g. Ubuntu 18.04]
  - Version: [e.g. 6.2.0]
@@ -46,7 +46,7 @@ Post clinfo output
 ```
 
 ```
-Post hashcat -I output
+Post hashdog -I output
 ```
 
 ```
@@ -54,4 +54,4 @@ On Linux: post lspci output
 ```
 
 **Additional context**
-Add any other context about the problem here. For instance, it was working with hashcat version X.X.X (also please post output from older versions).
+Add any other context about the problem here. For instance, it was working with hashdog version X.X.X (also please post output from older versions).

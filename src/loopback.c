@@ -11,9 +11,9 @@
 #include "locking.h"
 #include "loopback.h"
 
-static void loopback_format_plain (hashcat_ctx_t *hashcat_ctx, const u8 *plain_ptr, const unsigned int plain_len)
+static void loopback_format_plain (hashdog_ctx_t *hashdog_ctx, const u8 *plain_ptr, const unsigned int plain_len)
 {
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (loopback_ctx->enabled == false) return;
 
@@ -53,10 +53,10 @@ static void loopback_format_plain (hashcat_ctx_t *hashcat_ctx, const u8 *plain_p
   }
 }
 
-int loopback_init (hashcat_ctx_t *hashcat_ctx)
+int loopback_init (hashdog_ctx_t *hashdog_ctx)
 {
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   loopback_ctx->enabled = false;
 
@@ -80,19 +80,19 @@ int loopback_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void loopback_destroy (hashcat_ctx_t *hashcat_ctx)
+void loopback_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (loopback_ctx->enabled == false) return;
 
   memset (loopback_ctx, 0, sizeof (loopback_ctx_t));
 }
 
-int loopback_write_open (hashcat_ctx_t *hashcat_ctx)
+int loopback_write_open (hashdog_ctx_t *hashdog_ctx)
 {
-  induct_ctx_t   *induct_ctx   = hashcat_ctx->induct_ctx;
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  induct_ctx_t   *induct_ctx   = hashdog_ctx->induct_ctx;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (loopback_ctx->enabled == false) return 0;
 
@@ -108,7 +108,7 @@ int loopback_write_open (hashcat_ctx_t *hashcat_ctx)
 
   if (hc_fopen (&loopback_ctx->fp, loopback_ctx->filename, "ab") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", loopback_ctx->filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", loopback_ctx->filename, strerror (errno));
 
     return -1;
   }
@@ -118,9 +118,9 @@ int loopback_write_open (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void loopback_write_unlink (hashcat_ctx_t *hashcat_ctx)
+void loopback_write_unlink (hashdog_ctx_t *hashdog_ctx)
 {
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (loopback_ctx->enabled == false) return;
 
@@ -129,9 +129,9 @@ void loopback_write_unlink (hashcat_ctx_t *hashcat_ctx)
   unlink (loopback_ctx->filename);
 }
 
-void loopback_write_close (hashcat_ctx_t *hashcat_ctx)
+void loopback_write_close (hashdog_ctx_t *hashdog_ctx)
 {
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (loopback_ctx->enabled == false) return;
 
@@ -141,17 +141,17 @@ void loopback_write_close (hashcat_ctx_t *hashcat_ctx)
 
   if (loopback_ctx->unused == true)
   {
-    loopback_write_unlink (hashcat_ctx);
+    loopback_write_unlink (hashdog_ctx);
   }
 }
 
-void loopback_write_append (hashcat_ctx_t *hashcat_ctx, const u8 *plain_ptr, const unsigned int plain_len)
+void loopback_write_append (hashdog_ctx_t *hashdog_ctx, const u8 *plain_ptr, const unsigned int plain_len)
 {
-  loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (loopback_ctx->enabled == false) return;
 
-  loopback_format_plain (hashcat_ctx, plain_ptr, plain_len);
+  loopback_format_plain (hashdog_ctx, plain_ptr, plain_len);
 
   hc_lockfile (&loopback_ctx->fp);
 

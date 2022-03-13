@@ -25,7 +25,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_BE
                                   | OPTS_TYPE_PT_ADD80
                                   | OPTS_TYPE_ST_HEX;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$mysqlna$2576670568531371763643101056213751754328*5e4be686a3149a12847caa9898247dcc05739601";
 
 static const char *SIGNATURE_MYSQL_AUTH = "$mysqlna$";

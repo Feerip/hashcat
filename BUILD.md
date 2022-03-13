@@ -1,4 +1,4 @@
-hashcat build documentation
+hashdog build documentation
 =
 
 ### Revision ###
@@ -9,12 +9,12 @@ hashcat build documentation
 
 See docs/credits.txt
 
-### Building hashcat for Linux and macOS ###
+### Building hashdog for Linux and macOS ###
 
-Get a copy of the **hashcat** repository
+Get a copy of the **hashdog** repository
 
 ```
-$ git clone https://github.com/hashcat/hashcat.git
+$ git clone https://github.com/hashdog/hashdog.git
 ```
 
 Run "make"
@@ -23,7 +23,7 @@ Run "make"
 $ make
 ```
 
-### Install hashcat for Linux ###
+### Install hashdog for Linux ###
 
 The install target is linux FHS compatible and can be used like this:
 
@@ -31,53 +31,53 @@ The install target is linux FHS compatible and can be used like this:
 $ make install
 ```
 
-If the $HOME/.hashcat folder exists, then:
+If the $HOME/.hashdog folder exists, then:
 
-- Session related files go to: $HOME/.hashcat/sessions/
-- Cached kernels go to: $HOME/.hashcat/kernels/
-- Potfiles go to: $HOME/.hashcat/
+- Session related files go to: $HOME/.hashdog/sessions/
+- Cached kernels go to: $HOME/.hashdog/kernels/
+- Potfiles go to: $HOME/.hashdog/
 
 Otherwise, if environment variable XDG_DATA_HOME and XDG_CACHE_HOME exists, then:
 
-- Session related files go to: $XDG_DATA_HOME/hashcat/sessions/
-- Cached kernels go to: $XDG_CACHE_HOME/hashcat/kernels/
-- Potfiles go to: $XDG_DATA_HOME/hashcat/
+- Session related files go to: $XDG_DATA_HOME/hashdog/sessions/
+- Cached kernels go to: $XDG_CACHE_HOME/hashdog/kernels/
+- Potfiles go to: $XDG_DATA_HOME/hashdog/
 
 Otherwise, if environment variable XDG_DATA_HOME exists, then:
 
-- Session related files go to: $XDG_DATA_HOME/hashcat/sessions/
-- Cached kernels go to: $HOME/.cache/hashcat
-- Potfiles go to: $XDG_DATA_HOME/hashcat/
+- Session related files go to: $XDG_DATA_HOME/hashdog/sessions/
+- Cached kernels go to: $HOME/.cache/hashdog
+- Potfiles go to: $XDG_DATA_HOME/hashdog/
 
 Otherwise, if environment variable XDG_CACHE_HOME exists, then:
 
-- Session related files go to: $HOME/.local/share/hashcat/sessions/
-- Cached kernels go to: $XDG_CACHE_HOME/hashcat/kernels/
-- Potfiles go to: $HOME/.local/share/hashcat/
+- Session related files go to: $HOME/.local/share/hashdog/sessions/
+- Cached kernels go to: $XDG_CACHE_HOME/hashdog/kernels/
+- Potfiles go to: $HOME/.local/share/hashdog/
 
 Otherwise:
 
-- Session related files go to: $HOME/.local/share/hashcat/sessions/
-- Cached kernels go to: $HOME/.cache/hashcat
-- Potfiles go to: $HOME/.local/share/hashcat/
+- Session related files go to: $HOME/.local/share/hashdog/sessions/
+- Cached kernels go to: $HOME/.cache/hashdog
+- Potfiles go to: $HOME/.local/share/hashdog/
 
-### Building hashcat for Windows (using Windows Subsystem for Linux) ###
+### Building hashdog for Windows (using Windows Subsystem for Linux) ###
 
 Refer to [BUILD_WSL.md](BUILD_WSL.md)
 
-### Building hashcat for Windows (using Cygwin) ###
+### Building hashdog for Windows (using Cygwin) ###
 
 Refer to [BUILD_CYGWIN.md](BUILD_CYGWIN.md)
 
-### Building hashcat for Windows (using MSYS2) ###
+### Building hashdog for Windows (using MSYS2) ###
 
 Refer to [BUILD_MSYS2.md](BUILD_MSYS2.md)
 
-### Building hashcat for Windows from Linux ###
+### Building hashdog for Windows from Linux ###
 
 ```
 $ make win
 ```
 
 =
-Enjoy your fresh **hashcat** binaries ;)
+Enjoy your fresh **hashdog** binaries ;)

@@ -45,7 +45,7 @@
 - Fixed missing option flag OPTS_TYPE_SUGGEST_KG for hash-mode 11600 to inform the user about possible false positives in this mode
 - Fixed undefined function call to hc_byte_perm_S() in hash-mode 17010 on non-CUDA compute devices
 - Fixed Unit Test early exit on luks test file download/extract failure
-- Fixed Unit Test false negative if there are spaces in the filesystem path to hashcat
+- Fixed Unit Test false negative if there are spaces in the filesystem path to hashdog
 - Fixed Unit Test salt-max in case of optimized kernel, with hash-type 22 and 23
 - Fixed wordlist handling in -m 3000 when candidate passwords use the $HEX[...] syntax
 - Fixed display problem of the "Optimizers applied" list for algorithms using Register-Limit
@@ -193,9 +193,9 @@
 - ECC secp256k1: The inline assembly code for AMD GPUs has been removed as the latest JIT compilers optimize it with the same efficiency
 - HIP Kernels: Enable vector data types for HIP kernels for functionality and performance
 - Kernel threads: Use warp size / wavefront size query instead of hard-coded values as the basis for kernel threads
-- SCRYPT Kernels: Improve Hashcat.hctune entries for many NV and AMD GPUs for hash mode 8900, 9300, 15700 and 22700
+- SCRYPT Kernels: Improve hashdog.hctune entries for many NV and AMD GPUs for hash mode 8900, 9300, 15700 and 22700
 - STDIN: Reduce the performance gap between stdin and wordlist by disabling the --stdin-timeout-abort check after 1000 successful reads
-- Tuning Database: Add new module function module_extra_tuningdb_block() to extend hashcat.hctune content from a module
+- Tuning Database: Add new module function module_extra_tuningdb_block() to extend hashdog.hctune content from a module
 
 ##
 ## Technical
@@ -209,9 +209,9 @@
 - Backend Interface: Implement gpu_bzero() as a gpu_memset() replacement, since all gpu_memset() operations used 0 as the value
 - Backend Interface: Improve the query kernel's dynamic memory size based on DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK_OPTIN instead of BF
 - Brain Session: Adds hashconfig-specific opti_type and opts_type parameters to the session calculation to enable cover functions like -O
-- Commandline: Fix some memory leaks in case hashcat aborts due to command line parameter settings
+- Commandline: Fix some memory leaks in case hashdog aborts due to command line parameter settings
 - Commandline: Throw an error if the separator specified by the user with the -p option is not exactly 1 byte
-- Community: Add link to new hashcat discord to docs/contact.txt
+- Community: Add link to new hashdog discord to docs/contact.txt
 - Constants: Make const char * pointers actually const char * const pointers
 - Deprecated Plugins: Add new module function module_deprecated_notice() to mark a plugin as deprecated and to return a free text user notice
 - Deprecated Plugins: Marked plugins 2500/2501 and 16800/16801 as deprecated
@@ -224,7 +224,7 @@
 - Memory Management: Check in OpenCL that CL_DEVICE_HOST_UNIFIED_MEMORY is true and if so, then half of the available memory
 - Memory Management: Refactored the code responsible for limiting kernel accel with the goal to avoid low host memory situations
 - MetaMask: Added special extraction tool for MetaMask wallets
-- NEO driver: Activate the NEO driver (Intel GPU) after it passed several tests in hashcat using the latest NEO driver version
+- NEO driver: Activate the NEO driver (Intel GPU) after it passed several tests in hashdog using the latest NEO driver version
 - OpenCL Runtime: The use of clUnloadPlatformCompiler () was disabled after some users received unexpected return codes
 - OpenCL Runtime: Workaround for Intel OpenCL runtime: segmentation fault when compiling hc_enc_next() / hc_enc_next_global()
 - Potfile: Fixed some leaks in potfile_*_open(), potfile_*_close(), potfile_destroy() and don't assume plain file
@@ -263,10 +263,10 @@
 ## Bugs
 ##
 
-- Fixed access violation in hashconfig_destroy if hashcat_ctx_t is only partially initialized
+- Fixed access violation in hashconfig_destroy if hashdog_ctx_t is only partially initialized
 - Fixed 'E' rule in pure kernel mode which was ignoring letters that are in positions that are multiples of 4
 - Fixed false negative in hash-mode 15900 (DPAPI masterkey file v2) if password was longer than 64 characters
-- Fixed hashcat_ctx leak and refactor module and kernel existence checks
+- Fixed hashdog_ctx leak and refactor module and kernel existence checks
 - Fixed integer overflow in Recovered/Time status view column caused by division > 0 but < 1
 - Fixed invalid ETA if --limit was specified, several salts are in a hash list and some of them were found in a potfile
 - Fixed memory leak in iconv_ctx and iconv_tmp in backend.c
@@ -292,7 +292,7 @@
 ##
 
 - Autodetect: Limit the number of errors per hash-mode try to 100 to avoid long startup time
-- Brain: Add brain_ctx_t to hashcat_ctx_t to enable runtime check if hashcat was compiled with brain support
+- Brain: Add brain_ctx_t to hashdog_ctx_t to enable runtime check if hashdog was compiled with brain support
 - File handling: Do not abort on seeing a BOM in input files, just warn and ignore the BOM
 - Folders: Do not escape the variable cpath_real to prevent certain OpenCL runtimes from running into an error which do not support escape characters
 - Java Object hashCode: Add OPTS_TYPE_SUGGEST_KG as a default option
@@ -350,7 +350,7 @@
 
 - AES Crypt Plugin: Reduced max password length from 256 to 128 which improved performance by 22%
 - CUDA Backend: If --stdout is used, do not warn about missing CUDA SDK
-- Folder Management: Add support for XDG Base Directory specification when hashcat is installed using 'make install'
+- Folder Management: Add support for XDG Base Directory specification when hashdog is installed using 'make install'
 - Hardware Monitor: Add support for GPU device utilization readings from sysfs (AMD on Linux)
 - OpenCL Backend: Use CL_DEVICE_BOARD_NAME_AMD instead of CL_DEVICE_NAME for device name (when supported by OpenCL runtime)
 - Performance Monitor: Suggest -S to improve cracking performance in specific attack configurations
@@ -426,7 +426,7 @@
 - Added new attack-mode: Association Attack (aka "Context Attack") to attack hashes from a hashlist with associated "hints"
 - Added support for true UTF-8 to UTF-16 conversion in kernel crypto library
 - Added option --hash-info to show generic information for each hash-mode
-- Added command prompt [f]inish to tell hashcat to quit after finishing the current attack
+- Added command prompt [f]inish to tell hashdog to quit after finishing the current attack
 
 ##
 ## Bugs
@@ -448,8 +448,8 @@
 - Fixed out-of-boundary reads in kernels using module_extra_buffer_size() if -n is set to 1
 - Fixed password reassembling for cracked hashes on host for slow hashes in optimized mode that are longer than 32 characters
 - Fixed race condition in potfile check during removal of empty hashes
-- Fixed race condition resulting in out of memory error on startup if multiple hashcat instances are started at the same time
-- Fixed rare case of misalignment of the status prompt when other user warnings are shown in the hashcat output
+- Fixed race condition resulting in out of memory error on startup if multiple hashdog instances are started at the same time
+- Fixed rare case of misalignment of the status prompt when other user warnings are shown in the hashdog output
 - Fixed search of tuning database - if a device was not assigned an alias, it couldn't be found in general
 - Fixed test on gzip header in wordlists and hashlists
 - Fixed too-early execution of some module functions that use non-final values opts_type and opti_type
@@ -470,8 +470,8 @@
 - OpenCL Runtime: Workaround JiT compiler deadlock on NVIDIA driver >= 465.89
 - OpenCL Runtime: Workaround JiT compiler segfault on legacy AMDGPU driver compiling RAR3 OpenCL kernel
 - RAR3 Kernels: Improved loop code, improving performance by 23%
-- Scrypt Kernels: Added a number of GPU specific optimizations per hash modes to hashcat.hctune
-- Scrypt Kernels: Added detailed documentation on device specific tunings in hashcat.hctune
+- Scrypt Kernels: Added a number of GPU specific optimizations per hash modes to hashdog.hctune
+- Scrypt Kernels: Added detailed documentation on device specific tunings in hashdog.hctune
 - Scrypt Kernels: Optimized Salsa code portion by reducing register copies and removed unnecessary byte swaps
 - Scrypt Kernels: Reduced kernel wait times by making it a true split kernel where iteration count = N value
 - Scrypt Kernels: Refactored workload configuration strategy based on available resources
@@ -481,7 +481,7 @@
 ## Technical
 ##
 
-- Bcrypt: Make BCRYPT entry for CPU in hashcat.hctune after switch to OPTS_TYPE_MP_MULTI_DISABLE (basically set -n to 1)
+- Bcrypt: Make BCRYPT entry for CPU in hashdog.hctune after switch to OPTS_TYPE_MP_MULTI_DISABLE (basically set -n to 1)
 - Benchmark: Update benchmark_deep.pl with new hash modes added (also new hash modes which were added with v6.1.0)
 - Building: Declare phony targets in Makefile to avoid conflicts of a target name with a file of the same name
 - Building: Fixed build warnings on macOS for unrar sources
@@ -498,7 +498,7 @@
 - Hash-Mode 22000 (WPA-PBKDF2-PMKID+EAPOL): Support loading a hash from command line
 - Hash-Mode 23300 (Apple iWork): Use correct buffer size allocation for AES key
 - Hash Parser: Output support for machine-readable hash lines in --show and --left and in error messages
-- Kernel Development: Kernel cache is disabled automatically when hashcat is compiled with DEBUG=1
+- Kernel Development: Kernel cache is disabled automatically when hashdog is compiled with DEBUG=1
 - Kernel Functions: Added generic AES-GCM interface see OpenCL/inc_cipher_aes-gcm.h
 - Kernel Functions: Refactored OpenCL/inc_ecc_secp256k1.cl many functions, add constants and documentation
 - Kernel Functions: Refactored OpenCL/inc_ecc_secp256k1.cl to improve usage in external programs
@@ -522,7 +522,7 @@
 ## Bugs
 ##
 
-- Fixed unresolvable relative paths in hashcat.log
+- Fixed unresolvable relative paths in hashdog.log
 
 * changes v6.0.0 -> v6.1.0
 
@@ -576,15 +576,15 @@
 ##
 
 - Refactored hash-mode integration and replaced it with a fully modularized plugin interface
-- Converted all existing hardwired hash-modes to hashcat plugins
-- Added comprehensive plugin developer guide on adding new/custom hash-modes to hashcat
+- Converted all existing hardwired hash-modes to hashdog plugins
+- Added comprehensive plugin developer guide on adding new/custom hash-modes to hashdog
 - Refactored compute backend interface to allow adding compute API other than OpenCL
-- Added CUDA as a new compute backend (enables hashcat to run on NVIDIA Jetson, IBM POWER9 w/ Nvidia V100, etc.)
+- Added CUDA as a new compute backend (enables hashdog to run on NVIDIA Jetson, IBM POWER9 w/ Nvidia V100, etc.)
 - Support automatic use of all available GPU memory when using CUDA backend
 - Support automatic use of all available CPU cores for hash-mode-specific hooks
 - Support on-the-fly loading of compressed wordlists in zip and gzip format
 - Support deflate decompression for the 7-Zip hash-mode using zlib hook
-- Added additional documentation on hashcat brain, slow-candidate interface and keyboard-layout mapping features
+- Added additional documentation on hashdog brain, slow-candidate interface and keyboard-layout mapping features
 - Keep output of --show and --left in the original ordering of the input hash file
 - Improved performance of many hash-modes
 
@@ -674,7 +674,7 @@
 - Fixed output password of "e" rule in pure and CPU rule engine when separator character is also the first letter
 - Fixed problem with usage of hexadecimal notation (\x00-\xff) within rules
 - Fixed race condition in maskfile mode by using a dedicated flag for restore execution
-- Fixed some memory leaks when hashcat is shutting down due to some file error
+- Fixed some memory leaks when hashdog is shutting down due to some file error
 - Fixed some memory leaks when mask-files are used in optimized mode
 - Fixed --status-json to correctly escape certain characters in hashes
 - Fixed the 7-Zip parser to allow the entire supported range of encrypted and decrypted data lengths
@@ -689,7 +689,7 @@
 - Building: Fix for library compilation failure due to multiple defenition of sbob_xx64()
 - Cracking bcrypt and Password Safe v2: Use feedback from the compute API backend to dynamically calculate optimal thread count
 - Dictstat: On Windows, the st_ino attribute in the stat struct is not set, which can lead to invalid cache hits. Added the filename to the database entry.
-- Documents: Added README on how to build hashcat on Cygwin, MSYS2 and WSL
+- Documents: Added README on how to build hashdog on Cygwin, MSYS2 and WSL
 - File handling: Print a truncation warning when an oversized line is detected
 - My Wallet: Added additional plaintext pattern used in newer versions
 - Office cracking: Support hash format with second block data for 40-bit oldoffice files (eliminates false positives)
@@ -713,9 +713,9 @@
 - Startup Screen: Provide an estimate of host memory required for the requested attack
 - Status Screen: Added brain status for all compute devices
 - Status Screen: Added remaining counts and changed recovered count logic
-- Status Screen: Added --status-json flag for easier machine reading of hashcat status output
-- Tab Completion: Allow using "make install" version of hashcat
-- Tuning Database: Updated hashcat.hctune with new models and refreshed vector width values
+- Status Screen: Added --status-json flag for easier machine reading of hashdog status output
+- Tab Completion: Allow using "make install" version of hashdog
+- Tuning Database: Updated hashdog.hctune with new models and refreshed vector width values
 - VeraCrypt: Added support for VeraCrypt PIM brute-force, replaced --veracrypt-pim with --veracrypt-pim-start and --veracrypt-pim-stop
 - WipZip cracking: Added two byte early reject, resulting in higher cracking speed
 - WPA/WPA2 cracking: In the potfile, replace password with PMK in order to detect already cracked networks across all WPA modes
@@ -760,7 +760,7 @@
 ##
 
 - Added support for using --stdout in brain-client mode
-- Added new option --stdin-timeout-abort, to set how long hashcat should wait for stdin input before aborting
+- Added new option --stdin-timeout-abort, to set how long hashdog should wait for stdin input before aborting
 - Added new option --kernel-threads to manually override the automatically-calculated number of threads
 - Added new option --keyboard-layout-mapping to map users keyboard layout, required to crack TC/VC system boot volumes
 
@@ -817,10 +817,10 @@
 ##
 
 - Brain: Set --brain-client-features default from 3 to 2
-- Dependencies: Added xxHash and OpenCL-Headers to deps/ in order to allow building hashcat from GitHub source release package
+- Dependencies: Added xxHash and OpenCL-Headers to deps/ in order to allow building hashdog from GitHub source release package
 - Dependencies: Removed gitmodules xxHash and OpenCL-Headers
-- Keymaps: Added hashcat keyboard mapping us.hckmap (can be used as template)
-- Keymaps: Added hashcat keyboard mapping de.hckmap
+- Keymaps: Added hashdog keyboard mapping us.hckmap (can be used as template)
+- Keymaps: Added hashdog keyboard mapping de.hckmap
 - Hardware Monitor: Renamed --gpu-temp-abort to --hwmon-temp-abort
 - Hardware Monitor: Renamed --gpu-temp-disable to --hwmon-disable
 - Memory: Limit maximum host memory allocation depending on bitness
@@ -859,14 +859,14 @@
 ## Features
 ##
 
-- Added new option --slow-candidates which allows hashcat to generate passwords on-host
-- Added new option --brain-server to start a hashcat brain server
-- Added new option --brain-client to start a hashcat brain client, automatically activates --slow-candidates
+- Added new option --slow-candidates which allows hashdog to generate passwords on-host
+- Added new option --brain-server to start a hashdog brain server
+- Added new option --brain-client to start a hashdog brain client, automatically activates --slow-candidates
 - Added new option --brain-host and --brain-port to specify ip and port of brain server, both listening and connecting
 - Added new option --brain-session to override automatically calculated brain session ID
 - Added new option --brain-session-whitelist to allow only explicit written session ID on brain server
 - Added new option --brain-password to specify the brain server authentication password
-- Added new option --brain-client-features which allows enable and disable certain features of the hashcat brain
+- Added new option --brain-client-features which allows enable and disable certain features of the hashdog brain
 
 ##
 ## Algorithms
@@ -956,7 +956,7 @@
 - General file handling: Abort if a byte order mark (BOM) was detected in a wordlist, hashlist, maskfile or rulefile
 - HCCAPX management: Use advanced hints in message_pair stored by hcxtools about endian bitness of replay counter
 - OpenCL kernels: Abort session if kernel self-test fails
-- OpenCL kernels: Add '-pure' prefix to kernel filenames to avoid problems caused by reusing existing hashcat installation folder
+- OpenCL kernels: Add '-pure' prefix to kernel filenames to avoid problems caused by reusing existing hashdog installation folder
 - OpenCL kernels: Removed the use of 'volatile' in inline assembly instructions where it is not needed
 - OpenCL kernels: Switched array pointer types in function declarations in order to be compatible with OpenCL 2.0
 - Refactored code for --progress-only and --speed-only calculation
@@ -1006,7 +1006,7 @@
 - Fixed a hash parsing problem when using --show/--left with hashes with long salts that required pure kernels
 - Fixed a logic error in storing temporary progress for slow hashes, leading to invalid speeds in status view
 - Fixed a mask-length check issue: return -1 in case the mask length is not within the password-length range
-- Fixed a missing check for return code in case hashcat.hcstat2 was not found
+- Fixed a missing check for return code in case hashdog.hcstat2 was not found
 - Fixed a race condition in combinator- and hybrid-mode where the same scratch buffer was used by multiple threads
 - Fixed a restore issue leading to "Restore value is greater than keyspace" when mask files or wordlist folders were used
 - Fixed a uninitialized value in OpenCL kernels 9720, 9820 and 10420 leading to absurd benchmark performance
@@ -1031,7 +1031,7 @@
 - Documents: Added docs/limits.txt
 - Files: Copy include/ folder and its content when SHARED is set to 1 in Makefile
 - Files: Switched back to relative current working directory on windows to work around problems with Unicode characters
-- Hashcat Context: Fixed a memory leak in shutdown phase
+- hashdog Context: Fixed a memory leak in shutdown phase
 - Hash Parser: Changed the way large strings are handled/truncated within the event buffer if they are too large to fit
 - Hash Parser: Fixed a memory leak in shutdown phase
 - Hash Parser: Fixed the use of strtok_r () calls
@@ -1152,10 +1152,10 @@
 
 - General: Update C standard from c99 to gnu99
 - Hash Parser: Improved salt-length checks for generic hash modes
-- HCdict File: Renamed file from hashcat.hcdict to hashcat.hcdict2 and add header because versions are incompatible
-- HCstat File: Add code to read LZMA compressed hashcat.hcstat2
+- HCdict File: Renamed file from hashdog.hcdict to hashdog.hcdict2 and add header because versions are incompatible
+- HCstat File: Add code to read LZMA compressed hashdog.hcstat2
 - HCstat File: Add hcstat2 support to enable masks of length up to 256, also adds a filetype header
-- HCstat File: Renamed file from hashcat.hcstat to hashcat.hcstat2 and add header because versions are incompatible
+- HCstat File: Renamed file from hashdog.hcstat to hashdog.hcstat2 and add header because versions are incompatible
 - HCtune File: Remove apple related GPU entries to workaround Trap 6 error
 - OpenCL Kernels: Added code generator for most of the switch_* functions and replaced existing code
 - OpenCL Kernels: Declared all include functions as static to reduce binary kernel cache size
@@ -1210,7 +1210,7 @@
 ##
 
 - Fixed a condition that caused hybrid attacks using a maskfile to not select all wordlists from a wordlist folder
-- Fixed a memory leak that was present when a user periodically prints hashcat status (using --status-timer)
+- Fixed a memory leak that was present when a user periodically prints hashdog status (using --status-timer)
 - Fixed a missing type specifier in a function declaration of the RACF kernel
 
 ##
@@ -1268,7 +1268,7 @@
 - HCCAPX Parser: Added support for a special bit (bit 8) of the message_pair that indicates if replay counters match
 - Parameter: Detect and error when users try to use an empty string (length 0) for parameters like --session=
 - Parameter: Detect and error when users try to use non-digit input when only digits are expected
-- Sessions: Improved string comparison in case user sets --session to "hashcat"
+- Sessions: Improved string comparison in case user sets --session to "hashdog"
 - Status View: Add rejected counter to machine-readable output
 - Status View: Rename labels Input.Mode, Input.Base, ... to Guess.Mode, Guess.Base, ...
 - Status View: Added a visual indicator to the status screen when checkpoint quit has been requested
@@ -1344,7 +1344,7 @@
 ## Technical
 ##
 
-- Building: Add SHARED variable to Makefile to choose if hashcat is build as static or shared binary (using libhashcat.so/hashcat.dll)
+- Building: Add SHARED variable to Makefile to choose if hashdog is build as static or shared binary (using libhashdog.so/hashdog.dll)
 - Building: Removed compiler option -march=native as this created problems for maintainers on various distributions
 - Building: Removed the use of RPATH on linker level
 - Building: Replaced linking of CRT_glob.o with the use of int _dowildcard
@@ -1438,7 +1438,7 @@
 ## Technical
 ##
 
-- Building: Added hashcat32.dll and hashcat64.dll makefile targets for building hashcat windows libraries
+- Building: Added hashdog32.dll and hashdog64.dll makefile targets for building hashdog windows libraries
 - Building: Added production flag in Makefile to disable all the GCC compiler options needed only for development
 - Building: Removed access to readlink() on FreeBSD
 - Building: For CYGWIN prefer to use "opencl.dll" (installed by drivers) instead of optional "cygOpenCL-1.dll"
@@ -1450,8 +1450,8 @@
 - Hardware management: Removed *throttled* message from NVML as this created more confusion than it helped
 - Hash Parser: Improved error detection of invalid hex characters where hex character are expected
 - OpenCL Runtime: Updated AMDGPU-Pro driver version check, do warn if version 16.50 is detected which is known to be broken
-- OpenCL Runtime: Updated hashcat.hctune for Iris Pro GPU on macOS
-- Potfile: In v3.10 already, the default potfile suffix changed but the note about was missing. The "hashcat.pot" became "hashcat.potfile"
+- OpenCL Runtime: Updated hashdog.hctune for Iris Pro GPU on macOS
+- Potfile: In v3.10 already, the default potfile suffix changed but the note about was missing. The "hashdog.pot" became "hashdog.potfile"
 - Potfile: Added old potfile detection, show warning message
 - Returncode: Added dedicated returncode (see docs/status_codes.txt) for shutdowns caused by --runtime and checkpoint keypress
 - Sanity: Added sanity check to disallow --speed-only in combination with -i
@@ -1461,9 +1461,9 @@
 
 * changes v3.10 -> v3.20:
 
-The hashcat core was completely refactored to be a MT-safe library (libhashcat).
-The goal was to help developers include hashcat into distributed clients or GUI frontends.
-The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspective it's a library frontend.
+The hashdog core was completely refactored to be a MT-safe library (libhashdog).
+The goal was to help developers include hashdog into distributed clients or GUI frontends.
+The CLI (hashdog.bin or hashdog.exe) works as before but from a technical perspective it's a library frontend.
 
 ##
 ## Features
@@ -1474,7 +1474,7 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 - New option --restore-file-path: Manually override the path to the restore file (useful if we want all session files in the same folder)
 - New option --opencl-info: Show details about OpenCL compatible devices like an embedded clinfo tool (useful for bug reports)
 - Documents: Added colors for warnings (yellow) and errors (red) instead of WARNING: and ERROR: prefix
-- Documents: Added hints presented to the user about optimizing performance while hashcat is running
+- Documents: Added hints presented to the user about optimizing performance while hashdog is running
 - Hardware management: Support --gpu-temp-retain for AMDGPU-Pro driver
 - Hardware management: Support --powertune-enable for AMDGPU-Pro driver
 - Password candidates: Allow words of length > 31 in wordlists for -a 0 for some slow hashes if no rules are in use
@@ -1485,7 +1485,7 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 - Status view: Show temperature, coreclock, memoryclock, fanspeed and pci-lanes for devices using AMDGPU-Pro driver
 - Status view: Show the current first and last password candidate test queued for execution per device (as in JtR)
 - Status view: Show the current position in the queue for both base and modifier (Example: Wordlist 2/5)
-- Markov statistics: Update hashcat.hcstat which is used as reference whenever the user defines a mask
+- Markov statistics: Update hashdog.hcstat which is used as reference whenever the user defines a mask
 - Charsets: Added lowercase ascii hex (?h) and uppercase ascii hex (?H) as predefined charsets
 
 ##
@@ -1512,7 +1512,7 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 - If cracking a hash-mode using unicode passwords, length check of a mask was not taking into account
 - If cracking a large salted hashlist the wordlist reject code was too slow to handle it, leading to 0H/s
 - Null-pointer dereference in outfile-check shutdown code when using --outfile-check-dir, leading to segfault
-- On startup hashcat tried to access the folder defined in INSTALL_FOLDER, leading to segfault if that folder was not existing
+- On startup hashdog tried to access the folder defined in INSTALL_FOLDER, leading to segfault if that folder was not existing
 - Random rules generator code used invalid parameter for memory copy function (M), leading to use of invalid rule
 - Sanity check for --outfile-format was broken if used in combination with --show or --left
 
@@ -1551,7 +1551,7 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 - Bash completion: Removed some v2.01 leftovers in the bash completion configuration
 - Benchmark: Do not control fan speed in benchmark mode
 - Benchmark: On macOS, some hash-modes can't compile because of macOS OpenCL runtime. Skip them and move on to the next
-- Building: Added Makefile target "main_shared", a small how-to-use libhashcat example
+- Building: Added Makefile target "main_shared", a small how-to-use libhashdog example
 - Building: Added many additional compiler warning flags in Makefile to improve static code error detection
 - Building: Added missing includes for FreeBSD
 - Building: Added some types for windows only in case _BASETSD_H was not set
@@ -1592,7 +1592,7 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 - Hardware management: Replaced NVML registry functions macros with their ascii versions (Adds NVML support for XP)
 - Hashlist loading: Do not load data from hashfile if hashfile changed during runtime
 - Kernel cache: Fixed checksum building on oversized device version or driver version strings
-- Logging: Improved variable names in hashcat.log
+- Logging: Improved variable names in hashdog.log
 - Loopback: Refactored --loopback support completely, no longer a recursive function
 - Memory management: Fixed some memory leaks on shutdown
 - Memory management: Got rid of all global variables
@@ -1669,14 +1669,14 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 ##
 
 - Fixed a bug where CRAM MD5 checked salt length instead of hash length
-- Fixed a bug where hashcat is suppressing --machine-readable output in the final status update
-- Fixed a bug where hashcat did not check the return of realpath() and crashes uncontrolled if the path does not exist
-- Fixed a bug where hashcat crashes for accessing deallocated buffer if user spams "s" shortly before hashcat shuts down
-- Fixed a bug where hashcat crashes in case of a scrypt P setting > 1
-- Fixed a bug where hashcat did not correctly use the newly cracked plains whenever --loopback or the induction folder was used
-- Fixed a bug where hashcat did not correctly remove hashes of type WPA/WPA2 even if present in potfile
-- Fixed a bug where hashcat reported an invalid password for a zero-length password in LM
-- Fixed a bug where hashcat did not take into account how long it takes to prepare a session when auto-aborting with --runtime is in use
+- Fixed a bug where hashdog is suppressing --machine-readable output in the final status update
+- Fixed a bug where hashdog did not check the return of realpath() and crashes uncontrolled if the path does not exist
+- Fixed a bug where hashdog crashes for accessing deallocated buffer if user spams "s" shortly before hashdog shuts down
+- Fixed a bug where hashdog crashes in case of a scrypt P setting > 1
+- Fixed a bug where hashdog did not correctly use the newly cracked plains whenever --loopback or the induction folder was used
+- Fixed a bug where hashdog did not correctly remove hashes of type WPA/WPA2 even if present in potfile
+- Fixed a bug where hashdog reported an invalid password for a zero-length password in LM
+- Fixed a bug where hashdog did not take into account how long it takes to prepare a session when auto-aborting with --runtime is in use
 - Fixed a bug where some kernels used COMPARE_M_SIMD instead of COMPARE_S_SIMD in singlehash mode
 
 ##
@@ -1687,8 +1687,8 @@ The CLI (hashcat.bin or hashcat.exe) works as before but from a technical perspe
 
 * changes v2.01 -> v3.00:
 
-This release markes the fusion of "hashcat" and "oclHashcat" into "hashcat".
-It combines all features of all hashcat projects in one project.
+This release markes the fusion of "hashdog" and "oclhashdog" into "hashdog".
+It combines all features of all hashdog projects in one project.
 
 ##
 ## Features
@@ -1746,7 +1746,7 @@ It combines all features of all hashcat projects in one project.
 ## Improvements
 ##
 
-- Reordering of files to help integration into linux distributions ~/.hashcat etc
+- Reordering of files to help integration into linux distributions ~/.hashdog etc
 - Use a profile directory to write temporary files (session, potfile etc.)
 - Workaround dependencies on AMD APP-SDK AMD ADL, NV CUDA-SDK, NV ForceWare, NVML and NVAPI; they are no longer required
 - Load external libraries dynamic at runtime instead of link them static at compile-time
@@ -1796,7 +1796,7 @@ It combines all features of all hashcat projects in one project.
 - Added several macros to allow writing optimized code for the different OpenCL platforms
 - Replaced typedef for bool with stdbool.h
 - Added special DEBUG environment variables to the makefile
-- Hashcat now acquires an exclusive lock before writing to any file
+- hashdog now acquires an exclusive lock before writing to any file
 - Changed buffers to not use same buffer for both input and output at the same time with snprintf()
 - Check for allocatable device-memory depending on kernel_accel amplifier before trying to allocate
 - Added additional check for max. ESSID length to prevent possible crashes
@@ -1805,7 +1805,7 @@ It combines all features of all hashcat projects in one project.
 - Increased maximum hash line size to 0x50000
 - Run weak-hash checks only in straight-attack mode, this greatly reduces code complexity
 - Restrict loopback option to straight attack-mode
-- Moved rules_optimize to hashcat-utils
+- Moved rules_optimize to hashdog-utils
 - Stick to older libOpenCL in binary package to avoid errors like this: version `OPENCL_2.0' not found
 - Tightened hash parser for several algorithms
 - Updated old RC4 code in Kerberos 5

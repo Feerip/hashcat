@@ -193,8 +193,8 @@ typedef struct brain_server_client_options
 
 int   brain_logging                     (FILE *stream, const int client_idx, const char *format, ...);
 
-u32   brain_compute_session             (hashcat_ctx_t *hashcat_ctx);
-u32   brain_compute_attack              (hashcat_ctx_t *hashcat_ctx);
+u32   brain_compute_session             (hashdog_ctx_t *hashdog_ctx);
+u32   brain_compute_attack              (hashdog_ctx_t *hashdog_ctx);
 u64   brain_compute_attack_wordlist     (const char *filename);
 
 u32   brain_auth_challenge              (void);
@@ -249,7 +249,7 @@ void  brain_server_db_attack_init       (brain_server_db_attack_t *brain_server_
 bool  brain_server_db_attack_realloc    (brain_server_db_attack_t *brain_server_db_attack, const i64 new_long_cnt, const i64 new_short_cnt);
 void  brain_server_db_attack_free       (brain_server_db_attack_t *brain_server_db_attack);
 
-int   brain_ctx_init                    (hashcat_ctx_t *hashcat_ctx);
-void  brain_ctx_destroy                 (hashcat_ctx_t *hashcat_ctx);
+int   brain_ctx_init                    (hashdog_ctx_t *hashdog_ctx);
+void  brain_ctx_destroy                 (hashdog_ctx_t *hashdog_ctx);
 
 #endif // _BRAIN_H

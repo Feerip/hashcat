@@ -11,9 +11,9 @@
 #include "folder.h"
 #include "ext_sysfs_amdgpu.h"
 
-bool sysfs_amdgpu_init (void *hashcat_ctx)
+bool sysfs_amdgpu_init (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   SYSFS_AMDGPU_PTR *sysfs_amdgpu = (SYSFS_AMDGPU_PTR *) hwmon_ctx->hm_sysfs_amdgpu;
 
@@ -30,9 +30,9 @@ bool sysfs_amdgpu_init (void *hashcat_ctx)
   return r;
 }
 
-void sysfs_amdgpu_close (void *hashcat_ctx)
+void sysfs_amdgpu_close (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   SYSFS_AMDGPU_PTR *sysfs_amdgpu = (SYSFS_AMDGPU_PTR *) hwmon_ctx->hm_sysfs_amdgpu;
 
@@ -42,9 +42,9 @@ void sysfs_amdgpu_close (void *hashcat_ctx)
   }
 }
 
-char *hm_SYSFS_AMDGPU_get_syspath_device (void *hashcat_ctx, const int backend_device_idx)
+char *hm_SYSFS_AMDGPU_get_syspath_device (void *hashdog_ctx, const int backend_device_idx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_device_idx];
 
@@ -55,13 +55,13 @@ char *hm_SYSFS_AMDGPU_get_syspath_device (void *hashcat_ctx, const int backend_d
   return syspath;
 }
 
-char *hm_SYSFS_AMDGPU_get_syspath_hwmon (void *hashcat_ctx, const int backend_device_idx)
+char *hm_SYSFS_AMDGPU_get_syspath_hwmon (void *hashdog_ctx, const int backend_device_idx)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL)
   {
-    event_log_error (hashcat_ctx, "hm_SYSFS_AMDGPU_get_syspath_device() failed.");
+    event_log_error (hashdog_ctx, "hm_SYSFS_AMDGPU_get_syspath_device() failed.");
 
     return NULL;
   }
@@ -74,7 +74,7 @@ char *hm_SYSFS_AMDGPU_get_syspath_hwmon (void *hashcat_ctx, const int backend_de
 
   if (hwmonN == NULL)
   {
-    event_log_error (hashcat_ctx, "First_file_in_directory() failed.");
+    event_log_error (hashdog_ctx, "First_file_in_directory() failed.");
 
     hcfree (syspath);
 
@@ -93,9 +93,9 @@ char *hm_SYSFS_AMDGPU_get_syspath_hwmon (void *hashcat_ctx, const int backend_de
   return hwmon;
 }
 
-int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_device_idx, int *val)
+int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashdog_ctx, const int backend_device_idx, int *val)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_hwmon (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_hwmon (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL) return -1;
 
@@ -111,7 +111,7 @@ int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_
 
   if (hc_fopen (&fp_cur, path_cur, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path_cur, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path_cur, strerror (errno));
 
     hcfree (path_cur);
     hcfree (path_max);
@@ -125,7 +125,7 @@ int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_
   {
     hc_fclose (&fp_cur);
 
-    event_log_error (hashcat_ctx, "%s: unexpected data.", path_cur);
+    event_log_error (hashdog_ctx, "%s: unexpected data.", path_cur);
 
     hcfree (path_cur);
     hcfree (path_max);
@@ -139,7 +139,7 @@ int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_
 
   if (hc_fopen (&fp_max, path_max, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path_max, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path_max, strerror (errno));
 
     hcfree (path_cur);
     hcfree (path_max);
@@ -153,7 +153,7 @@ int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_
   {
     hc_fclose (&fp_max);
 
-    event_log_error (hashcat_ctx, "%s: unexpected data.", path_max);
+    event_log_error (hashdog_ctx, "%s: unexpected data.", path_max);
 
     hcfree (path_cur);
     hcfree (path_max);
@@ -165,7 +165,7 @@ int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_
 
   if (pwm1_max == 0)
   {
-    event_log_error (hashcat_ctx, "%s: pwm1_max cannot be 0.", path_max);
+    event_log_error (hashdog_ctx, "%s: pwm1_max cannot be 0.", path_max);
 
     hcfree (path_cur);
     hcfree (path_max);
@@ -185,9 +185,9 @@ int hm_SYSFS_AMDGPU_get_fan_speed_current (void *hashcat_ctx, const int backend_
   return 0;
 }
 
-int hm_SYSFS_AMDGPU_get_temperature_current (void *hashcat_ctx, const int backend_device_idx, int *val)
+int hm_SYSFS_AMDGPU_get_temperature_current (void *hashdog_ctx, const int backend_device_idx, int *val)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_hwmon (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_hwmon (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL) return -1;
 
@@ -201,7 +201,7 @@ int hm_SYSFS_AMDGPU_get_temperature_current (void *hashcat_ctx, const int backen
 
   if (hc_fopen (&fp, path, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path, strerror (errno));
 
     hcfree (path);
 
@@ -214,7 +214,7 @@ int hm_SYSFS_AMDGPU_get_temperature_current (void *hashcat_ctx, const int backen
   {
     hc_fclose (&fp);
 
-    event_log_error (hashcat_ctx, "%s: unexpected data.", path);
+    event_log_error (hashdog_ctx, "%s: unexpected data.", path);
 
     hcfree (path);
 
@@ -230,9 +230,9 @@ int hm_SYSFS_AMDGPU_get_temperature_current (void *hashcat_ctx, const int backen
   return 0;
 }
 
-int hm_SYSFS_AMDGPU_get_pp_dpm_sclk (void *hashcat_ctx, const int backend_device_idx, int *val)
+int hm_SYSFS_AMDGPU_get_pp_dpm_sclk (void *hashdog_ctx, const int backend_device_idx, int *val)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL) return -1;
 
@@ -246,7 +246,7 @@ int hm_SYSFS_AMDGPU_get_pp_dpm_sclk (void *hashcat_ctx, const int backend_device
 
   if (hc_fopen (&fp, path, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path, strerror (errno));
 
     hcfree (path);
 
@@ -285,9 +285,9 @@ int hm_SYSFS_AMDGPU_get_pp_dpm_sclk (void *hashcat_ctx, const int backend_device
   return 0;
 }
 
-int hm_SYSFS_AMDGPU_get_pp_dpm_mclk (void *hashcat_ctx, const int backend_device_idx, int *val)
+int hm_SYSFS_AMDGPU_get_pp_dpm_mclk (void *hashdog_ctx, const int backend_device_idx, int *val)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL) return -1;
 
@@ -301,7 +301,7 @@ int hm_SYSFS_AMDGPU_get_pp_dpm_mclk (void *hashcat_ctx, const int backend_device
 
   if (hc_fopen (&fp, path, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path, strerror (errno));
 
     hcfree (path);
 
@@ -340,9 +340,9 @@ int hm_SYSFS_AMDGPU_get_pp_dpm_mclk (void *hashcat_ctx, const int backend_device
   return 0;
 }
 
-int hm_SYSFS_AMDGPU_get_pp_dpm_pcie (void *hashcat_ctx, const int backend_device_idx, int *val)
+int hm_SYSFS_AMDGPU_get_pp_dpm_pcie (void *hashdog_ctx, const int backend_device_idx, int *val)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL) return -1;
 
@@ -356,7 +356,7 @@ int hm_SYSFS_AMDGPU_get_pp_dpm_pcie (void *hashcat_ctx, const int backend_device
 
   if (hc_fopen (&fp, path, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path, strerror (errno));
 
     hcfree (path);
 
@@ -391,9 +391,9 @@ int hm_SYSFS_AMDGPU_get_pp_dpm_pcie (void *hashcat_ctx, const int backend_device
   return 0;
 }
 
-int hm_SYSFS_AMDGPU_get_gpu_busy_percent (void *hashcat_ctx, const int backend_device_idx, int *val)
+int hm_SYSFS_AMDGPU_get_gpu_busy_percent (void *hashdog_ctx, const int backend_device_idx, int *val)
 {
-  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashcat_ctx, backend_device_idx);
+  char *syspath = hm_SYSFS_AMDGPU_get_syspath_device (hashdog_ctx, backend_device_idx);
 
   if (syspath == NULL) return -1;
 
@@ -407,7 +407,7 @@ int hm_SYSFS_AMDGPU_get_gpu_busy_percent (void *hashcat_ctx, const int backend_d
 
   if (hc_fopen (&fp, path, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path, strerror (errno));
 
     hcfree (path);
 

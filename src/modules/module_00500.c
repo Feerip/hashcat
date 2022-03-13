@@ -22,7 +22,7 @@ static const u64   KERN_TYPE      = 500;
 static const u32   OPTI_TYPE      = OPTI_TYPE_ZERO_BYTE;
 static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$1$38652870$DUjsu4TTlTsOe/xxZ05uf/";
 
 typedef struct md5crypt_tmp

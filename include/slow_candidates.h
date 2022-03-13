@@ -52,7 +52,7 @@ typedef struct extra_info_mask
 
 } extra_info_mask_t;
 
-void slow_candidates_seek (hashcat_ctx_t *hashcat_ctx, void *extra_info, const u64 cur, const u64 end);
-void slow_candidates_next (hashcat_ctx_t *hashcat_ctx, void *extra_info);
+void slow_candidates_seek (hashdog_ctx_t *hashdog_ctx, void *extra_info, const u64 cur, const u64 end);
+void slow_candidates_next (hashdog_ctx_t *hashdog_ctx, void *extra_info);
 
 #endif // _SLOW_CANDIDATES_H

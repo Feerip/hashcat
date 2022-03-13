@@ -40,10 +40,10 @@ static const int DEFAULT_BENCHMARK_ALGORITHMS_BUF[] =
   -1,
 };
 
-int benchmark_next (hashcat_ctx_t *hashcat_ctx)
+int benchmark_next (hashdog_ctx_t *hashdog_ctx)
 {
-  const folder_config_t *folder_config = hashcat_ctx->folder_config;
-  const user_options_t  *user_options  = hashcat_ctx->user_options;
+  const folder_config_t *folder_config = hashdog_ctx->folder_config;
+  const user_options_t  *user_options  = hashdog_ctx->user_options;
 
   static int cur = 0;
 

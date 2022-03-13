@@ -267,7 +267,7 @@ KERNEL_FQ void m22100_loop (KERN_ATTR_TMPS_ESALT (bitlocker_tmp_t, bitlocker_t))
 
     /**
      * On NVIDIA, the __sync_threads() is not working as expected if called from inside a loop.
-     * This is a unique situation across all hashcat kernels so far.
+     * This is a unique situation across all hashdog kernels so far.
      * From CUDA manual:
      *   __syncthreads() is allowed in conditional code but only if the conditional evaluates identically across the entire thread block,
      *   otherwise the code execution is likely to hang or produce unintended side effects.

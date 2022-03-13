@@ -8,5 +8,5 @@ Performance Notes:
 
 Also read this:
 
-https://hashcat.net/wiki/doku.php?id=frequently_asked_questions#how_to_create_more_work_for_full_speed
+https://hashdog.net/wiki/doku.php?id=frequently_asked_questions#how_to_create_more_work_for_full_speed
 

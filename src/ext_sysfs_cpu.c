@@ -11,9 +11,9 @@
 #include "folder.h"
 #include "ext_sysfs_cpu.h"
 
-bool sysfs_cpu_init (void *hashcat_ctx)
+bool sysfs_cpu_init (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   SYSFS_CPU_PTR *sysfs_cpu = (SYSFS_CPU_PTR *) hwmon_ctx->hm_sysfs_cpu;
 
@@ -30,9 +30,9 @@ bool sysfs_cpu_init (void *hashcat_ctx)
   return r;
 }
 
-void sysfs_cpu_close (void *hashcat_ctx)
+void sysfs_cpu_close (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   SYSFS_CPU_PTR *sysfs_cpu = (SYSFS_CPU_PTR *) hwmon_ctx->hm_sysfs_cpu;
 
@@ -88,7 +88,7 @@ char *hm_SYSFS_CPU_get_syspath_hwmon ()
   return NULL;
 }
 
-int hm_SYSFS_CPU_get_temperature_current (void *hashcat_ctx, int *val)
+int hm_SYSFS_CPU_get_temperature_current (void *hashdog_ctx, int *val)
 {
   char *syspath = hm_SYSFS_CPU_get_syspath_hwmon ();
 
@@ -104,7 +104,7 @@ int hm_SYSFS_CPU_get_temperature_current (void *hashcat_ctx, int *val)
 
   if (hc_fopen_raw (&fp, path, "r") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", path, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", path, strerror (errno));
 
     hcfree (path);
 
@@ -117,7 +117,7 @@ int hm_SYSFS_CPU_get_temperature_current (void *hashcat_ctx, int *val)
   {
     hc_fclose (&fp);
 
-    event_log_error (hashcat_ctx, "%s: unexpected data.", path);
+    event_log_error (hashdog_ctx, "%s: unexpected data.", path);
 
     hcfree (path);
 
@@ -133,7 +133,7 @@ int hm_SYSFS_CPU_get_temperature_current (void *hashcat_ctx, int *val)
   return 0;
 }
 
-bool read_proc_stat (void *hashcat_ctx, proc_stat_t *proc_stat)
+bool read_proc_stat (void *hashdog_ctx, proc_stat_t *proc_stat)
 {
   FILE *fd = fopen (PROC_STAT, "r");
 
@@ -155,7 +155,7 @@ bool read_proc_stat (void *hashcat_ctx, proc_stat_t *proc_stat)
 
   if (e != 10)
   {
-    event_log_error (hashcat_ctx, "%s: unexpected data.", PROC_STAT);
+    event_log_error (hashdog_ctx, "%s: unexpected data.", PROC_STAT);
 
     return false;
   }
@@ -163,13 +163,13 @@ bool read_proc_stat (void *hashcat_ctx, proc_stat_t *proc_stat)
   return true;
 }
 
-int hm_SYSFS_CPU_get_utilization_current (void *hashcat_ctx, int *val)
+int hm_SYSFS_CPU_get_utilization_current (void *hashdog_ctx, int *val)
 {
   static proc_stat_t prev;
 
   proc_stat_t cur;
 
-  if (read_proc_stat (hashcat_ctx, &cur) == false) return false;
+  if (read_proc_stat (hashdog_ctx, &cur) == false) return false;
 
   unsigned long prev_idle = prev.idle
                           + prev.iowait;

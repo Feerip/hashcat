@@ -1,11 +1,11 @@
 *.exe
 *.bin
 *.app
-hashcat
-hashcat.exe
-libhashcat.so.*
-libhashcat*.dylib
-hashcat.dll
+hashdog
+hashdog.exe
+libhashdog.so.*
+libhashdog*.dylib
+hashdog.dll
 *.potfile
 *.restore
 *.dictstat2

@@ -14,10 +14,10 @@
 #include "status.h"
 #include "monitor.h"
 
-int get_runtime_left (const hashcat_ctx_t *hashcat_ctx)
+int get_runtime_left (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t   *status_ctx   = hashcat_ctx->status_ctx;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const status_ctx_t   *status_ctx   = hashdog_ctx->status_ctx;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   double msec_paused = status_ctx->msec_paused;
 
@@ -40,14 +40,14 @@ int get_runtime_left (const hashcat_ctx_t *hashcat_ctx)
   return runtime_left;
 }
 
-static int monitor (hashcat_ctx_t *hashcat_ctx)
+static int monitor (hashdog_ctx_t *hashdog_ctx)
 {
-  hashes_t       *hashes        = hashcat_ctx->hashes;
-  hwmon_ctx_t    *hwmon_ctx     = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t  *backend_ctx   = hashcat_ctx->backend_ctx;
-  restore_ctx_t  *restore_ctx   = hashcat_ctx->restore_ctx;
-  status_ctx_t   *status_ctx    = hashcat_ctx->status_ctx;
-  user_options_t *user_options  = hashcat_ctx->user_options;
+  hashes_t       *hashes        = hashdog_ctx->hashes;
+  hwmon_ctx_t    *hwmon_ctx     = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t  *backend_ctx   = hashdog_ctx->backend_ctx;
+  restore_ctx_t  *restore_ctx   = hashdog_ctx->restore_ctx;
+  status_ctx_t   *status_ctx    = hashdog_ctx->status_ctx;
+  user_options_t *user_options  = hashdog_ctx->user_options;
 
   bool runtime_check      = false;
   bool remove_check       = false;
@@ -122,25 +122,25 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
 
         if ((backend_ctx->devices_param[backend_devices_idx].opencl_device_type & CL_DEVICE_TYPE_GPU) == 0) continue;
 
-        const int temperature = hm_get_temperature_with_devices_idx (hashcat_ctx, backend_devices_idx);
+        const int temperature = hm_get_temperature_with_devices_idx (hashdog_ctx, backend_devices_idx);
 
         if (temperature > (int) user_options->hwmon_temp_abort)
         {
           EVENT_DATA (EVENT_MONITOR_TEMP_ABORT, &backend_devices_idx, sizeof (int));
 
-          myabort (hashcat_ctx);
+          myabort (hashdog_ctx);
         }
         #if defined (__APPLE__)
         // experimental feature, check the "Sensor Graphic Hot" sensor through IOKIT/SMC to catch a GPU overtemp alarm
         else if (temperature > (int) (user_options->hwmon_temp_abort - 10))
         {
-          if (hm_IOKIT_SMCGetSensorGraphicHot (hashcat_ctx) == 1)
+          if (hm_IOKIT_SMCGetSensorGraphicHot (hashdog_ctx) == 1)
           {
-            event_log_error (hashcat_ctx, "hm_IOKIT_SMCGetSensorGraphicHot(): Sensor Graphics HoT, GPU Overtemp");
+            event_log_error (hashdog_ctx, "hm_IOKIT_SMCGetSensorGraphicHot(): Sensor Graphics HoT, GPU Overtemp");
 
             EVENT_DATA (EVENT_MONITOR_TEMP_ABORT, &backend_devices_idx, sizeof (int));
 
-            myabort (hashcat_ctx);
+            myabort (hashdog_ctx);
           }
         }
         #endif
@@ -153,7 +153,7 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
         if (device_param->skipped == true) continue;
         if (device_param->skipped_warning == true) continue;
 
-        const int rc_throttle = hm_get_throttle_with_devices_idx (hashcat_ctx, backend_devices_idx);
+        const int rc_throttle = hm_get_throttle_with_devices_idx (hashdog_ctx, backend_devices_idx);
 
         if (rc_throttle == -1) continue;
 
@@ -181,13 +181,13 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
       if (restore_left == 0)
       {
         // Can't return from monitor for that reasons, see:
-        // https://github.com/hashcat/hashcat/issues/2704
+        // https://github.com/hashdog/hashdog/issues/2704
         //
-        //const int rc = cycle_restore (hashcat_ctx);
+        //const int rc = cycle_restore (hashdog_ctx);
         //
         //if (rc == -1) return -1;
 
-        cycle_restore (hashcat_ctx);
+        cycle_restore (hashdog_ctx);
 
         restore_left = user_options->restore_timer;
       }
@@ -195,13 +195,13 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
 
     if ((runtime_check == true) && (status_ctx->runtime_start > 0))
     {
-      const int runtime_left = get_runtime_left (hashcat_ctx);
+      const int runtime_left = get_runtime_left (hashdog_ctx);
 
       if (runtime_left <= 0)
       {
         EVENT_DATA (EVENT_MONITOR_RUNTIME_LIMIT, NULL, 0);
 
-        myabort_runtime (hashcat_ctx);
+        myabort_runtime (hashdog_ctx);
       }
     }
 
@@ -216,13 +216,13 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
           hashes->digests_saved = hashes->digests_done;
 
           // Can't return from monitor for that reasons, see:
-          // https://github.com/hashcat/hashcat/issues/2704
+          // https://github.com/hashdog/hashdog/issues/2704
           //
-          // const int rc = save_hash (hashcat_ctx);
+          // const int rc = save_hash (hashdog_ctx);
           //
           // if (rc == -1) return -1;
 
-          save_hash (hashcat_ctx);
+          save_hash (hashdog_ctx);
         }
 
         remove_left = user_options->remove_timer;
@@ -264,11 +264,11 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
 
         exec_cnt++;
 
-        const double exec = status_get_exec_msec_dev (hashcat_ctx, backend_devices_idx);
+        const double exec = status_get_exec_msec_dev (hashdog_ctx, backend_devices_idx);
 
         exec_total += exec;
 
-        const int util = hm_get_utilization_with_devices_idx (hashcat_ctx, backend_devices_idx);
+        const int util = hm_get_utilization_with_devices_idx (hashdog_ctx, backend_devices_idx);
 
         if (util == -1) continue;
 
@@ -305,7 +305,7 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
 
     if (user_options->stdin_timeout_abort != 0)
     {
-      if (status_get_progress_done (hashcat_ctx) == 0)
+      if (status_get_progress_done (hashdog_ctx) == 0)
       {
         if (status_ctx->stdin_read_timeout_cnt > 0)
         {
@@ -313,7 +313,7 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
           {
             EVENT_DATA (EVENT_MONITOR_NOINPUT_ABORT, NULL, 0);
 
-            myabort (hashcat_ctx);
+            myabort (hashdog_ctx);
 
             status_ctx->shutdown_inner = true;
 
@@ -336,13 +336,13 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
     if (hashes->digests_saved != hashes->digests_done)
     {
       // Can't return from monitor for that reasons, see:
-      // https://github.com/hashcat/hashcat/issues/2704
+      // https://github.com/hashdog/hashdog/issues/2704
       //
-      // const int rc = save_hash (hashcat_ctx);
+      // const int rc = save_hash (hashdog_ctx);
       //
       // if (rc == -1) return -1;
 
-      save_hash (hashcat_ctx);
+      save_hash (hashdog_ctx);
     }
   }
 
@@ -351,13 +351,13 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
   if (restore_check == true)
   {
     // Can't return from monitor for that reasons, see:
-    // https://github.com/hashcat/hashcat/issues/2704
+    // https://github.com/hashdog/hashdog/issues/2704
     //
-    // const int rc = cycle_restore (hashcat_ctx);
+    // const int rc = cycle_restore (hashdog_ctx);
     //
     // if (rc == -1) return -1;
 
-    cycle_restore (hashcat_ctx);
+    cycle_restore (hashdog_ctx);
   }
 
   return 0;
@@ -365,9 +365,9 @@ static int monitor (hashcat_ctx_t *hashcat_ctx)
 
 HC_API_CALL void *thread_monitor (void *p)
 {
-  hashcat_ctx_t *hashcat_ctx = (hashcat_ctx_t *) p;
+  hashdog_ctx_t *hashdog_ctx = (hashdog_ctx_t *) p;
 
-  monitor (hashcat_ctx); // we should give back some useful returncode
+  monitor (hashdog_ctx); // we should give back some useful returncode
 
   return NULL;
 }

@@ -11,9 +11,9 @@
 #include "shared.h"
 #include "logfile.h"
 
-void logfile_generate_topid (hashcat_ctx_t *hashcat_ctx)
+void logfile_generate_topid (hashdog_ctx_t *hashdog_ctx)
 {
-  logfile_ctx_t *logfile_ctx = hashcat_ctx->logfile_ctx;
+  logfile_ctx_t *logfile_ctx = hashdog_ctx->logfile_ctx;
 
   if (logfile_ctx->enabled == false) return;
 
@@ -24,9 +24,9 @@ void logfile_generate_topid (hashcat_ctx_t *hashcat_ctx)
   snprintf (logfile_ctx->topid, 40, "TOP.%08x.%08x", (u32) v.tv_sec, (u32) v.tv_usec);
 }
 
-void logfile_generate_subid (hashcat_ctx_t *hashcat_ctx)
+void logfile_generate_subid (hashdog_ctx_t *hashdog_ctx)
 {
-  logfile_ctx_t *logfile_ctx = hashcat_ctx->logfile_ctx;
+  logfile_ctx_t *logfile_ctx = hashdog_ctx->logfile_ctx;
 
   if (logfile_ctx->enabled == false) return;
 
@@ -37,9 +37,9 @@ void logfile_generate_subid (hashcat_ctx_t *hashcat_ctx)
   snprintf (logfile_ctx->subid, 40, "SUB.%08x.%08x", (u32) v.tv_sec, (u32) v.tv_usec);
 }
 
-void logfile_append (hashcat_ctx_t *hashcat_ctx, const char *fmt, ...)
+void logfile_append (hashdog_ctx_t *hashdog_ctx, const char *fmt, ...)
 {
-  logfile_ctx_t *logfile_ctx = hashcat_ctx->logfile_ctx;
+  logfile_ctx_t *logfile_ctx = hashdog_ctx->logfile_ctx;
 
   if (logfile_ctx->enabled == false) return;
 
@@ -47,7 +47,7 @@ void logfile_append (hashcat_ctx_t *hashcat_ctx, const char *fmt, ...)
 
   if (hc_fopen (&fp, logfile_ctx->logfile, "ab") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", logfile_ctx->logfile, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", logfile_ctx->logfile, strerror (errno));
 
     return;
   }
@@ -71,11 +71,11 @@ void logfile_append (hashcat_ctx_t *hashcat_ctx, const char *fmt, ...)
   hc_fclose (&fp);
 }
 
-int logfile_init (hashcat_ctx_t *hashcat_ctx)
+int logfile_init (hashdog_ctx_t *hashdog_ctx)
 {
-  folder_config_t *folder_config = hashcat_ctx->folder_config;
-  logfile_ctx_t   *logfile_ctx   = hashcat_ctx->logfile_ctx;
-  user_options_t  *user_options  = hashcat_ctx->user_options;
+  folder_config_t *folder_config = hashdog_ctx->folder_config;
+  logfile_ctx_t   *logfile_ctx   = hashdog_ctx->logfile_ctx;
+  user_options_t  *user_options  = hashdog_ctx->user_options;
 
   if (user_options->logfile_disable == true) return 0;
 
@@ -89,9 +89,9 @@ int logfile_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void logfile_destroy (hashcat_ctx_t *hashcat_ctx)
+void logfile_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  logfile_ctx_t *logfile_ctx = hashcat_ctx->logfile_ctx;
+  logfile_ctx_t *logfile_ctx = hashdog_ctx->logfile_ctx;
 
   if (logfile_ctx->enabled == false) return;
 

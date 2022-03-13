@@ -70,12 +70,12 @@ static bool generate_bitmaps (const u32 digests_cnt, const u32 dgst_size, const 
   return false;
 }
 
-int bitmap_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int bitmap_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  hashes_t       *hashes       = hashcat_ctx->hashes;
-  bitmap_ctx_t   *bitmap_ctx   = hashcat_ctx->bitmap_ctx;
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  hashes_t       *hashes       = hashdog_ctx->hashes;
+  bitmap_ctx_t   *bitmap_ctx   = hashdog_ctx->bitmap_ctx;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   bitmap_ctx->enabled = false;
 
@@ -165,9 +165,9 @@ int bitmap_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void bitmap_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void bitmap_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  bitmap_ctx_t *bitmap_ctx = hashcat_ctx->bitmap_ctx;
+  bitmap_ctx_t *bitmap_ctx = hashdog_ctx->bitmap_ctx;
 
   if (bitmap_ctx->enabled == false) return;
 

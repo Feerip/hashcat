@@ -12,7 +12,7 @@ environment:
       CYG_SETUP: setup-x86.exe
       BASH: C:\cygwin\bin\bash
       CC: gcc
-    # Disable MINGW test. It seems AppVeyor is no longer supporting MSYS2. Not a hashcat problem.
+    # Disable MINGW test. It seems AppVeyor is no longer supporting MSYS2. Not a hashdog problem.
     # See BUILD_MSYS2.md for local test
     #- MSYSTEM: MINGW64
     #  MSYS_CACHE: C:\msys64\var\cache\pacman\pkg
@@ -50,17 +50,17 @@ build_script:
 
 test_script:
   # some file globbing tests
-  #  1. hash file should not exist and therefore hashcat should complain (if it does not there might be a problem)
+  #  1. hash file should not exist and therefore hashdog should complain (if it does not there might be a problem)
   #  2. hash file should expand to example0.hash and succeed
   - ps: >-
-      & $env:BASH -lc "cd '$env:APPVEYOR_BUILD_FOLDER' && ./hashcat.exe -m 0 --show *file_not_found.hash" 2>&1 | out-null
+      & $env:BASH -lc "cd '$env:APPVEYOR_BUILD_FOLDER' && ./hashdog.exe -m 0 --show *file_not_found.hash" 2>&1 | out-null
 
       if ($LastExitCode -eq 0)
       {
         throw "test failed"
       }
 
-      & $env:BASH -lc "cd '$env:APPVEYOR_BUILD_FOLDER' && ./hashcat.exe -m 0 --show *ple0.hash"
+      & $env:BASH -lc "cd '$env:APPVEYOR_BUILD_FOLDER' && ./hashdog.exe -m 0 --show *ple0.hash"
 
 only_commits:
   files:

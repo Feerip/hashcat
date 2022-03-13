@@ -957,7 +957,7 @@ int select_read_timeout_console (const int sec)
 
 #endif
 
-const char *strhashcategory (const u32 hash_category)
+const char *strhashdogegory (const u32 hash_category)
 {
   switch (hash_category)
   {

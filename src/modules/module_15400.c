@@ -24,7 +24,7 @@ static const u32   OPTI_TYPE      = OPTI_TYPE_ZERO_BYTE
                                   | OPTI_TYPE_RAW_HASH;
 static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat_hashcat_hashcat_hashcat_";
+static const char *ST_PASS        = "hashdog_hashdog_hashdog_hashdog_";
 static const char *ST_HASH        = "$chacha20$*0400000000000003*16*0200000000000001*5152535455565758*6b05fe554b0bc3b3";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }

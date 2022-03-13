@@ -27,7 +27,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_BE
                                   | OPTS_TYPE_PT_ADDBITS15
                                   | OPTS_TYPE_SUGGEST_KG;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "597056:3600";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
@@ -48,10 +48,10 @@ const char *module_st_pass        (MAYBE_UNUSED const hashconfig_t *hashconfig, 
 bool module_unstable_warning (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra, MAYBE_UNUSED const hc_device_param_t *device_param)
 {
   // amdgpu-pro-20.50-1234664-ubuntu-20.04 (legacy)
-  // test_1619943729/test_report.log:! unhandled return code 255, cmdline : cat test_1619943729/18100_passwords.txt | ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 1 -a 0 -m 18100 test_1619943729/18100_hashes.txt
-  // test_1619950656/test_report.log:! unhandled return code 255, cmdline : ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 4 -a 3 -m 18100  test_1619950656/18100_multihash_bruteforce.txt test_1619950656/18100_passwords.txt
-  // test_1619955152/test_report.log:! unhandled return code 255, cmdline : cat test_1619955152/18100_passwords.txt | ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 0 -m 18100 test_1619955152/18100_hashes.txt
-  // test_1619967069/test_report.log:! unhandled return code 255, cmdline : ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 3 -m 18100  test_1619967069/18100_multihash_bruteforce.txt test_1619967069/18100_passwords.txt
+  // test_1619943729/test_report.log:! unhandled return code 255, cmdline : cat test_1619943729/18100_passwords.txt | ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 1 -a 0 -m 18100 test_1619943729/18100_hashes.txt
+  // test_1619950656/test_report.log:! unhandled return code 255, cmdline : ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 4 -a 3 -m 18100  test_1619950656/18100_multihash_bruteforce.txt test_1619950656/18100_passwords.txt
+  // test_1619955152/test_report.log:! unhandled return code 255, cmdline : cat test_1619955152/18100_passwords.txt | ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 0 -m 18100 test_1619955152/18100_hashes.txt
+  // test_1619967069/test_report.log:! unhandled return code 255, cmdline : ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 3 -m 18100  test_1619967069/18100_multihash_bruteforce.txt test_1619967069/18100_passwords.txt
   if ((device_param->opencl_device_vendor_id == VENDOR_ID_AMD) && (device_param->has_vperm == false))
   {
     return true;

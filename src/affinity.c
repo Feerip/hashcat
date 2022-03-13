@@ -51,12 +51,12 @@ typedef cpuset_t cpu_set_t;
 typedef cpuset_t cpu_set_t;
 #endif
 
-int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
+int set_cpu_affinity (MAYBE_UNUSED hashdog_ctx_t *hashdog_ctx)
 {
 #if defined (__CYGWIN__)
   return 0;
 #else
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->cpu_affinity == NULL) return 0;
 
@@ -73,7 +73,7 @@ int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
   cpuset = cpuset_create();
   if (cpuset == NULL)
   {
-    event_log_error (hashcat_ctx, "cpuset_create() failed with error: %d", errno);
+    event_log_error (hashdog_ctx, "cpuset_create() failed with error: %d", errno);
 
     hcfree (devices);
 
@@ -102,7 +102,7 @@ int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
       cpuset = cpuset_create ();
       if (cpuset == NULL)
       {
-        event_log_error (hashcat_ctx, "cpuset_create() failed with error: %d", errno);
+        event_log_error (hashdog_ctx, "cpuset_create() failed with error: %d", errno);
 
         hcfree (devices);
 
@@ -117,7 +117,7 @@ int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
 
     if (cpu_id > cpu_id_max)
     {
-      event_log_error (hashcat_ctx, "Invalid cpu_id %d specified.", cpu_id);
+      event_log_error (hashdog_ctx, "Invalid cpu_id %d specified.", cpu_id);
 
       #if defined (__NetBSD__)
       cpuset_destroy (cpuset);
@@ -148,7 +148,7 @@ int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
 
   if (SetProcessAffinityMask (GetCurrentProcess (), aff_mask) == 0)
   {
-    event_log_error (hashcat_ctx, "SetProcessAffinityMask() failed with error: %d", (int) GetLastError ());
+    event_log_error (hashdog_ctx, "SetProcessAffinityMask() failed with error: %d", (int) GetLastError ());
 
     return -1;
   }
@@ -161,7 +161,7 @@ int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
 
   if (rc != 0)
   {
-    event_log_error (hashcat_ctx, "pthread_setaffinity_np() failed with error: %d", rc);
+    event_log_error (hashdog_ctx, "pthread_setaffinity_np() failed with error: %d", rc);
 
     return -1;
   }
@@ -174,7 +174,7 @@ int set_cpu_affinity (MAYBE_UNUSED hashcat_ctx_t *hashcat_ctx)
 
   if (rc != 0)
   {
-    event_log_error (hashcat_ctx, "pthread_setaffinity_np() failed with error: %d", rc);
+    event_log_error (hashdog_ctx, "pthread_setaffinity_np() failed with error: %d", rc);
 
     return -1;
   }

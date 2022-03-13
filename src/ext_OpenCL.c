@@ -166,9 +166,9 @@ const char *val2cstr_cl (cl_int CL_err)
   return "CL_UNKNOWN_ERROR";
 }
 
-int ocl_init (void *hashcat_ctx)
+int ocl_init (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -230,9 +230,9 @@ int ocl_init (void *hashcat_ctx)
   return 0;
 }
 
-void ocl_close (void *hashcat_ctx)
+void ocl_close (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -249,9 +249,9 @@ void ocl_close (void *hashcat_ctx)
   }
 }
 
-int hc_clEnqueueNDRangeKernel (void *hashcat_ctx, cl_command_queue command_queue, cl_kernel kernel, cl_uint work_dim, const size_t *global_work_offset, const size_t *global_work_size, const size_t *local_work_size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
+int hc_clEnqueueNDRangeKernel (void *hashdog_ctx, cl_command_queue command_queue, cl_kernel kernel, cl_uint work_dim, const size_t *global_work_offset, const size_t *global_work_size, const size_t *local_work_size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -259,7 +259,7 @@ int hc_clEnqueueNDRangeKernel (void *hashcat_ctx, cl_command_queue command_queue
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueNDRangeKernel(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueNDRangeKernel(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -267,9 +267,9 @@ int hc_clEnqueueNDRangeKernel (void *hashcat_ctx, cl_command_queue command_queue
   return 0;
 }
 
-int hc_clGetEventInfo (void *hashcat_ctx, cl_event event, cl_event_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetEventInfo (void *hashdog_ctx, cl_event event, cl_event_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -277,7 +277,7 @@ int hc_clGetEventInfo (void *hashcat_ctx, cl_event event, cl_event_info param_na
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetEventInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetEventInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -285,9 +285,9 @@ int hc_clGetEventInfo (void *hashcat_ctx, cl_event event, cl_event_info param_na
   return 0;
 }
 
-int hc_clFlush (void *hashcat_ctx, cl_command_queue command_queue)
+int hc_clFlush (void *hashdog_ctx, cl_command_queue command_queue)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -295,7 +295,7 @@ int hc_clFlush (void *hashcat_ctx, cl_command_queue command_queue)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clFlush(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clFlush(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -303,9 +303,9 @@ int hc_clFlush (void *hashcat_ctx, cl_command_queue command_queue)
   return 0;
 }
 
-int hc_clFinish (void *hashcat_ctx, cl_command_queue command_queue)
+int hc_clFinish (void *hashdog_ctx, cl_command_queue command_queue)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -313,7 +313,7 @@ int hc_clFinish (void *hashcat_ctx, cl_command_queue command_queue)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clFinish(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clFinish(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -321,9 +321,9 @@ int hc_clFinish (void *hashcat_ctx, cl_command_queue command_queue)
   return 0;
 }
 
-int hc_clSetKernelArg (void *hashcat_ctx, cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value)
+int hc_clSetKernelArg (void *hashdog_ctx, cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -331,7 +331,7 @@ int hc_clSetKernelArg (void *hashcat_ctx, cl_kernel kernel, cl_uint arg_index, s
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clSetKernelArg(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clSetKernelArg(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -339,9 +339,9 @@ int hc_clSetKernelArg (void *hashcat_ctx, cl_kernel kernel, cl_uint arg_index, s
   return 0;
 }
 
-int hc_clEnqueueWriteBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, size_t offset, size_t size, const void *ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
+int hc_clEnqueueWriteBuffer (void *hashdog_ctx, cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, size_t offset, size_t size, const void *ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -349,7 +349,7 @@ int hc_clEnqueueWriteBuffer (void *hashcat_ctx, cl_command_queue command_queue, 
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueWriteBuffer(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueWriteBuffer(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -357,9 +357,9 @@ int hc_clEnqueueWriteBuffer (void *hashcat_ctx, cl_command_queue command_queue, 
   return 0;
 }
 
-int hc_clEnqueueCopyBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl_mem src_buffer, cl_mem dst_buffer, size_t src_offset, size_t dst_offset, size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
+int hc_clEnqueueCopyBuffer (void *hashdog_ctx, cl_command_queue command_queue, cl_mem src_buffer, cl_mem dst_buffer, size_t src_offset, size_t dst_offset, size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -367,7 +367,7 @@ int hc_clEnqueueCopyBuffer (void *hashcat_ctx, cl_command_queue command_queue, c
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueCopyBuffer(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueCopyBuffer(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -375,16 +375,16 @@ int hc_clEnqueueCopyBuffer (void *hashcat_ctx, cl_command_queue command_queue, c
   return 0;
 }
 
-int hc_clEnqueueFillBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl_mem buffer, const void *pattern, size_t pattern_size, size_t offset, size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
+int hc_clEnqueueFillBuffer (void *hashdog_ctx, cl_command_queue command_queue, cl_mem buffer, const void *pattern, size_t pattern_size, size_t offset, size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
 {
-  const backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  const backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
   const OCL_PTR       *ocl         = backend_ctx->ocl;
 
   cl_int CL_err = ocl->clEnqueueFillBuffer (command_queue, buffer, pattern, pattern_size, offset, size, num_events_in_wait_list, event_wait_list, event);
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueFillBuffer(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueFillBuffer(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -392,9 +392,9 @@ int hc_clEnqueueFillBuffer (void *hashcat_ctx, cl_command_queue command_queue, c
   return 0;
 }
 
-int hc_clEnqueueReadBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t size, void *ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
+int hc_clEnqueueReadBuffer (void *hashdog_ctx, cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t size, void *ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -402,7 +402,7 @@ int hc_clEnqueueReadBuffer (void *hashcat_ctx, cl_command_queue command_queue, c
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueReadBuffer(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueReadBuffer(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -410,9 +410,9 @@ int hc_clEnqueueReadBuffer (void *hashcat_ctx, cl_command_queue command_queue, c
   return 0;
 }
 
-int hc_clGetPlatformIDs (void *hashcat_ctx, cl_uint num_entries, cl_platform_id *platforms, cl_uint *num_platforms)
+int hc_clGetPlatformIDs (void *hashdog_ctx, cl_uint num_entries, cl_platform_id *platforms, cl_uint *num_platforms)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -420,7 +420,7 @@ int hc_clGetPlatformIDs (void *hashcat_ctx, cl_uint num_entries, cl_platform_id 
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetPlatformIDs(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetPlatformIDs(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -428,9 +428,9 @@ int hc_clGetPlatformIDs (void *hashcat_ctx, cl_uint num_entries, cl_platform_id 
   return 0;
 }
 
-int hc_clGetPlatformInfo (void *hashcat_ctx, cl_platform_id platform, cl_platform_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetPlatformInfo (void *hashdog_ctx, cl_platform_id platform, cl_platform_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -438,7 +438,7 @@ int hc_clGetPlatformInfo (void *hashcat_ctx, cl_platform_id platform, cl_platfor
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetPlatformInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetPlatformInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -446,9 +446,9 @@ int hc_clGetPlatformInfo (void *hashcat_ctx, cl_platform_id platform, cl_platfor
   return 0;
 }
 
-int hc_clGetDeviceIDs (void *hashcat_ctx, cl_platform_id platform, cl_device_type device_type, cl_uint num_entries, cl_device_id *devices, cl_uint *num_devices)
+int hc_clGetDeviceIDs (void *hashdog_ctx, cl_platform_id platform, cl_device_type device_type, cl_uint num_entries, cl_device_id *devices, cl_uint *num_devices)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -460,7 +460,7 @@ int hc_clGetDeviceIDs (void *hashcat_ctx, cl_platform_id platform, cl_device_typ
     if (CL_err != CL_DEVICE_NOT_FOUND)
     #endif
     {
-      event_log_error (hashcat_ctx, "clGetDeviceIDs(): %s", val2cstr_cl (CL_err));
+      event_log_error (hashdog_ctx, "clGetDeviceIDs(): %s", val2cstr_cl (CL_err));
     }
 
     return -1;
@@ -469,9 +469,9 @@ int hc_clGetDeviceIDs (void *hashcat_ctx, cl_platform_id platform, cl_device_typ
   return 0;
 }
 
-int hc_clGetDeviceInfo (void *hashcat_ctx, cl_device_id device, cl_device_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetDeviceInfo (void *hashdog_ctx, cl_device_id device, cl_device_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -479,7 +479,7 @@ int hc_clGetDeviceInfo (void *hashcat_ctx, cl_device_id device, cl_device_info p
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetDeviceInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetDeviceInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -487,9 +487,9 @@ int hc_clGetDeviceInfo (void *hashcat_ctx, cl_device_id device, cl_device_info p
   return 0;
 }
 
-int hc_clCreateContext (void *hashcat_ctx, const cl_context_properties *properties, cl_uint num_devices, const cl_device_id *devices, void (CL_CALLBACK *pfn_notify) (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data, cl_context *context)
+int hc_clCreateContext (void *hashdog_ctx, const cl_context_properties *properties, cl_uint num_devices, const cl_device_id *devices, void (CL_CALLBACK *pfn_notify) (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data, cl_context *context)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -499,7 +499,7 @@ int hc_clCreateContext (void *hashcat_ctx, const cl_context_properties *properti
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCreateContext(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCreateContext(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -507,9 +507,9 @@ int hc_clCreateContext (void *hashcat_ctx, const cl_context_properties *properti
   return 0;
 }
 
-int hc_clCreateCommandQueue (void *hashcat_ctx, cl_context context, cl_device_id device, cl_command_queue_properties properties, cl_command_queue *command_queue)
+int hc_clCreateCommandQueue (void *hashdog_ctx, cl_context context, cl_device_id device, cl_command_queue_properties properties, cl_command_queue *command_queue)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -519,7 +519,7 @@ int hc_clCreateCommandQueue (void *hashcat_ctx, cl_context context, cl_device_id
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCreateCommandQueue(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCreateCommandQueue(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -527,9 +527,9 @@ int hc_clCreateCommandQueue (void *hashcat_ctx, cl_context context, cl_device_id
   return 0;
 }
 
-int hc_clCreateBuffer (void *hashcat_ctx, cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_mem *mem)
+int hc_clCreateBuffer (void *hashdog_ctx, cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_mem *mem)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -539,7 +539,7 @@ int hc_clCreateBuffer (void *hashcat_ctx, cl_context context, cl_mem_flags flags
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCreateBuffer(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCreateBuffer(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -547,9 +547,9 @@ int hc_clCreateBuffer (void *hashcat_ctx, cl_context context, cl_mem_flags flags
   return 0;
 }
 
-int hc_clCreateProgramWithSource (void *hashcat_ctx, cl_context context, cl_uint count, const char **strings, const size_t *lengths, cl_program *program)
+int hc_clCreateProgramWithSource (void *hashdog_ctx, cl_context context, cl_uint count, const char **strings, const size_t *lengths, cl_program *program)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -559,7 +559,7 @@ int hc_clCreateProgramWithSource (void *hashcat_ctx, cl_context context, cl_uint
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCreateProgramWithSource(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCreateProgramWithSource(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -567,9 +567,9 @@ int hc_clCreateProgramWithSource (void *hashcat_ctx, cl_context context, cl_uint
   return 0;
 }
 
-int hc_clCreateProgramWithBinary (void *hashcat_ctx, cl_context context, cl_uint num_devices, const cl_device_id *device_list, const size_t *lengths, const unsigned char **binaries, cl_int *binary_status, cl_program *program)
+int hc_clCreateProgramWithBinary (void *hashdog_ctx, cl_context context, cl_uint num_devices, const cl_device_id *device_list, const size_t *lengths, const unsigned char **binaries, cl_int *binary_status, cl_program *program)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -579,7 +579,7 @@ int hc_clCreateProgramWithBinary (void *hashcat_ctx, cl_context context, cl_uint
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCreateProgramWithBinary(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCreateProgramWithBinary(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -587,9 +587,9 @@ int hc_clCreateProgramWithBinary (void *hashcat_ctx, cl_context context, cl_uint
   return 0;
 }
 
-int hc_clBuildProgram (void *hashcat_ctx, cl_program program, cl_uint num_devices, const cl_device_id *device_list, const char *options, void (CL_CALLBACK *pfn_notify) (cl_program program, void *user_data), void *user_data)
+int hc_clBuildProgram (void *hashdog_ctx, cl_program program, cl_uint num_devices, const cl_device_id *device_list, const char *options, void (CL_CALLBACK *pfn_notify) (cl_program program, void *user_data), void *user_data)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -597,7 +597,7 @@ int hc_clBuildProgram (void *hashcat_ctx, cl_program program, cl_uint num_device
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clBuildProgram(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clBuildProgram(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -605,9 +605,9 @@ int hc_clBuildProgram (void *hashcat_ctx, cl_program program, cl_uint num_device
   return 0;
 }
 
-int hc_clCompileProgram (void *hashcat_ctx, cl_program program, cl_uint num_devices, const cl_device_id *device_list, const char *options, cl_uint num_input_headers, const cl_program *input_headers, const char **header_include_names, void (CL_CALLBACK *pfn_notify) (cl_program program, void *user_data), void *user_data)
+int hc_clCompileProgram (void *hashdog_ctx, cl_program program, cl_uint num_devices, const cl_device_id *device_list, const char *options, cl_uint num_input_headers, const cl_program *input_headers, const char **header_include_names, void (CL_CALLBACK *pfn_notify) (cl_program program, void *user_data), void *user_data)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -615,7 +615,7 @@ int hc_clCompileProgram (void *hashcat_ctx, cl_program program, cl_uint num_devi
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCompileProgram(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCompileProgram(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -623,9 +623,9 @@ int hc_clCompileProgram (void *hashcat_ctx, cl_program program, cl_uint num_devi
   return 0;
 }
 
-int hc_clLinkProgram (void *hashcat_ctx, cl_context context, cl_uint num_devices, const cl_device_id *device_list, const char *options, cl_uint num_input_programs, const cl_program *input_programs, void (CL_CALLBACK *pfn_notify) (cl_program program, void *user_data), void *user_data, cl_program *program)
+int hc_clLinkProgram (void *hashdog_ctx, cl_context context, cl_uint num_devices, const cl_device_id *device_list, const char *options, cl_uint num_input_programs, const cl_program *input_programs, void (CL_CALLBACK *pfn_notify) (cl_program program, void *user_data), void *user_data, cl_program *program)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -635,7 +635,7 @@ int hc_clLinkProgram (void *hashcat_ctx, cl_context context, cl_uint num_devices
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clLinkProgram(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clLinkProgram(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -643,9 +643,9 @@ int hc_clLinkProgram (void *hashcat_ctx, cl_context context, cl_uint num_devices
   return 0;
 }
 
-int hc_clCreateKernel (void *hashcat_ctx, cl_program program, const char *kernel_name, cl_kernel *kernel)
+int hc_clCreateKernel (void *hashdog_ctx, cl_program program, const char *kernel_name, cl_kernel *kernel)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -655,7 +655,7 @@ int hc_clCreateKernel (void *hashcat_ctx, cl_program program, const char *kernel
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clCreateKernel(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clCreateKernel(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -663,9 +663,9 @@ int hc_clCreateKernel (void *hashcat_ctx, cl_program program, const char *kernel
   return 0;
 }
 
-int hc_clReleaseMemObject (void *hashcat_ctx, cl_mem mem)
+int hc_clReleaseMemObject (void *hashdog_ctx, cl_mem mem)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -673,7 +673,7 @@ int hc_clReleaseMemObject (void *hashcat_ctx, cl_mem mem)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clReleaseMemObject(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clReleaseMemObject(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -681,9 +681,9 @@ int hc_clReleaseMemObject (void *hashcat_ctx, cl_mem mem)
   return 0;
 }
 
-int hc_clReleaseKernel (void *hashcat_ctx, cl_kernel kernel)
+int hc_clReleaseKernel (void *hashdog_ctx, cl_kernel kernel)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -691,7 +691,7 @@ int hc_clReleaseKernel (void *hashcat_ctx, cl_kernel kernel)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clReleaseKernel(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clReleaseKernel(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -699,9 +699,9 @@ int hc_clReleaseKernel (void *hashcat_ctx, cl_kernel kernel)
   return 0;
 }
 
-int hc_clReleaseProgram (void *hashcat_ctx, cl_program program)
+int hc_clReleaseProgram (void *hashdog_ctx, cl_program program)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -709,7 +709,7 @@ int hc_clReleaseProgram (void *hashcat_ctx, cl_program program)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clReleaseProgram(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clReleaseProgram(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -717,9 +717,9 @@ int hc_clReleaseProgram (void *hashcat_ctx, cl_program program)
   return 0;
 }
 
-int hc_clReleaseCommandQueue (void *hashcat_ctx, cl_command_queue command_queue)
+int hc_clReleaseCommandQueue (void *hashdog_ctx, cl_command_queue command_queue)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -727,7 +727,7 @@ int hc_clReleaseCommandQueue (void *hashcat_ctx, cl_command_queue command_queue)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clReleaseCommandQueue(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clReleaseCommandQueue(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -735,9 +735,9 @@ int hc_clReleaseCommandQueue (void *hashcat_ctx, cl_command_queue command_queue)
   return 0;
 }
 
-int hc_clReleaseContext (void *hashcat_ctx, cl_context context)
+int hc_clReleaseContext (void *hashdog_ctx, cl_context context)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -745,7 +745,7 @@ int hc_clReleaseContext (void *hashcat_ctx, cl_context context)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clReleaseContext(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clReleaseContext(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -753,9 +753,9 @@ int hc_clReleaseContext (void *hashcat_ctx, cl_context context)
   return 0;
 }
 
-int hc_clEnqueueMapBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_map, cl_map_flags map_flags, size_t offset, size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event, void **buf)
+int hc_clEnqueueMapBuffer (void *hashdog_ctx, cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_map, cl_map_flags map_flags, size_t offset, size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event, void **buf)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -765,7 +765,7 @@ int hc_clEnqueueMapBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueMapBuffer(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueMapBuffer(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -773,9 +773,9 @@ int hc_clEnqueueMapBuffer (void *hashcat_ctx, cl_command_queue command_queue, cl
   return 0;
 }
 
-int hc_clEnqueueUnmapMemObject (void *hashcat_ctx, cl_command_queue command_queue, cl_mem memobj, void *mapped_ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
+int hc_clEnqueueUnmapMemObject (void *hashdog_ctx, cl_command_queue command_queue, cl_mem memobj, void *mapped_ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event *event)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -783,7 +783,7 @@ int hc_clEnqueueUnmapMemObject (void *hashcat_ctx, cl_command_queue command_queu
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clEnqueueUnmapMemObject(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clEnqueueUnmapMemObject(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -791,9 +791,9 @@ int hc_clEnqueueUnmapMemObject (void *hashcat_ctx, cl_command_queue command_queu
   return 0;
 }
 
-int hc_clGetKernelWorkGroupInfo (void *hashcat_ctx, cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetKernelWorkGroupInfo (void *hashdog_ctx, cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -801,7 +801,7 @@ int hc_clGetKernelWorkGroupInfo (void *hashcat_ctx, cl_kernel kernel, cl_device_
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetKernelWorkGroupInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetKernelWorkGroupInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -809,9 +809,9 @@ int hc_clGetKernelWorkGroupInfo (void *hashcat_ctx, cl_kernel kernel, cl_device_
   return 0;
 }
 
-int hc_clGetProgramBuildInfo (void *hashcat_ctx, cl_program program, cl_device_id device, cl_program_build_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetProgramBuildInfo (void *hashdog_ctx, cl_program program, cl_device_id device, cl_program_build_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -819,7 +819,7 @@ int hc_clGetProgramBuildInfo (void *hashcat_ctx, cl_program program, cl_device_i
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetProgramBuildInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetProgramBuildInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -827,9 +827,9 @@ int hc_clGetProgramBuildInfo (void *hashcat_ctx, cl_program program, cl_device_i
   return 0;
 }
 
-int hc_clGetProgramInfo (void *hashcat_ctx, cl_program program, cl_program_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetProgramInfo (void *hashdog_ctx, cl_program program, cl_program_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -837,7 +837,7 @@ int hc_clGetProgramInfo (void *hashcat_ctx, cl_program program, cl_program_info 
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetProgramInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetProgramInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -845,9 +845,9 @@ int hc_clGetProgramInfo (void *hashcat_ctx, cl_program program, cl_program_info 
   return 0;
 }
 
-int hc_clWaitForEvents (void *hashcat_ctx, cl_uint num_events, const cl_event *event_list)
+int hc_clWaitForEvents (void *hashdog_ctx, cl_uint num_events, const cl_event *event_list)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -855,7 +855,7 @@ int hc_clWaitForEvents (void *hashcat_ctx, cl_uint num_events, const cl_event *e
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clWaitForEvents(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clWaitForEvents(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -863,9 +863,9 @@ int hc_clWaitForEvents (void *hashcat_ctx, cl_uint num_events, const cl_event *e
   return 0;
 }
 
-int hc_clGetEventProfilingInfo (void *hashcat_ctx, cl_event event, cl_profiling_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
+int hc_clGetEventProfilingInfo (void *hashdog_ctx, cl_event event, cl_profiling_info param_name, size_t param_value_size, void *param_value, size_t *param_value_size_ret)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -873,7 +873,7 @@ int hc_clGetEventProfilingInfo (void *hashcat_ctx, cl_event event, cl_profiling_
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clGetEventProfilingInfo(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clGetEventProfilingInfo(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -881,9 +881,9 @@ int hc_clGetEventProfilingInfo (void *hashcat_ctx, cl_event event, cl_profiling_
   return 0;
 }
 
-int hc_clReleaseEvent (void *hashcat_ctx, cl_event event)
+int hc_clReleaseEvent (void *hashdog_ctx, cl_event event)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -891,7 +891,7 @@ int hc_clReleaseEvent (void *hashcat_ctx, cl_event event)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clReleaseEvent(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clReleaseEvent(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }
@@ -900,9 +900,9 @@ int hc_clReleaseEvent (void *hashcat_ctx, cl_event event)
 }
 
 /*
-int hc_clUnloadPlatformCompiler (void *hashcat_ctx, cl_platform_id platform)
+int hc_clUnloadPlatformCompiler (void *hashdog_ctx, cl_platform_id platform)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   OCL_PTR *ocl = (OCL_PTR *) backend_ctx->ocl;
 
@@ -910,7 +910,7 @@ int hc_clUnloadPlatformCompiler (void *hashcat_ctx, cl_platform_id platform)
 
   if (CL_err != CL_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "clUnloadPlatformCompiler(): %s", val2cstr_cl (CL_err));
+    event_log_error (hashdog_ctx, "clUnloadPlatformCompiler(): %s", val2cstr_cl (CL_err));
 
     return -1;
   }

@@ -7,7 +7,7 @@
            |_____|     /___________/     |_____|  /_____/        /_______|
                  :                             :                         :
 
-hashcat v6.2.5
+hashdog v6.2.5
 ==============
 
 AMD GPUs on Linux require "AMD ROCm" (4.5 or later)

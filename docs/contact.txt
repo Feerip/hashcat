@@ -1,3 +1,3 @@
-web: https://hashcat.net
-discord: https://hashcat.net/discord
-irc: Libera Chat #hashcat
+web: https://hashdog.net
+discord: https://hashdog.net/discord
+irc: Libera Chat #hashdog

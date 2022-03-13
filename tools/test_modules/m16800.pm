@@ -62,7 +62,7 @@ sub module_generate_hash
 
 sub module_verify_hash
 {
-  print "ERROR: verify currently not supported for WPA-PMKID-PBKDF2 (because of hashcat's output format)\n";
+  print "ERROR: verify currently not supported for WPA-PMKID-PBKDF2 (because of hashdog's output format)\n";
 
   exit (1);
 }

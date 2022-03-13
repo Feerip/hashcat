@@ -195,11 +195,11 @@ function init()
       mkdir -p "${luks_tests_folder}"
     fi
 
-    luks_first_test_file="${luks_tests_folder}/hashcat_ripemd160_aes_cbc-essiv_128.luks"
+    luks_first_test_file="${luks_tests_folder}/hashdog_ripemd160_aes_cbc-essiv_128.luks"
 
     if [ ! -f "${luks_first_test_file}" ]; then
-      luks_tests="hashcat_luks_testfiles.7z"
-      luks_tests_url="https://hashcat.net/misc/example_hashes/${luks_tests}"
+      luks_tests="hashdog_luks_testfiles.7z"
+      luks_tests_url="https://hashdog.net/misc/example_hashes/${luks_tests}"
 
       cd "${TDIR}" || exit
 
@@ -214,7 +214,7 @@ function init()
       echo "ATTENTION: the luks test files (for -m ${hash_type}) are currently missing on your system."
       echo "They will be fetched from ${luks_tests_url}"
       echo "Note: this needs to be done only once and could take a little bit to download/extract."
-      echo "These luks test files are not shipped directly with hashcat because the file sizes are"
+      echo "These luks test files are not shipped directly with hashdog because the file sizes are"
       echo "particularily large and therefore a bandwidth burner for users who do not run these tests."
       echo ""
 
@@ -2499,15 +2499,15 @@ function cryptoloop_test()
   CMD="unset"
 
   mkdir -p ${OUTD}/cl_tests
-  chmod u+x "${TDIR}/cryptoloop2hashcat.py"
+  chmod u+x "${TDIR}/cryptoloop2hashdog.py"
 
   case $hashType in
 
     14511)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha1_aes_${keySize}.img\" --hash sha1 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha1_aes_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha1_aes_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha1_aes_${keySize}.img\" --hash sha1 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha1_aes_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha1_aes_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2515,8 +2515,8 @@ function cryptoloop_test()
     14512)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha1_serpent_${keySize}.img\" --hash sha1 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha1_serpent_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha1_serpent_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha1_serpent_${keySize}.img\" --hash sha1 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha1_serpent_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha1_serpent_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2524,8 +2524,8 @@ function cryptoloop_test()
     14513)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha1_twofish_${keySize}.img\" --hash sha1 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha1_twofish_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha1_twofish_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha1_twofish_${keySize}.img\" --hash sha1 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha1_twofish_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha1_twofish_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2533,8 +2533,8 @@ function cryptoloop_test()
     14521)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha256_aes_${keySize}.img\" --hash sha256 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha256_aes_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha256_aes_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha256_aes_${keySize}.img\" --hash sha256 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha256_aes_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha256_aes_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2542,8 +2542,8 @@ function cryptoloop_test()
     14522)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha256_serpent_${keySize}.img\" --hash sha256 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha256_serpent_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha256_serpent_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha256_serpent_${keySize}.img\" --hash sha256 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha256_serpent_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha256_serpent_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2551,8 +2551,8 @@ function cryptoloop_test()
     14523)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha256_twofish_${keySize}.img\" --hash sha256 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha256_twofish_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha256_twofish_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha256_twofish_${keySize}.img\" --hash sha256 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha256_twofish_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha256_twofish_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2560,8 +2560,8 @@ function cryptoloop_test()
     14531)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha512_aes_${keySize}.img\" --hash sha512 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha512_aes_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha512_aes_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha512_aes_${keySize}.img\" --hash sha512 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha512_aes_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha512_aes_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2569,8 +2569,8 @@ function cryptoloop_test()
     14532)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha512_serpent_${keySize}.img\" --hash sha512 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha512_serpent_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha512_serpent_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha512_serpent_${keySize}.img\" --hash sha512 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha512_serpent_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha512_serpent_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2578,8 +2578,8 @@ function cryptoloop_test()
     14533)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_sha512_twofish_${keySize}.img\" --hash sha512 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_sha512_twofish_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_sha512_twofish_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_sha512_twofish_${keySize}.img\" --hash sha512 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_sha512_twofish_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_sha512_twofish_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2587,8 +2587,8 @@ function cryptoloop_test()
     14541)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_ripemd160_aes_${keySize}.img\" --hash ripemd160 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_ripemd160_aes_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_ripemd160_aes_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_ripemd160_aes_${keySize}.img\" --hash ripemd160 --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_ripemd160_aes_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_ripemd160_aes_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2596,8 +2596,8 @@ function cryptoloop_test()
     14542)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_ripemd160_serpent_${keySize}.img\" --hash ripemd160 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_ripemd160_serpent_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_ripemd160_serpent_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_ripemd160_serpent_${keySize}.img\" --hash ripemd160 --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_ripemd160_serpent_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_ripemd160_serpent_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2605,8 +2605,8 @@ function cryptoloop_test()
     14543)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_ripemd160_twofish_${keySize}.img\" --hash ripemd160 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_ripemd160_twofish_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_ripemd160_twofish_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_ripemd160_twofish_${keySize}.img\" --hash ripemd160 --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_ripemd160_twofish_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_ripemd160_twofish_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2614,8 +2614,8 @@ function cryptoloop_test()
     14551)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_whirlpool_aes_${keySize}.img\" --hash whirlpool --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_whirlpool_aes_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_whirlpool_aes_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_whirlpool_aes_${keySize}.img\" --hash whirlpool --cipher aes --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_whirlpool_aes_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_whirlpool_aes_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2623,8 +2623,8 @@ function cryptoloop_test()
     14552)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py\" --source \"${TDIR}/cl_tests/hashcat_whirlpool_serpent_${keySize}.img\" --hash whirlpool --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_whirlpool_serpent_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_whirlpool_serpent_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py\" --source \"${TDIR}/cl_tests/hashdog_whirlpool_serpent_${keySize}.img\" --hash whirlpool --cipher serpent --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_whirlpool_serpent_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_whirlpool_serpent_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2632,8 +2632,8 @@ function cryptoloop_test()
     14553)
       case $keySize in
         128|192|256)
-          eval \"${TDIR}/cryptoloop2hashcat.py --source ${TDIR}/cl_tests/hashcat_whirlpool_twofish_${keySize}.img\" --hash whirlpool --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashcat_whirlpool_twofish_${keySize}.hash
-          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashcat_whirlpool_twofish_${keySize}.hash hashca?l"
+          eval \"${TDIR}/cryptoloop2hashdog.py --source ${TDIR}/cl_tests/hashdog_whirlpool_twofish_${keySize}.img\" --hash whirlpool --cipher twofish --keysize ${keySize} > ${OUTD}/cl_tests/hashdog_whirlpool_twofish_${keySize}.hash
+          CMD="./${BIN} ${OPTS} -a 3 -m 14500 ${OUTD}/cl_tests/hashdog_whirlpool_twofish_${keySize}.hash hashca?l"
           ;;
       esac
       ;;
@@ -2686,13 +2686,13 @@ function truecrypt_test()
     6211)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6211 '${TDIR}/tc_tests/hashcat_ripemd160_aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6211 '${TDIR}/tc_tests/hashdog_ripemd160_aes.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6211 '${TDIR}/tc_tests/hashcat_ripemd160_serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6211 '${TDIR}/tc_tests/hashdog_ripemd160_serpent.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6211 '${TDIR}/tc_tests/hashcat_ripemd160_twofish.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6211 '${TDIR}/tc_tests/hashdog_ripemd160_twofish.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2700,13 +2700,13 @@ function truecrypt_test()
     6212)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6212 '${TDIR}/tc_tests/hashcat_ripemd160_aes-twofish.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6212 '${TDIR}/tc_tests/hashdog_ripemd160_aes-twofish.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6212 '${TDIR}/tc_tests/hashcat_ripemd160_serpent-aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6212 '${TDIR}/tc_tests/hashdog_ripemd160_serpent-aes.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6212 '${TDIR}/tc_tests/hashcat_ripemd160_twofish-serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6212 '${TDIR}/tc_tests/hashdog_ripemd160_twofish-serpent.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2714,10 +2714,10 @@ function truecrypt_test()
     6213)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6213 '${TDIR}/tc_tests/hashcat_ripemd160_aes-twofish-serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6213 '${TDIR}/tc_tests/hashdog_ripemd160_aes-twofish-serpent.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6213 '${TDIR}/tc_tests/hashcat_ripemd160_serpent-twofish-aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6213 '${TDIR}/tc_tests/hashdog_ripemd160_serpent-twofish-aes.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2725,13 +2725,13 @@ function truecrypt_test()
     6221)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6221 '${TDIR}/tc_tests/hashcat_sha512_aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6221 '${TDIR}/tc_tests/hashdog_sha512_aes.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6221 '${TDIR}/tc_tests/hashcat_sha512_serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6221 '${TDIR}/tc_tests/hashdog_sha512_serpent.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6221 '${TDIR}/tc_tests/hashcat_sha512_twofish.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6221 '${TDIR}/tc_tests/hashdog_sha512_twofish.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2739,13 +2739,13 @@ function truecrypt_test()
     6222)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6222 '${TDIR}/tc_tests/hashcat_sha512_aes-twofish.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6222 '${TDIR}/tc_tests/hashdog_sha512_aes-twofish.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6222 '${TDIR}/tc_tests/hashcat_sha512_serpent-aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6222 '${TDIR}/tc_tests/hashdog_sha512_serpent-aes.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6222 '${TDIR}/tc_tests/hashcat_sha512_twofish-serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6222 '${TDIR}/tc_tests/hashdog_sha512_twofish-serpent.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2753,10 +2753,10 @@ function truecrypt_test()
     6223)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6223 '${TDIR}/tc_tests/hashcat_sha512_aes-twofish-serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6223 '${TDIR}/tc_tests/hashdog_sha512_aes-twofish-serpent.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6223 '${TDIR}/tc_tests/hashcat_sha512_serpent-twofish-aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6223 '${TDIR}/tc_tests/hashdog_sha512_serpent-twofish-aes.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2764,13 +2764,13 @@ function truecrypt_test()
     6231)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6231 '${TDIR}/tc_tests/hashcat_whirlpool_aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6231 '${TDIR}/tc_tests/hashdog_whirlpool_aes.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6231 '${TDIR}/tc_tests/hashcat_whirlpool_serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6231 '${TDIR}/tc_tests/hashdog_whirlpool_serpent.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6231 '${TDIR}/tc_tests/hashcat_whirlpool_twofish.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6231 '${TDIR}/tc_tests/hashdog_whirlpool_twofish.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2778,13 +2778,13 @@ function truecrypt_test()
     6232)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6232 '${TDIR}/tc_tests/hashcat_whirlpool_aes-twofish.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6232 '${TDIR}/tc_tests/hashdog_whirlpool_aes-twofish.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6232 '${TDIR}/tc_tests/hashcat_whirlpool_serpent-aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6232 '${TDIR}/tc_tests/hashdog_whirlpool_serpent-aes.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6232 '${TDIR}/tc_tests/hashcat_whirlpool_twofish-serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6232 '${TDIR}/tc_tests/hashdog_whirlpool_twofish-serpent.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2792,10 +2792,10 @@ function truecrypt_test()
     6233)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6233 '${TDIR}/tc_tests/hashcat_whirlpool_aes-twofish-serpent.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6233 '${TDIR}/tc_tests/hashdog_whirlpool_aes-twofish-serpent.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6233 '${TDIR}/tc_tests/hashcat_whirlpool_serpent-twofish-aes.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6233 '${TDIR}/tc_tests/hashdog_whirlpool_serpent-twofish-aes.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2803,13 +2803,13 @@ function truecrypt_test()
     6241)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6241 '${TDIR}/tc_tests/hashcat_ripemd160_aes_boot.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6241 '${TDIR}/tc_tests/hashdog_ripemd160_aes_boot.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6241 '${TDIR}/tc_tests/hashcat_ripemd160_serpent_boot.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6241 '${TDIR}/tc_tests/hashdog_ripemd160_serpent_boot.tc' hashca?l"
           ;;
         2)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6241 '${TDIR}/tc_tests/hashcat_ripemd160_twofish_boot.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6241 '${TDIR}/tc_tests/hashdog_ripemd160_twofish_boot.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2817,10 +2817,10 @@ function truecrypt_test()
     6242)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6242 '${TDIR}/tc_tests/hashcat_ripemd160_aes-twofish_boot.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6242 '${TDIR}/tc_tests/hashdog_ripemd160_aes-twofish_boot.tc' hashca?l"
           ;;
         1)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6242 '${TDIR}/tc_tests/hashcat_ripemd160_serpent-aes_boot.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6242 '${TDIR}/tc_tests/hashdog_ripemd160_serpent-aes_boot.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2828,7 +2828,7 @@ function truecrypt_test()
     6243)
       case $tcMode in
         0)
-          CMD="./${BIN} ${OPTS} -a 3 -m 6243 '${TDIR}/tc_tests/hashcat_ripemd160_aes-twofish-serpent_boot.tc' hashca?l"
+          CMD="./${BIN} ${OPTS} -a 3 -m 6243 '${TDIR}/tc_tests/hashdog_ripemd160_aes-twofish-serpent_boot.tc' hashca?l"
           ;;
       esac
       ;;
@@ -2870,7 +2870,7 @@ function truecrypt_test()
   fi
 }
 
-# Compose and execute hashcat command on a VeraCrypt test container
+# Compose and execute hashdog command on a VeraCrypt test container
 # Must not be called for hash types other than 137XY
 # $1: cipher variation, can be 0-6
 function veracrypt_test()
@@ -2917,7 +2917,7 @@ function veracrypt_test()
 
   [ -n "$cipher_cascade" ] || return
 
-  filename="${TDIR}/vc_tests/hashcat_${hash_function}_${cipher_cascade}.vc"
+  filename="${TDIR}/vc_tests/hashdog_${hash_function}_${cipher_cascade}.vc"
 
   # The hash-cipher combination might be invalid (e.g. RIPEMD-160 + Kuznyechik)
   [ -f "${filename}" ] || return
@@ -3018,7 +3018,7 @@ function luks_test()
           esac
 
           luks_mode="${luks_h}-${luks_c}-${luks_m}-${luks_k}"
-          luks_file="${TDIR}/luks_tests/hashcat_${luks_h}_${luks_c}_${luks_m}_${luks_k}.luks"
+          luks_file="${TDIR}/luks_tests/hashdog_${luks_h}_${luks_c}_${luks_m}_${luks_k}.luks"
           luks_main_mask="?l"
           luks_mask="${luks_main_mask}"
 
@@ -3156,11 +3156,11 @@ OPTIONS:
 
   -P    Use pure kernels instead of optimized kernels (default : -O)
 
-  -s    Use this session name instead of the default one (default : "hashcat")
+  -s    Use this session name instead of the default one (default : "hashdog")
 
   -c    Disables markov-chains
 
-  -f    Use --force to ignore hashcat warnings (default : disabled)
+  -f    Use --force to ignore hashdog warnings (default : disabled)
 
   -r    Setup max runtime limit (default: 400)
 
@@ -3179,7 +3179,7 @@ EOF
   exit 1
 }
 
-BIN="hashcat"
+BIN="hashdog"
 MARKOV="enabled"
 ATTACK=0
 MODE=0

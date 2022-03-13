@@ -14,13 +14,13 @@
 
 // general functions
 
-static int get_adapters_num_adl (hashcat_ctx_t *hashcat_ctx, int *iNumberAdapters)
+static int get_adapters_num_adl (hashdog_ctx_t *hashdog_ctx, int *iNumberAdapters)
 {
-  if (hm_ADL_Adapter_NumberOfAdapters_Get (hashcat_ctx, iNumberAdapters) == -1) return -1;
+  if (hm_ADL_Adapter_NumberOfAdapters_Get (hashdog_ctx, iNumberAdapters) == -1) return -1;
 
   if (iNumberAdapters == NULL)
   {
-    event_log_error (hashcat_ctx, "No ADL adapters found.");
+    event_log_error (hashdog_ctx, "No ADL adapters found.");
 
     return -1;
   }
@@ -28,15 +28,15 @@ static int get_adapters_num_adl (hashcat_ctx_t *hashcat_ctx, int *iNumberAdapter
   return 0;
 }
 
-static int hm_get_adapter_index_nvapi (hashcat_ctx_t *hashcat_ctx, HM_ADAPTER_NVAPI *nvapiGPUHandle)
+static int hm_get_adapter_index_nvapi (hashdog_ctx_t *hashdog_ctx, HM_ADAPTER_NVAPI *nvapiGPUHandle)
 {
   NvU32 pGpuCount;
 
-  if (hm_NvAPI_EnumPhysicalGPUs (hashcat_ctx, nvapiGPUHandle, &pGpuCount) == -1) return 0;
+  if (hm_NvAPI_EnumPhysicalGPUs (hashdog_ctx, nvapiGPUHandle, &pGpuCount) == -1) return 0;
 
   if (pGpuCount == 0)
   {
-    event_log_error (hashcat_ctx, "No NvAPI adapters found.");
+    event_log_error (hashdog_ctx, "No NvAPI adapters found.");
 
     return 0;
   }
@@ -44,35 +44,35 @@ static int hm_get_adapter_index_nvapi (hashcat_ctx_t *hashcat_ctx, HM_ADAPTER_NV
   return (pGpuCount);
 }
 
-static int hm_get_adapter_index_nvml (hashcat_ctx_t *hashcat_ctx, HM_ADAPTER_NVML *nvmlGPUHandle)
+static int hm_get_adapter_index_nvml (hashdog_ctx_t *hashdog_ctx, HM_ADAPTER_NVML *nvmlGPUHandle)
 {
   unsigned int deviceCount = 0;
 
-  hm_NVML_nvmlDeviceGetCount (hashcat_ctx, &deviceCount);
+  hm_NVML_nvmlDeviceGetCount (hashdog_ctx, &deviceCount);
 
   if (deviceCount == 0)
   {
-    event_log_error (hashcat_ctx, "No NVML adapters found.");
+    event_log_error (hashdog_ctx, "No NVML adapters found.");
 
     return 0;
   }
 
   for (u32 i = 0; i < deviceCount; i++)
   {
-    if (hm_NVML_nvmlDeviceGetHandleByIndex (hashcat_ctx, i, &nvmlGPUHandle[i]) == -1) break;
+    if (hm_NVML_nvmlDeviceGetHandleByIndex (hashdog_ctx, i, &nvmlGPUHandle[i]) == -1) break;
 
     // can be used to determine if the device by index matches the cuda device by index
     // char name[100]; memset (name, 0, sizeof (name));
-    // hm_NVML_nvmlDeviceGetName (hashcat_ctx, nvGPUHandle[i], name, sizeof (name) - 1);
+    // hm_NVML_nvmlDeviceGetName (hashdog_ctx, nvGPUHandle[i], name, sizeof (name) - 1);
   }
 
   return (deviceCount);
 }
 
-int hm_get_threshold_slowdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_threshold_slowdown_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -84,7 +84,7 @@ int hm_get_threshold_slowdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, cons
     {
       int target = 0;
 
-      if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, (unsigned int *) &target) == -1)
+      if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, (unsigned int *) &target) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].threshold_slowdown_get_supported = false;
 
@@ -120,7 +120,7 @@ int hm_get_threshold_slowdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, cons
         {
           int target = 0;
 
-          if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, (unsigned int *) &target) == -1)
+          if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, (unsigned int *) &target) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].threshold_slowdown_get_supported = false;
 
@@ -138,10 +138,10 @@ int hm_get_threshold_slowdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, cons
   return -1;
 }
 
-int hm_get_threshold_shutdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_threshold_shutdown_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -153,7 +153,7 @@ int hm_get_threshold_shutdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, cons
     {
       int target = 0;
 
-      if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, (unsigned int *) &target) == -1)
+      if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, (unsigned int *) &target) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].threshold_shutdown_get_supported = false;
 
@@ -189,7 +189,7 @@ int hm_get_threshold_shutdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, cons
         {
           int target = 0;
 
-          if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, (unsigned int *) &target) == -1)
+          if (hm_NVML_nvmlDeviceGetTemperatureThreshold (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, (unsigned int *) &target) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].threshold_shutdown_get_supported = false;
 
@@ -207,10 +207,10 @@ int hm_get_threshold_shutdown_with_devices_idx (hashcat_ctx_t *hashcat_ctx, cons
   return -1;
 }
 
-int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_temperature_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -222,7 +222,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
     {
       int temperature = 0;
 
-      if (hm_NVML_nvmlDeviceGetTemperature (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_GPU, (u32 *) &temperature) == -1)
+      if (hm_NVML_nvmlDeviceGetTemperature (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_GPU, (u32 *) &temperature) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -246,7 +246,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
           char *key = HM_IOKIT_SMC_CPU_PROXIMITY;
 
-          if (hm_IOKIT_SMCGetTemperature(hashcat_ctx, key, &temperature) == -1)
+          if (hm_IOKIT_SMCGetTemperature(hashdog_ctx, key, &temperature) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -262,7 +262,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
       {
         int temperature = 0;
 
-        if (hm_SYSFS_CPU_get_temperature_current (hashcat_ctx, &temperature) == -1)
+        if (hm_SYSFS_CPU_get_temperature_current (hashdog_ctx, &temperature) == -1)
         {
           hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -289,7 +289,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
             key = HM_IOKIT_SMC_PECI_GPU;
           }
 
-          if (hm_IOKIT_SMCGetTemperature (hashcat_ctx, key, &temperature) == -1)
+          if (hm_IOKIT_SMCGetTemperature (hashdog_ctx, key, &temperature) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -311,7 +311,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
             Temperature.iSize = sizeof (ADLTemperature);
 
-            if (hm_ADL_Overdrive5_Temperature_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, 0, &Temperature) == -1)
+            if (hm_ADL_Overdrive5_Temperature_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, 0, &Temperature) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -325,7 +325,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
           {
             int Temperature = 0;
 
-            if (hm_ADL_Overdrive6_Temperature_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &Temperature) == -1)
+            if (hm_ADL_Overdrive6_Temperature_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &Temperature) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -341,7 +341,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -356,7 +356,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           int temperature = 0;
 
-          if (hm_SYSFS_AMDGPU_get_temperature_current (hashcat_ctx, backend_device_idx, &temperature) == -1)
+          if (hm_SYSFS_AMDGPU_get_temperature_current (hashdog_ctx, backend_device_idx, &temperature) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -373,7 +373,7 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           int temperature = 0;
 
-          if (hm_NVML_nvmlDeviceGetTemperature (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_GPU, (u32 *) &temperature) == -1)
+          if (hm_NVML_nvmlDeviceGetTemperature (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_TEMPERATURE_GPU, (u32 *) &temperature) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].temperature_get_supported = false;
 
@@ -391,10 +391,10 @@ int hm_get_temperature_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
   return -1;
 }
 
-int hm_get_fanpolicy_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_fanpolicy_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -422,7 +422,7 @@ int hm_get_fanpolicy_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
             lpFanSpeedValue.iSize      = sizeof (lpFanSpeedValue);
             lpFanSpeedValue.iSpeedType = ADL_DL_FANCTRL_SPEED_TYPE_PERCENT;
 
-            if (hm_ADL_Overdrive5_FanSpeed_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, 0, &lpFanSpeedValue) == -1)
+            if (hm_ADL_Overdrive5_FanSpeed_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, 0, &lpFanSpeedValue) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].fanpolicy_get_supported = false;
               hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported  = false;
@@ -439,7 +439,7 @@ int hm_get_fanpolicy_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
 
             memset (&lpFanSpeedInfo, 0, sizeof (lpFanSpeedInfo));
 
-            if (hm_ADL_Overdrive6_FanSpeed_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &lpFanSpeedInfo) == -1)
+            if (hm_ADL_Overdrive6_FanSpeed_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &lpFanSpeedInfo) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].fanpolicy_get_supported = false;
               hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported  = false;
@@ -456,7 +456,7 @@ int hm_get_fanpolicy_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].fanpolicy_get_supported = false;
               hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported  = false;
@@ -488,15 +488,15 @@ int hm_get_fanpolicy_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
 }
 
 #if defined(__APPLE__)
-int hm_get_fanspeed_apple (hashcat_ctx_t *hashcat_ctx, char *fan_speed_buf)
+int hm_get_fanspeed_apple (hashdog_ctx_t *hashdog_ctx, char *fan_speed_buf)
 {
-  hwmon_ctx_t *hwmon_ctx = hashcat_ctx->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = hashdog_ctx->hwmon_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
   if (hwmon_ctx->hm_iokit)
   {
-    if (hm_IOKIT_get_fan_speed_current (hashcat_ctx, fan_speed_buf) == 0)
+    if (hm_IOKIT_get_fan_speed_current (hashdog_ctx, fan_speed_buf) == 0)
     {
       return 1;
     }
@@ -506,10 +506,10 @@ int hm_get_fanspeed_apple (hashcat_ctx_t *hashcat_ctx, char *fan_speed_buf)
 }
 #endif
 
-int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_fanspeed_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -521,7 +521,7 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
     {
       int speed = 0;
 
-      if (hm_NVML_nvmlDeviceGetFanSpeed (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, (u32 *) &speed) == -1)
+      if (hm_NVML_nvmlDeviceGetFanSpeed (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, (u32 *) &speed) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported = false;
 
@@ -550,7 +550,7 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
             lpFanSpeedValue.iSpeedType = ADL_DL_FANCTRL_SPEED_TYPE_PERCENT;
             lpFanSpeedValue.iFlags     = ADL_DL_FANCTRL_FLAG_USER_DEFINED_SPEED;
 
-            if (hm_ADL_Overdrive5_FanSpeed_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, 0, &lpFanSpeedValue) == -1)
+            if (hm_ADL_Overdrive5_FanSpeed_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, 0, &lpFanSpeedValue) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported = false;
 
@@ -566,7 +566,7 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
 
             memset (&faninfo, 0, sizeof (faninfo));
 
-            if (hm_ADL_Overdrive6_FanSpeed_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &faninfo) == -1)
+            if (hm_ADL_Overdrive6_FanSpeed_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &faninfo) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported = false;
 
@@ -582,7 +582,7 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported = false;
 
@@ -597,7 +597,7 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
         {
           int speed = 0;
 
-          if (hm_SYSFS_AMDGPU_get_fan_speed_current (hashcat_ctx, backend_device_idx, &speed) == -1)
+          if (hm_SYSFS_AMDGPU_get_fan_speed_current (hashdog_ctx, backend_device_idx, &speed) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported = false;
 
@@ -614,7 +614,7 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
         {
           int speed = 0;
 
-          if (hm_NVML_nvmlDeviceGetFanSpeed (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, (u32 *) &speed) == -1)
+          if (hm_NVML_nvmlDeviceGetFanSpeed (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, (u32 *) &speed) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].fanspeed_get_supported = false;
 
@@ -632,10 +632,10 @@ int hm_get_fanspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
   return -1;
 }
 
-int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_buslanes_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -647,7 +647,7 @@ int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
     {
       unsigned int currLinkWidth;
 
-      if (hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &currLinkWidth) == -1)
+      if (hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &currLinkWidth) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].buslanes_get_supported = false;
 
@@ -672,7 +672,7 @@ int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
 
             PMActivity.iSize = sizeof (ADLPMActivity);
 
-            if (hm_ADL_Overdrive_CurrentActivity_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
+            if (hm_ADL_Overdrive_CurrentActivity_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].buslanes_get_supported = false;
 
@@ -688,7 +688,7 @@ int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].buslanes_get_supported = false;
 
@@ -703,7 +703,7 @@ int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
         {
           int lanes;
 
-          if (hm_SYSFS_AMDGPU_get_pp_dpm_pcie (hashcat_ctx, backend_device_idx, &lanes) == -1)
+          if (hm_SYSFS_AMDGPU_get_pp_dpm_pcie (hashdog_ctx, backend_device_idx, &lanes) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].buslanes_get_supported = false;
 
@@ -720,7 +720,7 @@ int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
         {
           unsigned int currLinkWidth;
 
-          if (hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &currLinkWidth) == -1)
+          if (hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &currLinkWidth) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].buslanes_get_supported = false;
 
@@ -738,10 +738,10 @@ int hm_get_buslanes_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
   return -1;
 }
 
-int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_utilization_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -753,7 +753,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
     {
       nvmlUtilization_t utilization;
 
-      if (hm_NVML_nvmlDeviceGetUtilizationRates (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &utilization) == -1)
+      if (hm_NVML_nvmlDeviceGetUtilizationRates (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &utilization) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -775,7 +775,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           int utilization = 0;
 
-          if (hm_IOKIT_get_utilization_current (hashcat_ctx, &utilization) == -1)
+          if (hm_IOKIT_get_utilization_current (hashdog_ctx, &utilization) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -803,7 +803,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
             PMActivity.iSize = sizeof (ADLPMActivity);
 
-            if (hm_ADL_Overdrive_CurrentActivity_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
+            if (hm_ADL_Overdrive_CurrentActivity_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -819,7 +819,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -834,7 +834,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           int util;
 
-          if (hm_SYSFS_AMDGPU_get_gpu_busy_percent (hashcat_ctx, backend_device_idx, &util) == -1)
+          if (hm_SYSFS_AMDGPU_get_gpu_busy_percent (hashdog_ctx, backend_device_idx, &util) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -851,7 +851,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           nvmlUtilization_t utilization;
 
-          if (hm_NVML_nvmlDeviceGetUtilizationRates (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &utilization) == -1)
+          if (hm_NVML_nvmlDeviceGetUtilizationRates (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &utilization) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -869,7 +869,7 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
       {
         int utilization = 0;
 
-        if (hm_SYSFS_CPU_get_utilization_current (hashcat_ctx, &utilization) == -1)
+        if (hm_SYSFS_CPU_get_utilization_current (hashdog_ctx, &utilization) == -1)
         {
           hwmon_ctx->hm_device[backend_device_idx].utilization_get_supported = false;
 
@@ -886,10 +886,10 @@ int hm_get_utilization_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
   return -1;
 }
 
-int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_memoryspeed_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -901,7 +901,7 @@ int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
     {
       unsigned int clockfreq;
 
-      if (hm_NVML_nvmlDeviceGetClockInfo (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_MEM, &clockfreq) == -1)
+      if (hm_NVML_nvmlDeviceGetClockInfo (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_MEM, &clockfreq) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].memoryspeed_get_supported = false;
 
@@ -926,7 +926,7 @@ int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
             PMActivity.iSize = sizeof (ADLPMActivity);
 
-            if (hm_ADL_Overdrive_CurrentActivity_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
+            if (hm_ADL_Overdrive_CurrentActivity_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].memoryspeed_get_supported = false;
 
@@ -942,7 +942,7 @@ int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].memoryspeed_get_supported = false;
 
@@ -957,7 +957,7 @@ int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           int clockfreq;
 
-          if (hm_SYSFS_AMDGPU_get_pp_dpm_mclk (hashcat_ctx, backend_device_idx, &clockfreq) == -1)
+          if (hm_SYSFS_AMDGPU_get_pp_dpm_mclk (hashdog_ctx, backend_device_idx, &clockfreq) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].memoryspeed_get_supported = false;
 
@@ -974,7 +974,7 @@ int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
         {
           unsigned int clockfreq;
 
-          if (hm_NVML_nvmlDeviceGetClockInfo (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_MEM, &clockfreq) == -1)
+          if (hm_NVML_nvmlDeviceGetClockInfo (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_MEM, &clockfreq) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].memoryspeed_get_supported = false;
 
@@ -992,10 +992,10 @@ int hm_get_memoryspeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int b
   return -1;
 }
 
-int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_corespeed_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -1007,7 +1007,7 @@ int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
     {
       unsigned int clockfreq;
 
-      if (hm_NVML_nvmlDeviceGetClockInfo (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_SM, &clockfreq) == -1)
+      if (hm_NVML_nvmlDeviceGetClockInfo (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_SM, &clockfreq) == -1)
       {
         hwmon_ctx->hm_device[backend_device_idx].corespeed_get_supported = false;
 
@@ -1032,7 +1032,7 @@ int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
 
             PMActivity.iSize = sizeof (ADLPMActivity);
 
-            if (hm_ADL_Overdrive_CurrentActivity_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
+            if (hm_ADL_Overdrive_CurrentActivity_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &PMActivity) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].corespeed_get_supported = false;
 
@@ -1048,7 +1048,7 @@ int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
 
             memset (&odlpDataOutput, 0, sizeof (ADLPMLogDataOutput));
 
-            if (hm_ADL2_New_QueryPMLogData_Get (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
+            if (hm_ADL2_New_QueryPMLogData_Get (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].adl, &odlpDataOutput) == -1)
             {
               hwmon_ctx->hm_device[backend_device_idx].corespeed_get_supported = false;
 
@@ -1063,7 +1063,7 @@ int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
         {
           int clockfreq;
 
-          if (hm_SYSFS_AMDGPU_get_pp_dpm_sclk (hashcat_ctx, backend_device_idx, &clockfreq) == -1)
+          if (hm_SYSFS_AMDGPU_get_pp_dpm_sclk (hashdog_ctx, backend_device_idx, &clockfreq) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].corespeed_get_supported = false;
 
@@ -1080,7 +1080,7 @@ int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
         {
           unsigned int clockfreq;
 
-          if (hm_NVML_nvmlDeviceGetClockInfo (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_SM, &clockfreq) == -1)
+          if (hm_NVML_nvmlDeviceGetClockInfo (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, NVML_CLOCK_SM, &clockfreq) == -1)
           {
             hwmon_ctx->hm_device[backend_device_idx].corespeed_get_supported = false;
 
@@ -1098,10 +1098,10 @@ int hm_get_corespeed_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int bac
   return -1;
 }
 
-int hm_get_throttle_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int backend_device_idx)
+int hm_get_throttle_with_devices_idx (hashdog_ctx_t *hashdog_ctx, const int backend_device_idx)
 {
-  hwmon_ctx_t   *hwmon_ctx   = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  hwmon_ctx_t   *hwmon_ctx   = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   if (hwmon_ctx->enabled == false) return -1;
 
@@ -1115,8 +1115,8 @@ int hm_get_throttle_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
       unsigned long long clocksThrottleReasons = 0;
       unsigned long long supportedThrottleReasons = 0;
 
-      if (hm_NVML_nvmlDeviceGetCurrentClocksThrottleReasons   (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &clocksThrottleReasons)    == -1) return -1;
-      if (hm_NVML_nvmlDeviceGetSupportedClocksThrottleReasons (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &supportedThrottleReasons) == -1) return -1;
+      if (hm_NVML_nvmlDeviceGetCurrentClocksThrottleReasons   (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &clocksThrottleReasons)    == -1) return -1;
+      if (hm_NVML_nvmlDeviceGetSupportedClocksThrottleReasons (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &supportedThrottleReasons) == -1) return -1;
 
       clocksThrottleReasons &=  supportedThrottleReasons;
       clocksThrottleReasons &= ~nvmlClocksThrottleReasonGpuIdle;
@@ -1143,11 +1143,11 @@ int hm_get_throttle_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
       perfPolicies_info.version   = MAKE_NVAPI_VERSION (NV_GPU_PERF_POLICIES_INFO_PARAMS_V1, 1);
       perfPolicies_status.version = MAKE_NVAPI_VERSION (NV_GPU_PERF_POLICIES_STATUS_PARAMS_V1, 1);
 
-      hm_NvAPI_GPU_GetPerfPoliciesInfo (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_info);
+      hm_NvAPI_GPU_GetPerfPoliciesInfo (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_info);
 
       perfPolicies_status.info_value = perfPolicies_info.info_value;
 
-      hm_NvAPI_GPU_GetPerfPoliciesStatus (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_status);
+      hm_NvAPI_GPU_GetPerfPoliciesStatus (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_status);
 
       return perfPolicies_status.throttle & 2;
     }
@@ -1169,8 +1169,8 @@ int hm_get_throttle_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
           unsigned long long clocksThrottleReasons = 0;
           unsigned long long supportedThrottleReasons = 0;
 
-          if (hm_NVML_nvmlDeviceGetCurrentClocksThrottleReasons   (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &clocksThrottleReasons)    == -1) return -1;
-          if (hm_NVML_nvmlDeviceGetSupportedClocksThrottleReasons (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &supportedThrottleReasons) == -1) return -1;
+          if (hm_NVML_nvmlDeviceGetCurrentClocksThrottleReasons   (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &clocksThrottleReasons)    == -1) return -1;
+          if (hm_NVML_nvmlDeviceGetSupportedClocksThrottleReasons (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvml, &supportedThrottleReasons) == -1) return -1;
 
           clocksThrottleReasons &=  supportedThrottleReasons;
           clocksThrottleReasons &= ~nvmlClocksThrottleReasonGpuIdle;
@@ -1197,11 +1197,11 @@ int hm_get_throttle_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
           perfPolicies_info.version   = MAKE_NVAPI_VERSION (NV_GPU_PERF_POLICIES_INFO_PARAMS_V1, 1);
           perfPolicies_status.version = MAKE_NVAPI_VERSION (NV_GPU_PERF_POLICIES_STATUS_PARAMS_V1, 1);
 
-          hm_NvAPI_GPU_GetPerfPoliciesInfo (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_info);
+          hm_NvAPI_GPU_GetPerfPoliciesInfo (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_info);
 
           perfPolicies_status.info_value = perfPolicies_info.info_value;
 
-          hm_NvAPI_GPU_GetPerfPoliciesStatus (hashcat_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_status);
+          hm_NvAPI_GPU_GetPerfPoliciesStatus (hashdog_ctx, hwmon_ctx->hm_device[backend_device_idx].nvapi, &perfPolicies_status);
 
           return perfPolicies_status.throttle & 2;
         }
@@ -1214,11 +1214,11 @@ int hm_get_throttle_with_devices_idx (hashcat_ctx_t *hashcat_ctx, const int back
   return -1;
 }
 
-int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int hwmon_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  hwmon_ctx_t    *hwmon_ctx    = hashcat_ctx->hwmon_ctx;
-  backend_ctx_t  *backend_ctx  = hashcat_ctx->backend_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  hwmon_ctx_t    *hwmon_ctx    = hashdog_ctx->hwmon_ctx;
+  backend_ctx_t  *backend_ctx  = hashdog_ctx->backend_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   hwmon_ctx->enabled = false;
 
@@ -1264,7 +1264,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_nvml = (NVML_PTR *) hcmalloc (sizeof (NVML_PTR));
 
-    if (nvml_init (hashcat_ctx) == -1)
+    if (nvml_init (hashdog_ctx) == -1)
     {
       hcfree (hwmon_ctx->hm_nvml);
 
@@ -1276,7 +1276,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_nvapi = (NVAPI_PTR *) hcmalloc (sizeof (NVAPI_PTR));
 
-    if (nvapi_init (hashcat_ctx) == -1)
+    if (nvapi_init (hashdog_ctx) == -1)
     {
       hcfree (hwmon_ctx->hm_nvapi);
 
@@ -1288,7 +1288,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_adl = (ADL_PTR *) hcmalloc (sizeof (ADL_PTR));
 
-    if (adl_init (hashcat_ctx) == -1)
+    if (adl_init (hashdog_ctx) == -1)
     {
       hcfree (hwmon_ctx->hm_adl);
 
@@ -1300,7 +1300,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_sysfs_amdgpu = (SYSFS_AMDGPU_PTR *) hcmalloc (sizeof (SYSFS_AMDGPU_PTR));
 
-    if (sysfs_amdgpu_init (hashcat_ctx) == false)
+    if (sysfs_amdgpu_init (hashdog_ctx) == false)
     {
       hcfree (hwmon_ctx->hm_sysfs_amdgpu);
 
@@ -1321,7 +1321,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_sysfs_cpu = (SYSFS_CPU_PTR *) hcmalloc (sizeof (SYSFS_CPU_PTR));
 
-    if (sysfs_cpu_init (hashcat_ctx) == false)
+    if (sysfs_cpu_init (hashdog_ctx) == false)
     {
       hcfree (hwmon_ctx->hm_sysfs_cpu);
 
@@ -1334,7 +1334,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_iokit = (IOKIT_PTR *) hcmalloc (sizeof (IOKIT_PTR));
 
-    if (iokit_init (hashcat_ctx) == false)
+    if (iokit_init (hashdog_ctx) == false)
     {
       hcfree (hwmon_ctx->hm_iokit);
 
@@ -1345,11 +1345,11 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
   if (hwmon_ctx->hm_nvml)
   {
-    if (hm_NVML_nvmlInit (hashcat_ctx) == 0)
+    if (hm_NVML_nvmlInit (hashdog_ctx) == 0)
     {
       HM_ADAPTER_NVML *nvmlGPUHandle = (HM_ADAPTER_NVML *) hccalloc (DEVICES_MAX, sizeof (HM_ADAPTER_NVML));
 
-      int tmp_in = hm_get_adapter_index_nvml (hashcat_ctx, nvmlGPUHandle);
+      int tmp_in = hm_get_adapter_index_nvml (hashdog_ctx, nvmlGPUHandle);
 
       for (int backend_devices_idx = 0; backend_devices_idx < backend_ctx->backend_devices_cnt; backend_devices_idx++)
       {
@@ -1363,7 +1363,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
           {
             nvmlPciInfo_t pci;
 
-            if (hm_NVML_nvmlDeviceGetPciInfo (hashcat_ctx, nvmlGPUHandle[i], &pci) == -1) continue;
+            if (hm_NVML_nvmlDeviceGetPciInfo (hashdog_ctx, nvmlGPUHandle[i], &pci) == -1) continue;
 
             if ((device_param->pcie_bus      == pci.bus)
              && (device_param->pcie_device   == (pci.device >> 3))
@@ -1395,7 +1395,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
           {
             nvmlPciInfo_t pci;
 
-            if (hm_NVML_nvmlDeviceGetPciInfo (hashcat_ctx, nvmlGPUHandle[i], &pci) == -1) continue;
+            if (hm_NVML_nvmlDeviceGetPciInfo (hashdog_ctx, nvmlGPUHandle[i], &pci) == -1) continue;
 
             if ((device_param->pcie_bus      == pci.bus)
              && (device_param->pcie_device   == (pci.device >> 3))
@@ -1424,11 +1424,11 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
   if (hwmon_ctx->hm_nvapi)
   {
-    if (hm_NvAPI_Initialize (hashcat_ctx) == 0)
+    if (hm_NvAPI_Initialize (hashdog_ctx) == 0)
     {
       HM_ADAPTER_NVAPI *nvGPUHandle = (HM_ADAPTER_NVAPI *) hccalloc (NVAPI_MAX_PHYSICAL_GPUS, sizeof (HM_ADAPTER_NVAPI));
 
-      int tmp_in = hm_get_adapter_index_nvapi (hashcat_ctx, nvGPUHandle);
+      int tmp_in = hm_get_adapter_index_nvapi (hashdog_ctx, nvGPUHandle);
 
       for (int backend_devices_idx = 0; backend_devices_idx < backend_ctx->backend_devices_cnt; backend_devices_idx++)
       {
@@ -1443,9 +1443,9 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
             NvU32 BusId     = 0;
             NvU32 BusSlotId = 0;
 
-            if (hm_NvAPI_GPU_GetBusId (hashcat_ctx, nvGPUHandle[i], &BusId) == -1) continue;
+            if (hm_NvAPI_GPU_GetBusId (hashdog_ctx, nvGPUHandle[i], &BusId) == -1) continue;
 
-            if (hm_NvAPI_GPU_GetBusSlotId (hashcat_ctx, nvGPUHandle[i], &BusSlotId) == -1) continue;
+            if (hm_NvAPI_GPU_GetBusSlotId (hashdog_ctx, nvGPUHandle[i], &BusSlotId) == -1) continue;
 
             if ((device_param->pcie_bus      == BusId)
              && (device_param->pcie_device   == (BusSlotId >> 3))
@@ -1472,9 +1472,9 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
             NvU32 BusId     = 0;
             NvU32 BusSlotId = 0;
 
-            if (hm_NvAPI_GPU_GetBusId (hashcat_ctx, nvGPUHandle[i], &BusId) == -1) continue;
+            if (hm_NvAPI_GPU_GetBusId (hashdog_ctx, nvGPUHandle[i], &BusId) == -1) continue;
 
-            if (hm_NvAPI_GPU_GetBusSlotId (hashcat_ctx, nvGPUHandle[i], &BusSlotId) == -1) continue;
+            if (hm_NvAPI_GPU_GetBusSlotId (hashdog_ctx, nvGPUHandle[i], &BusSlotId) == -1) continue;
 
             if ((device_param->pcie_bus      == BusId)
              && (device_param->pcie_device   == (BusSlotId >> 3))
@@ -1497,13 +1497,13 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
   if (hwmon_ctx->hm_adl)
   {
-    if (hm_ADL_Main_Control_Create (hashcat_ctx, ADL_Main_Memory_Alloc, 0) == 0)
+    if (hm_ADL_Main_Control_Create (hashdog_ctx, ADL_Main_Memory_Alloc, 0) == 0)
     {
       // total number of adapters
 
       int tmp_in;
 
-      if (get_adapters_num_adl (hashcat_ctx, &tmp_in) == -1)
+      if (get_adapters_num_adl (hashdog_ctx, &tmp_in) == -1)
       {
         FREE_ADAPTERS;
 
@@ -1514,7 +1514,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
       LPAdapterInfo lpAdapterInfo = (LPAdapterInfo) hccalloc (tmp_in, sizeof (AdapterInfo));
 
-      if (hm_ADL_Adapter_AdapterInfo_Get (hashcat_ctx, lpAdapterInfo, tmp_in * sizeof (AdapterInfo)) == -1)
+      if (hm_ADL_Adapter_AdapterInfo_Get (hashdog_ctx, lpAdapterInfo, tmp_in * sizeof (AdapterInfo)) == -1)
       {
         FREE_ADAPTERS;
 
@@ -1550,7 +1550,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
               int od_enabled   = 0;
               int od_version   = 0;
 
-              hm_ADL2_Overdrive_Caps (hashcat_ctx, lpAdapterInfo[i].iAdapterIndex, &od_supported, &od_enabled, &od_version);
+              hm_ADL2_Overdrive_Caps (hashdog_ctx, lpAdapterInfo[i].iAdapterIndex, &od_supported, &od_enabled, &od_version);
 
               if (od_version < 8) od_version = 5;
 
@@ -1681,7 +1681,7 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     hwmon_ctx->hm_iokit = (IOKIT_PTR *) hcmalloc (sizeof (IOKIT_PTR));
 
-    if (iokit_init (hashcat_ctx) == false)
+    if (iokit_init (hashdog_ctx) == false)
     {
       hcfree (hwmon_ctx->hm_iokit);
 
@@ -1911,16 +1911,16 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
     // by calling the different functions here this will disable them in case they will error out
     // this will also reduce the error itself printed to the user to a single print on startup
 
-    hm_get_buslanes_with_devices_idx           (hashcat_ctx, backend_devices_idx);
-    hm_get_corespeed_with_devices_idx          (hashcat_ctx, backend_devices_idx);
-    hm_get_fanpolicy_with_devices_idx          (hashcat_ctx, backend_devices_idx);
-    hm_get_fanspeed_with_devices_idx           (hashcat_ctx, backend_devices_idx);
-    hm_get_memoryspeed_with_devices_idx        (hashcat_ctx, backend_devices_idx);
-    hm_get_temperature_with_devices_idx        (hashcat_ctx, backend_devices_idx);
-    hm_get_threshold_shutdown_with_devices_idx (hashcat_ctx, backend_devices_idx);
-    hm_get_threshold_slowdown_with_devices_idx (hashcat_ctx, backend_devices_idx);
-    hm_get_throttle_with_devices_idx           (hashcat_ctx, backend_devices_idx);
-    hm_get_utilization_with_devices_idx        (hashcat_ctx, backend_devices_idx);
+    hm_get_buslanes_with_devices_idx           (hashdog_ctx, backend_devices_idx);
+    hm_get_corespeed_with_devices_idx          (hashdog_ctx, backend_devices_idx);
+    hm_get_fanpolicy_with_devices_idx          (hashdog_ctx, backend_devices_idx);
+    hm_get_fanspeed_with_devices_idx           (hashdog_ctx, backend_devices_idx);
+    hm_get_memoryspeed_with_devices_idx        (hashdog_ctx, backend_devices_idx);
+    hm_get_temperature_with_devices_idx        (hashdog_ctx, backend_devices_idx);
+    hm_get_threshold_shutdown_with_devices_idx (hashdog_ctx, backend_devices_idx);
+    hm_get_threshold_slowdown_with_devices_idx (hashdog_ctx, backend_devices_idx);
+    hm_get_throttle_with_devices_idx           (hashdog_ctx, backend_devices_idx);
+    hm_get_utilization_with_devices_idx        (hashdog_ctx, backend_devices_idx);
   }
 
   FREE_ADAPTERS;
@@ -1928,9 +1928,9 @@ int hwmon_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void hwmon_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void hwmon_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = hashcat_ctx->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = hashdog_ctx->hwmon_ctx;
 
   if (hwmon_ctx->enabled == false) return;
 
@@ -1938,39 +1938,39 @@ void hwmon_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
 
   if (hwmon_ctx->hm_nvml)
   {
-    hm_NVML_nvmlShutdown (hashcat_ctx);
+    hm_NVML_nvmlShutdown (hashdog_ctx);
 
-    nvml_close (hashcat_ctx);
+    nvml_close (hashdog_ctx);
   }
 
   if (hwmon_ctx->hm_nvapi)
   {
-    hm_NvAPI_Unload (hashcat_ctx);
+    hm_NvAPI_Unload (hashdog_ctx);
 
-    nvapi_close (hashcat_ctx);
+    nvapi_close (hashdog_ctx);
   }
 
   if (hwmon_ctx->hm_adl)
   {
-    hm_ADL_Main_Control_Destroy (hashcat_ctx);
+    hm_ADL_Main_Control_Destroy (hashdog_ctx);
 
-    adl_close (hashcat_ctx);
+    adl_close (hashdog_ctx);
   }
 
   if (hwmon_ctx->hm_sysfs_amdgpu)
   {
-    sysfs_amdgpu_close (hashcat_ctx);
+    sysfs_amdgpu_close (hashdog_ctx);
   }
 
   if (hwmon_ctx->hm_sysfs_cpu)
   {
-    sysfs_cpu_close (hashcat_ctx);
+    sysfs_cpu_close (hashdog_ctx);
   }
 
   #if defined (__APPLE__)
   if (hwmon_ctx->hm_iokit)
   {
-    iokit_close (hashcat_ctx);
+    iokit_close (hashdog_ctx);
   }
   #endif
 

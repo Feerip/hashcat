@@ -1,6 +1,6 @@
 Test files for pdf kernels
 
-Didn't use hashcat as password as pdf files/a single pdf hash can
+Didn't use hashdog as password as pdf files/a single pdf hash can
 have two passwords, based on the u-value and o-value.
 https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf
 

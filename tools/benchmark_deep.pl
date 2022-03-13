@@ -10,16 +10,16 @@ use warnings;
 
 my $nvidia_cache     = "~/.nv";
 my $amd_cache        = "~/.AMD";
-my $hashcat_path     = ".";
-my $kernels_cache    = "$hashcat_path/kernels";
-my $hashcat_bin      = "$hashcat_path/hashcat";
+my $hashdog_path     = ".";
+my $kernels_cache    = "$hashdog_path/kernels";
+my $hashdog_bin      = "$hashdog_path/hashdog";
 my $device           = 1;
 my $workload_profile = 3;
 my $runtime          = 24;
 my $sleep_sec        = 12;
 my $default_mask     = "?b?b?b?b?b?b?b";
 my $result           = "result.txt";
-my $old_hashcat      = 0; # requires to have ran with new hashcat before to create the hashfiles
+my $old_hashdog      = 0; # requires to have ran with new hashdog before to create the hashfiles
 my $repeats          = 1;
 my $cpu_benchmark    = 0;
 
@@ -375,7 +375,7 @@ if (scalar @ARGV)
 
 unlink ($result);
 
-chdir ($hashcat_path);
+chdir ($hashdog_path);
 
 for my $hash_type (@hash_types)
 {
@@ -383,7 +383,7 @@ for my $hash_type (@hash_types)
 
   my $mask = $default_mask;
 
-  if ($old_hashcat == 0)
+  if ($old_hashdog == 0)
   {
     my $module = get_module ($hash_type);
 
@@ -408,7 +408,7 @@ for my $hash_type (@hash_types)
 
   my @command =
   (
-    $hashcat_bin,
+    $hashdog_bin,
     "--quiet",
     "tmp.hash.$hash_type",
     "--keep-guessing",

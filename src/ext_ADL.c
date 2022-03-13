@@ -16,9 +16,9 @@ void *HC_API_CALL ADL_Main_Memory_Alloc (const int iSize)
   return malloc ((size_t) iSize);
 }
 
-int adl_init (void *hashcat_ctx)
+int adl_init (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -45,7 +45,7 @@ int adl_init (void *hashcat_ctx)
   if (!adl->lib)
   {
     //if (user_options->quiet == false)
-    //  event_log_error (hashcat_ctx, "Load of ADL library failed. Proceeding without ADL HWMon enabled.");
+    //  event_log_error (hashdog_ctx, "Load of ADL library failed. Proceeding without ADL HWMon enabled.");
 
     return -1;
   }
@@ -74,9 +74,9 @@ int adl_init (void *hashcat_ctx)
   return 0;
 }
 
-void adl_close (void *hashcat_ctx)
+void adl_close (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -89,9 +89,9 @@ void adl_close (void *hashcat_ctx)
   }
 }
 
-int hm_ADL_Main_Control_Destroy (void *hashcat_ctx)
+int hm_ADL_Main_Control_Destroy (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -99,7 +99,7 @@ int hm_ADL_Main_Control_Destroy (void *hashcat_ctx)
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Main_Control_Destroy(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Main_Control_Destroy(): %d", ADL_rc);
 
     return -1;
   }
@@ -107,9 +107,9 @@ int hm_ADL_Main_Control_Destroy (void *hashcat_ctx)
   return 0;
 }
 
-int hm_ADL_Main_Control_Create (void *hashcat_ctx, ADL_MAIN_MALLOC_CALLBACK callback, int iEnumConnectedAdapters)
+int hm_ADL_Main_Control_Create (void *hashdog_ctx, ADL_MAIN_MALLOC_CALLBACK callback, int iEnumConnectedAdapters)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -117,7 +117,7 @@ int hm_ADL_Main_Control_Create (void *hashcat_ctx, ADL_MAIN_MALLOC_CALLBACK call
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Main_Control_Create(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Main_Control_Create(): %d", ADL_rc);
 
     return -1;
   }
@@ -125,9 +125,9 @@ int hm_ADL_Main_Control_Create (void *hashcat_ctx, ADL_MAIN_MALLOC_CALLBACK call
   return 0;
 }
 
-int hm_ADL_Adapter_NumberOfAdapters_Get (void *hashcat_ctx, int *lpNumAdapters)
+int hm_ADL_Adapter_NumberOfAdapters_Get (void *hashdog_ctx, int *lpNumAdapters)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -135,7 +135,7 @@ int hm_ADL_Adapter_NumberOfAdapters_Get (void *hashcat_ctx, int *lpNumAdapters)
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Adapter_NumberOfAdapters_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Adapter_NumberOfAdapters_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -143,9 +143,9 @@ int hm_ADL_Adapter_NumberOfAdapters_Get (void *hashcat_ctx, int *lpNumAdapters)
   return 0;
 }
 
-int hm_ADL_Adapter_AdapterInfo_Get (void *hashcat_ctx, LPAdapterInfo lpInfo, int iInputSize)
+int hm_ADL_Adapter_AdapterInfo_Get (void *hashdog_ctx, LPAdapterInfo lpInfo, int iInputSize)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -153,7 +153,7 @@ int hm_ADL_Adapter_AdapterInfo_Get (void *hashcat_ctx, LPAdapterInfo lpInfo, int
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Adapter_AdapterInfo_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Adapter_AdapterInfo_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -161,9 +161,9 @@ int hm_ADL_Adapter_AdapterInfo_Get (void *hashcat_ctx, LPAdapterInfo lpInfo, int
   return 0;
 }
 
-int hm_ADL_Overdrive5_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLTemperature *lpTemperature)
+int hm_ADL_Overdrive5_Temperature_Get (void *hashdog_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLTemperature *lpTemperature)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -171,7 +171,7 @@ int hm_ADL_Overdrive5_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Overdrive5_Temperature_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Overdrive5_Temperature_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -179,9 +179,9 @@ int hm_ADL_Overdrive5_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int
   return 0;
 }
 
-int hm_ADL_Overdrive6_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int *iTemperature)
+int hm_ADL_Overdrive6_Temperature_Get (void *hashdog_ctx, int iAdapterIndex, int *iTemperature)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -189,7 +189,7 @@ int hm_ADL_Overdrive6_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Overdrive6_Temperature_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Overdrive6_Temperature_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -197,9 +197,9 @@ int hm_ADL_Overdrive6_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int
   return 0;
 }
 
-int hm_ADL_Overdrive_CurrentActivity_Get (void *hashcat_ctx, int iAdapterIndex, ADLPMActivity *lpActivity)
+int hm_ADL_Overdrive_CurrentActivity_Get (void *hashdog_ctx, int iAdapterIndex, ADLPMActivity *lpActivity)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -207,7 +207,7 @@ int hm_ADL_Overdrive_CurrentActivity_Get (void *hashcat_ctx, int iAdapterIndex, 
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Overdrive5_CurrentActivity_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Overdrive5_CurrentActivity_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -215,9 +215,9 @@ int hm_ADL_Overdrive_CurrentActivity_Get (void *hashcat_ctx, int iAdapterIndex, 
   return 0;
 }
 
-int hm_ADL_Overdrive5_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLFanSpeedValue *lpFanSpeedValue)
+int hm_ADL_Overdrive5_FanSpeed_Get (void *hashdog_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLFanSpeedValue *lpFanSpeedValue)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -225,7 +225,7 @@ int hm_ADL_Overdrive5_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, int iT
 
   if ((ADL_rc != ADL_OK) && (ADL_rc != ADL_ERR_NOT_SUPPORTED)) // exception allowed only here
   {
-    event_log_error (hashcat_ctx, "ADL_Overdrive5_FanSpeed_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Overdrive5_FanSpeed_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -233,9 +233,9 @@ int hm_ADL_Overdrive5_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, int iT
   return 0;
 }
 
-int hm_ADL_Overdrive6_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, ADLOD6FanSpeedInfo *lpFanSpeedInfo)
+int hm_ADL_Overdrive6_FanSpeed_Get (void *hashdog_ctx, int iAdapterIndex, ADLOD6FanSpeedInfo *lpFanSpeedInfo)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -243,7 +243,7 @@ int hm_ADL_Overdrive6_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, ADLOD6
 
   if ((ADL_rc != ADL_OK) && (ADL_rc != ADL_ERR_NOT_SUPPORTED)) // exception allowed only here
   {
-    event_log_error (hashcat_ctx, "ADL_Overdrive6_FanSpeed_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Overdrive6_FanSpeed_Get(): %d", ADL_rc);
 
     return -1;
   }
@@ -251,9 +251,9 @@ int hm_ADL_Overdrive6_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, ADLOD6
   return 0;
 }
 
-int hm_ADL_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *od_supported, int *od_enabled, int *od_version)
+int hm_ADL_Overdrive_Caps (void *hashdog_ctx, int iAdapterIndex, int *od_supported, int *od_enabled, int *od_version)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -261,7 +261,7 @@ int hm_ADL_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *od_support
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL_Overdrive_Caps(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL_Overdrive_Caps(): %d", ADL_rc);
 
     return -1;
   }
@@ -269,9 +269,9 @@ int hm_ADL_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *od_support
   return 0;
 }
 
-int hm_ADL2_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *iSupported, int *iEnabled, int *iVersion)
+int hm_ADL2_Overdrive_Caps (void *hashdog_ctx, int iAdapterIndex, int *iSupported, int *iEnabled, int *iVersion)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -279,14 +279,14 @@ int hm_ADL2_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *iSupporte
 
   if (adl->ADL2_Overdrive_Caps == NULL)
   {
-    return hm_ADL_Overdrive_Caps (hashcat_ctx, iAdapterIndex, iSupported, iEnabled, iVersion);
+    return hm_ADL_Overdrive_Caps (hashdog_ctx, iAdapterIndex, iSupported, iEnabled, iVersion);
   }
 
   const int ADL_rc = adl->ADL2_Overdrive_Caps (NULL, iAdapterIndex, iSupported, iEnabled, iVersion);
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL2_Overdrive_Caps(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL2_Overdrive_Caps(): %d", ADL_rc);
 
     return -1;
   }
@@ -294,9 +294,9 @@ int hm_ADL2_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *iSupporte
   return 0;
 }
 
-int hm_ADL2_New_QueryPMLogData_Get (void *hashcat_ctx, int iAdapterIndex, ADLPMLogDataOutput *lpDataOutput)
+int hm_ADL2_New_QueryPMLogData_Get (void *hashdog_ctx, int iAdapterIndex, ADLPMLogDataOutput *lpDataOutput)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   ADL_PTR *adl = (ADL_PTR *) hwmon_ctx->hm_adl;
 
@@ -304,7 +304,7 @@ int hm_ADL2_New_QueryPMLogData_Get (void *hashcat_ctx, int iAdapterIndex, ADLPML
 
   if (ADL_rc != ADL_OK)
   {
-    event_log_error (hashcat_ctx, "ADL2_New_QueryPMLogData_Get(): %d", ADL_rc);
+    event_log_error (hashdog_ctx, "ADL2_New_QueryPMLogData_Get(): %d", ADL_rc);
 
     return -1;
   }

@@ -113,17 +113,17 @@ typedef hm_iokit_lib_t IOKIT_PTR;
 #if defined(__APPLE__)
 UInt32 hm_IOKIT_strtoul (const char *str, int size, int base);
 void hm_IOKIT_ultostr (char *str, UInt32 val);
-kern_return_t hm_IOKIT_SMCOpen (void *hashcat_ctx, io_connect_t *conn);
+kern_return_t hm_IOKIT_SMCOpen (void *hashdog_ctx, io_connect_t *conn);
 kern_return_t hm_IOKIT_SMCClose (io_connect_t conn);
 kern_return_t hm_IOKIT_SMCCall (int index, SMCKeyData_t *inData, SMCKeyData_t *outData, io_connect_t conn);
 kern_return_t hm_IOKIT_SMCReadKey (UInt32Char_t key, SMCVal_t *val, io_connect_t conn);
-int hm_IOKIT_SMCGetSensorGraphicHot (void *hashcat_ctx);
-int hm_IOKIT_SMCGetTemperature (void *hashcat_ctx, char *key, double *temp);
+int hm_IOKIT_SMCGetSensorGraphicHot (void *hashdog_ctx);
+int hm_IOKIT_SMCGetTemperature (void *hashdog_ctx, char *key, double *temp);
 bool hm_IOKIT_SMCGetFanRPM (char *key, io_connect_t conn, float *ret);
-int hm_IOKIT_get_fan_speed_current (void *hashcat_ctx, char *fan_speed_buf);
-int hm_IOKIT_get_utilization_current (void *hashcat_ctx, int *utilization);
-bool iokit_init (void *hashcat_ctx);
-bool iokit_close (void *hashcat_ctx);
+int hm_IOKIT_get_fan_speed_current (void *hashdog_ctx, char *fan_speed_buf);
+int hm_IOKIT_get_utilization_current (void *hashdog_ctx, int *utilization);
+bool iokit_init (void *hashdog_ctx);
+bool iokit_close (void *hashdog_ctx);
 #endif // __APPLE__
 
 #endif // _EXT_IOKIT_H

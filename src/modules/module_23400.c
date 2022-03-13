@@ -25,7 +25,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_LOOP2
                                   | OPTS_TYPE_INIT2;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat1";
+static const char *ST_PASS        = "hashdog1";
 static const char *ST_HASH        = "$bitwarden$2*100000*2*bm9yZXBseUBoYXNoY2F0Lm5ldA==*CWCy4KZEEw1W92qB7xfLRNoJpepTMSyr7WJGZ0/Xr8c=";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }

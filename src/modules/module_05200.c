@@ -24,7 +24,7 @@ static const u32   OPTI_TYPE      = OPTI_TYPE_ZERO_BYTE
 static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_BINARY_HASHFILE;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "50575333e4e2a590a5e5c8269f57ec04a8a1c0c03da55b311c51236dab8c6b96b0afca02000800005eaeee20c6cc10d5caa6522b3ca545c41d9133d630ca08f467b7aae8a2bbef51aa2df968d10b9c4cfb17a182c0add7acb8c153794f51337e12f472f451d10e6dcac664ed760606aabdbb6b794a80d6ce2a330100c76de0ff961a45cca21576b893d826c52f272b97cdf48aca6fbe6c74b039f81c61b7d632fb6fddd9f96162ab1effd69a4598a331e855e38792e5365272d4791bf991d248e1585a9ad20ea3d77b5d2ef9a711ef90a70ec6991cb578f1b8bdaa9efa7b0039e9ea96f777491713047bdd99fa1d78f06f23406a66046b387d3034e46b1f84129bba853cc18fa49f107dc0290547258d30566a4b1b363ff4c1c16cb2f5f400059833d4b651bfa508200cbdc7a75fc57ef90eb1d90b0deea8505753332d454f46505753332d454f466236710e2e2477878e738b60d0aa2834a96b01e97764fe980243a06ad16939d1";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }

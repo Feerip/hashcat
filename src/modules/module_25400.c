@@ -29,7 +29,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_PT_ALWAYS_ASCII
                                   | OPTS_TYPE_AUTODETECT_DISABLE;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$pdf$2*3*128*-3904*1*16*631ed33746e50fba5caf56bcc39e09c6*32*5f9d0e4f0b39835dace0d306c40cd6b700000000000000000000000000000000*32*842103b0a0dc886db9223b94afe2d7cd63389079b61986a4fcf70095ad630c24";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
@@ -526,7 +526,7 @@ int module_build_plain_postprocess (MAYBE_UNUSED const hashconfig_t *hashconfig,
   //   we check whether we already have a user-password in the hash
   //   TODO would be better to actually also verify the u-value whether we've retrieved the correct user-password,
   //     however, we'd need to include a lot of code/complexity here to do so (or call into 10500 kernel).
-  //     this seems relevant: run_kernel (hashcat_ctx, device_param, KERN_RUN_3, 0, 1, false, 0)
+  //     this seems relevant: run_kernel (hashdog_ctx, device_param, KERN_RUN_3, 0, 1, false, 0)
   if(pdf_tmp->out[0]==src_buf[0] && pdf_tmp->out[1]==src_buf[1] && pdf_tmp->out[2]==src_buf[2] && pdf_tmp->out[3]==src_buf[3])
   {
     if(pdf->u_pass_len==0)

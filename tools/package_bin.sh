@@ -5,18 +5,18 @@
 ## License.....: MIT
 ##
 
-export IN=$HOME/hashcat
-export OUT=$HOME/xy/hashcat-6.2.5
+export IN=$HOME/hashdog
+export OUT=$HOME/xy/hashdog-6.2.5
 
 rm -rf $OUT
 rm -rf $OUT.7z
 
 mkdir -p $OUT
 
-cp    $IN/hashcat.exe                   $OUT/
-cp    $IN/hashcat.bin                   $OUT/
-cp    $IN/hashcat.hctune                $OUT/
-cp    $IN/hashcat.hcstat2               $OUT/
+cp    $IN/hashdog.exe                   $OUT/
+cp    $IN/hashdog.bin                   $OUT/
+cp    $IN/hashdog.hctune                $OUT/
+cp    $IN/hashdog.hcstat2               $OUT/
 
 cp -r $IN/docs                          $OUT/
 cp -r $IN/charsets                      $OUT/
@@ -35,7 +35,7 @@ cp -r $IN/OpenCL                        $OUT/
 
 for example in example[0123456789]*.sh; do
 
-  sed 's!./hashcat !./hashcat.bin !' $IN/${example} > $OUT/${example}
+  sed 's!./hashdog !./hashdog.bin !' $IN/${example} > $OUT/${example}
 
 done
 
@@ -55,7 +55,7 @@ unix2dos $OUT/docs/*
 unix2dos $OUT/docs/license_libs/*
 unix2dos $OUT/example*.cmd
 unix2dos $OUT/OpenCL/*
-unix2dos $OUT/hashcat.hctune
+unix2dos $OUT/hashdog.hctune
 
 chmod 755 $OUT
 chmod 755 $OUT/rules
@@ -80,7 +80,7 @@ chmod 755 $OUT/OpenCL
 chmod 644 $OUT/OpenCL/*
 chmod 644 $OUT/*.exe
 chmod 755 $OUT/*.bin
-chmod 644 $OUT/hashcat.hctune
-chmod 644 $OUT/hashcat.hcstat2
+chmod 644 $OUT/hashdog.hctune
+chmod 644 $OUT/hashdog.hcstat2
 
 time 7z a -t7z -m0=lzma2:d31 -mx=9 -mmt=8 -ms=on $OUT.7z $OUT

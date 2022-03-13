@@ -60,7 +60,7 @@ int kernel_rule_to_cpu_rule (char *rule_buf, kernel_rule_t *rule);
 
 bool kernel_rules_has_noop (const kernel_rule_t *kernel_rules_buf, const u32 kernel_rules_cnt);
 
-int kernel_rules_load     (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 *out_cnt);
-int kernel_rules_generate (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 *out_cnt, const char *rp_gen_func_selection);
+int kernel_rules_load     (hashdog_ctx_t *hashdog_ctx, kernel_rule_t **out_buf, u32 *out_cnt);
+int kernel_rules_generate (hashdog_ctx_t *hashdog_ctx, kernel_rule_t **out_buf, u32 *out_cnt, const char *rp_gen_func_selection);
 
 #endif // _RP_H

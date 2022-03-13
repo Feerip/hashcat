@@ -42,9 +42,9 @@ static const char UNITS[7] = { ' ', 'k', 'M', 'G', 'T', 'P', 'E' };
 static const char *const  ETA_ABSOLUTE_MAX_EXCEEDED = "Next Big Bang"; // in honor of ighashgpu
 static const char *const  ETA_RELATIVE_MAX_EXCEEDED = "> 10 years";
 
-static char *status_get_rules_file (const hashcat_ctx_t *hashcat_ctx)
+static char *status_get_rules_file (const hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (user_options->rp_files_cnt > 0)
   {
@@ -201,64 +201,64 @@ double get_avg_exec_time (hc_device_param_t *device_param, const int last_num_en
   return exec_msec_sum / exec_msec_cnt;
 }
 
-int status_get_device_info_cnt (const hashcat_ctx_t *hashcat_ctx)
+int status_get_device_info_cnt (const hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   return backend_ctx->backend_devices_cnt;
 }
 
-int status_get_device_info_active (const hashcat_ctx_t *hashcat_ctx)
+int status_get_device_info_active (const hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   return backend_ctx->backend_devices_active;
 }
 
-bool status_get_skipped_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+bool status_get_skipped_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
   return device_param->skipped;
 }
 
-bool status_get_skipped_warning_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+bool status_get_skipped_warning_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
   return device_param->skipped_warning;
 }
 
-char *status_get_session (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_session (const hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   return strdup (user_options->session);
 }
 
 #ifdef WITH_BRAIN
-int status_get_brain_session (const hashcat_ctx_t *hashcat_ctx)
+int status_get_brain_session (const hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   return user_options->brain_session;
 }
 
-int status_get_brain_attack (const hashcat_ctx_t *hashcat_ctx)
+int status_get_brain_attack (const hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   return user_options->brain_attack;
 }
 #endif
 
-const char *status_get_status_string (const hashcat_ctx_t *hashcat_ctx)
+const char *status_get_status_string (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   const int devices_status = status_ctx->devices_status;
 
@@ -299,25 +299,25 @@ const char *status_get_status_string (const hashcat_ctx_t *hashcat_ctx)
   return ST_9999;
 }
 
-int status_get_status_number (const hashcat_ctx_t *hashcat_ctx)
+int status_get_status_number (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   return status_ctx->devices_status;
 }
 
-char *status_get_hash_name (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_hash_name (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t *hashconfig = hashcat_ctx->hashconfig;
+  const hashconfig_t *hashconfig = hashdog_ctx->hashconfig;
 
   return hcstrdup (hashconfig->hash_name);
 }
 
-char *status_get_hash_target (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_hash_target (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t *hashconfig = hashcat_ctx->hashconfig;
-  const hashes_t     *hashes     = hashcat_ctx->hashes;
-  const module_ctx_t *module_ctx = hashcat_ctx->module_ctx;
+  const hashconfig_t *hashconfig = hashdog_ctx->hashconfig;
+  const hashes_t     *hashes     = hashdog_ctx->hashes;
+  const module_ctx_t *module_ctx = hashdog_ctx->module_ctx;
 
   if ((hashes->digests_cnt == 1) || (hashes->hashfile == NULL))
   {
@@ -355,7 +355,7 @@ char *status_get_hash_target (const hashcat_ctx_t *hashcat_ctx)
 
     char *tmp_buf = (char *) hcmalloc (HCBUFSIZ_LARGE);
 
-    const int tmp_len = hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, tmp_buf, HCBUFSIZ_LARGE, 0, 0);
+    const int tmp_len = hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, tmp_buf, HCBUFSIZ_LARGE, 0, 0);
 
     tmp_buf[tmp_len] = 0;
 
@@ -371,11 +371,11 @@ char *status_get_hash_target (const hashcat_ctx_t *hashcat_ctx)
   return hcstrdup (hashes->hashfile);
 }
 
-int status_get_guess_mode (const hashcat_ctx_t *hashcat_ctx)
+int status_get_guess_mode (const hashdog_ctx_t *hashdog_ctx)
 {
-  const combinator_ctx_t     *combinator_ctx     = hashcat_ctx->combinator_ctx;
-  const user_options_t       *user_options       = hashcat_ctx->user_options;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const combinator_ctx_t     *combinator_ctx     = hashdog_ctx->combinator_ctx;
+  const user_options_t       *user_options       = hashdog_ctx->user_options;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   bool has_wordlist   = false;
   bool has_rule_file  = false;
@@ -459,17 +459,17 @@ int status_get_guess_mode (const hashcat_ctx_t *hashcat_ctx)
   return GUESS_MODE_NONE;
 }
 
-char *status_get_guess_base (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_guess_base (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t         *hashconfig         = hashcat_ctx->hashconfig;
-  const user_options_t       *user_options       = hashcat_ctx->user_options;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const hashconfig_t         *hashconfig         = hashdog_ctx->hashconfig;
+  const user_options_t       *user_options       = hashdog_ctx->user_options;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   if ((user_options->attack_mode == ATTACK_MODE_STRAIGHT) || (user_options->attack_mode == ATTACK_MODE_ASSOCIATION))
   {
     if (user_options_extra->wordlist_mode == WL_MODE_FILE)
     {
-      const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+      const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
       return strdup (straight_ctx->dict);
     }
@@ -477,7 +477,7 @@ char *status_get_guess_base (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_COMBI)
   {
-    const combinator_ctx_t *combinator_ctx = hashcat_ctx->combinator_ctx;
+    const combinator_ctx_t *combinator_ctx = hashdog_ctx->combinator_ctx;
 
     if (combinator_ctx->combs_mode == COMBINATOR_MODE_BASE_LEFT)
     {
@@ -488,14 +488,14 @@ char *status_get_guess_base (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_BF)
   {
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return strdup (mask_ctx->mask);
   }
 
   if (user_options->attack_mode == ATTACK_MODE_HYBRID1)
   {
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return strdup (straight_ctx->dict);
   }
@@ -504,26 +504,26 @@ char *status_get_guess_base (const hashcat_ctx_t *hashcat_ctx)
   {
     if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
     {
-      const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+      const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
       return strdup (mask_ctx->mask);
     }
 
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return strdup (straight_ctx->dict);
   }
   return NULL;
 }
 
-int status_get_guess_base_offset (const hashcat_ctx_t *hashcat_ctx)
+int status_get_guess_base_offset (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if ((user_options->attack_mode == ATTACK_MODE_STRAIGHT) || (user_options->attack_mode == ATTACK_MODE_ASSOCIATION))
   {
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return straight_ctx->dicts_pos + 1;
   }
@@ -535,14 +535,14 @@ int status_get_guess_base_offset (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_BF)
   {
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return mask_ctx->masks_pos + 1;
   }
 
   if (user_options->attack_mode == ATTACK_MODE_HYBRID1)
   {
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return straight_ctx->dicts_pos + 1;
   }
@@ -551,12 +551,12 @@ int status_get_guess_base_offset (const hashcat_ctx_t *hashcat_ctx)
   {
     if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
     {
-      const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+      const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
       return mask_ctx->masks_pos + 1;
     }
 
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return straight_ctx->dicts_pos + 1;
   }
@@ -564,14 +564,14 @@ int status_get_guess_base_offset (const hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-int status_get_guess_base_count (const hashcat_ctx_t *hashcat_ctx)
+int status_get_guess_base_count (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if ((user_options->attack_mode == ATTACK_MODE_STRAIGHT) || (user_options->attack_mode == ATTACK_MODE_ASSOCIATION))
   {
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return straight_ctx->dicts_cnt;
   }
@@ -583,14 +583,14 @@ int status_get_guess_base_count (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_BF)
   {
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return mask_ctx->masks_cnt;
   }
 
   if (user_options->attack_mode == ATTACK_MODE_HYBRID1)
   {
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return straight_ctx->dicts_cnt;
   }
@@ -599,12 +599,12 @@ int status_get_guess_base_count (const hashcat_ctx_t *hashcat_ctx)
   {
     if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
     {
-      const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+      const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
       return mask_ctx->masks_cnt;
     }
 
-    const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+    const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
     return straight_ctx->dicts_cnt;
   }
@@ -612,29 +612,29 @@ int status_get_guess_base_count (const hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-double status_get_guess_base_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_guess_base_percent (const hashdog_ctx_t *hashdog_ctx)
 {
-  const int guess_base_offset = status_get_guess_base_offset (hashcat_ctx);
-  const int guess_base_count  = status_get_guess_base_count (hashcat_ctx);
+  const int guess_base_offset = status_get_guess_base_offset (hashdog_ctx);
+  const int guess_base_count  = status_get_guess_base_count (hashdog_ctx);
 
   if (guess_base_count == 0) return 0;
 
   return ((double) guess_base_offset / (double) guess_base_count) * 100;
 }
 
-char *status_get_guess_mod (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_guess_mod (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if ((user_options->attack_mode == ATTACK_MODE_STRAIGHT) || (user_options->attack_mode == ATTACK_MODE_ASSOCIATION))
   {
-    return status_get_rules_file (hashcat_ctx);
+    return status_get_rules_file (hashdog_ctx);
   }
 
   if (user_options->attack_mode == ATTACK_MODE_COMBI)
   {
-    const combinator_ctx_t *combinator_ctx = hashcat_ctx->combinator_ctx;
+    const combinator_ctx_t *combinator_ctx = hashdog_ctx->combinator_ctx;
 
     if (combinator_ctx->combs_mode == COMBINATOR_MODE_BASE_LEFT)
     {
@@ -650,7 +650,7 @@ char *status_get_guess_mod (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_HYBRID1)
   {
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return strdup (mask_ctx->mask);
   }
@@ -659,12 +659,12 @@ char *status_get_guess_mod (const hashcat_ctx_t *hashcat_ctx)
   {
     if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
     {
-      const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+      const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
       return strdup (straight_ctx->dict);
     }
 
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return strdup (mask_ctx->mask);
   }
@@ -672,10 +672,10 @@ char *status_get_guess_mod (const hashcat_ctx_t *hashcat_ctx)
   return NULL;
 }
 
-int status_get_guess_mod_offset (const hashcat_ctx_t *hashcat_ctx)
+int status_get_guess_mod_offset (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if ((user_options->attack_mode == ATTACK_MODE_STRAIGHT) || (user_options->attack_mode == ATTACK_MODE_ASSOCIATION))
   {
@@ -694,7 +694,7 @@ int status_get_guess_mod_offset (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_HYBRID1)
   {
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return mask_ctx->masks_pos + 1;
   }
@@ -703,12 +703,12 @@ int status_get_guess_mod_offset (const hashcat_ctx_t *hashcat_ctx)
   {
     if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
     {
-      const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+      const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
       return straight_ctx->dicts_pos + 1;
     }
 
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return mask_ctx->masks_pos + 1;
   }
@@ -716,10 +716,10 @@ int status_get_guess_mod_offset (const hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-int status_get_guess_mod_count (const hashcat_ctx_t *hashcat_ctx)
+int status_get_guess_mod_count (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if ((user_options->attack_mode == ATTACK_MODE_STRAIGHT) || (user_options->attack_mode == ATTACK_MODE_ASSOCIATION))
   {
@@ -738,7 +738,7 @@ int status_get_guess_mod_count (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->attack_mode == ATTACK_MODE_HYBRID1)
   {
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return mask_ctx->masks_cnt;
   }
@@ -747,12 +747,12 @@ int status_get_guess_mod_count (const hashcat_ctx_t *hashcat_ctx)
   {
     if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
     {
-      const straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+      const straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
       return straight_ctx->dicts_cnt;
     }
 
-    const mask_ctx_t *mask_ctx = hashcat_ctx->mask_ctx;
+    const mask_ctx_t *mask_ctx = hashdog_ctx->mask_ctx;
 
     return mask_ctx->masks_cnt;
   }
@@ -760,19 +760,19 @@ int status_get_guess_mod_count (const hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-double status_get_guess_mod_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_guess_mod_percent (const hashdog_ctx_t *hashdog_ctx)
 {
-  const int guess_mod_offset = status_get_guess_mod_offset (hashcat_ctx);
-  const int guess_mod_count  = status_get_guess_mod_count  (hashcat_ctx);
+  const int guess_mod_offset = status_get_guess_mod_offset (hashdog_ctx);
+  const int guess_mod_count  = status_get_guess_mod_count  (hashdog_ctx);
 
   if (guess_mod_count == 0) return 0;
 
   return ((double) guess_mod_offset / (double) guess_mod_count) * 100;
 }
 
-char *status_get_guess_charset (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_guess_charset (const hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   const char *custom_charset_1 = user_options->custom_charset_1;
   const char *custom_charset_2 = user_options->custom_charset_2;
@@ -796,10 +796,10 @@ char *status_get_guess_charset (const hashcat_ctx_t *hashcat_ctx)
   return NULL;
 }
 
-int status_get_guess_mask_length (const hashcat_ctx_t *hashcat_ctx)
+int status_get_guess_mask_length (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t *hashconfig = hashcat_ctx->hashconfig;
-  const mask_ctx_t   *mask_ctx   = hashcat_ctx->mask_ctx;
+  const hashconfig_t *hashconfig = hashdog_ctx->hashconfig;
+  const mask_ctx_t   *mask_ctx   = hashdog_ctx->mask_ctx;
 
   if (mask_ctx == NULL) return -1;
 
@@ -808,12 +808,12 @@ int status_get_guess_mask_length (const hashcat_ctx_t *hashcat_ctx)
   return mp_get_length (mask_ctx->mask, hashconfig->opts_type);
 }
 
-char *status_get_guess_candidates_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_guess_candidates_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const hashconfig_t         *hashconfig         = hashcat_ctx->hashconfig;
-  const backend_ctx_t        *backend_ctx        = hashcat_ctx->backend_ctx;
-  const status_ctx_t         *status_ctx         = hashcat_ctx->status_ctx;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const hashconfig_t         *hashconfig         = hashdog_ctx->hashconfig;
+  const backend_ctx_t        *backend_ctx        = hashdog_ctx->backend_ctx;
+  const status_ctx_t         *status_ctx         = hashdog_ctx->status_ctx;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   if (status_ctx->accessible == false) return NULL;
 
@@ -857,8 +857,8 @@ char *status_get_guess_candidates_dev (const hashcat_ctx_t *hashcat_ctx, const i
   int plain_len1 = 0;
   int plain_len2 = 0;
 
-  build_plain ((hashcat_ctx_t *) hashcat_ctx, device_param, &plain1, plain_buf1, &plain_len1);
-  build_plain ((hashcat_ctx_t *) hashcat_ctx, device_param, &plain2, plain_buf2, &plain_len2);
+  build_plain ((hashdog_ctx_t *) hashdog_ctx, device_param, &plain1, plain_buf1, &plain_len1);
+  build_plain ((hashdog_ctx_t *) hashdog_ctx, device_param, &plain2, plain_buf2, &plain_len2);
 
   const bool always_ascii = (hashconfig->opts_type & OPTS_TYPE_PT_ALWAYS_ASCII) ? true : false;
 
@@ -886,71 +886,71 @@ char *status_get_guess_candidates_dev (const hashcat_ctx_t *hashcat_ctx, const i
   return display;
 }
 
-int status_get_digests_done (const hashcat_ctx_t *hashcat_ctx)
+int status_get_digests_done (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   return hashes->digests_done;
 }
 
-int status_get_digests_done_pot (const hashcat_ctx_t *hashcat_ctx)
+int status_get_digests_done_pot (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   return hashes->digests_done_pot;
 }
 
-int status_get_digests_cnt (const hashcat_ctx_t *hashcat_ctx)
+int status_get_digests_cnt (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   return hashes->digests_cnt;
 }
 
-double status_get_digests_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_digests_percent (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   if (hashes->digests_cnt == 0) return 0;
 
   return ((double) hashes->digests_done / (double) hashes->digests_cnt) * 100;
 }
 
-int status_get_salts_done (const hashcat_ctx_t *hashcat_ctx)
+int status_get_salts_done (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   return hashes->salts_done;
 }
 
-int status_get_salts_cnt (const hashcat_ctx_t *hashcat_ctx)
+int status_get_salts_cnt (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   return hashes->salts_cnt;
 }
 
-double status_get_salts_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_salts_percent (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t *hashes = hashcat_ctx->hashes;
+  const hashes_t *hashes = hashdog_ctx->hashes;
 
   if (hashes->salts_cnt == 0) return 0;
 
   return ((double) hashes->salts_done / (double) hashes->salts_cnt) * 100;
 }
 
-double status_get_msec_running (const hashcat_ctx_t *hashcat_ctx)
+double status_get_msec_running (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   double msec_running = hc_timer_get (status_ctx->timer_running);
 
   return msec_running;
 }
 
-double status_get_msec_paused (const hashcat_ctx_t *hashcat_ctx)
+double status_get_msec_paused (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   double msec_paused = status_ctx->msec_paused;
 
@@ -964,19 +964,19 @@ double status_get_msec_paused (const hashcat_ctx_t *hashcat_ctx)
   return msec_paused;
 }
 
-double status_get_msec_real (const hashcat_ctx_t *hashcat_ctx)
+double status_get_msec_real (const hashdog_ctx_t *hashdog_ctx)
 {
-  const double msec_running = status_get_msec_running (hashcat_ctx);
-  const double msec_paused  = status_get_msec_paused  (hashcat_ctx);
+  const double msec_running = status_get_msec_running (hashdog_ctx);
+  const double msec_paused  = status_get_msec_paused  (hashdog_ctx);
 
   const double msec_real = msec_running - msec_paused;
 
   return msec_real;
 }
 
-char *status_get_time_started_absolute (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_time_started_absolute (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   const time_t time_start = status_ctx->runtime_start;
 
@@ -992,9 +992,9 @@ char *status_get_time_started_absolute (const hashcat_ctx_t *hashcat_ctx)
   return strdup (start);
 }
 
-char *status_get_time_started_relative (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_time_started_relative (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   time_t time_now;
 
@@ -1016,10 +1016,10 @@ char *status_get_time_started_relative (const hashcat_ctx_t *hashcat_ctx)
   return display_run;
 }
 
-time_t status_get_sec_etc (const hashcat_ctx_t *hashcat_ctx)
+time_t status_get_sec_etc (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t         *status_ctx         = hashcat_ctx->status_ctx;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const status_ctx_t         *status_ctx         = hashdog_ctx->status_ctx;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   time_t sec_etc = 0;
 
@@ -1027,12 +1027,12 @@ time_t status_get_sec_etc (const hashcat_ctx_t *hashcat_ctx)
   {
     if (status_ctx->devices_status != STATUS_CRACKED)
     {
-      const u64 progress_cur_relative_skip = status_get_progress_cur_relative_skip (hashcat_ctx);
-      const u64 progress_end_relative_skip = status_get_progress_end_relative_skip (hashcat_ctx);
+      const u64 progress_cur_relative_skip = status_get_progress_cur_relative_skip (hashdog_ctx);
+      const u64 progress_end_relative_skip = status_get_progress_end_relative_skip (hashdog_ctx);
 
-      const u64 progress_ignore = status_get_progress_ignore (hashcat_ctx);
+      const u64 progress_ignore = status_get_progress_ignore (hashdog_ctx);
 
-      const double hashes_msec_all = status_get_hashes_msec_all (hashcat_ctx);
+      const double hashes_msec_all = status_get_hashes_msec_all (hashdog_ctx);
 
       if (hashes_msec_all > 0)
       {
@@ -1048,9 +1048,9 @@ time_t status_get_sec_etc (const hashcat_ctx_t *hashcat_ctx)
   return sec_etc;
 }
 
-char *status_get_time_estimated_absolute (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_time_estimated_absolute (const hashdog_ctx_t *hashdog_ctx)
 {
-  time_t sec_etc = status_get_sec_etc (hashcat_ctx);
+  time_t sec_etc = status_get_sec_etc (hashdog_ctx);
 
   time_t now;
   time (&now);
@@ -1080,13 +1080,13 @@ char *status_get_time_estimated_absolute (const hashcat_ctx_t *hashcat_ctx)
   return strdup (etc);
 }
 
-char *status_get_time_estimated_relative (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_time_estimated_relative (const hashdog_ctx_t *hashdog_ctx)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   char *display = (char *) hcmalloc (HCBUFSIZ_TINY);
 
-  time_t sec_etc = status_get_sec_etc (hashcat_ctx);
+  time_t sec_etc = status_get_sec_etc (hashdog_ctx);
 
   struct tm *tmp;
   struct tm  tm;
@@ -1104,7 +1104,7 @@ char *status_get_time_estimated_relative (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->runtime > 0)
   {
-    const int runtime_left = get_runtime_left (hashcat_ctx);
+    const int runtime_left = get_runtime_left (hashdog_ctx);
 
     char *tmp_display = strdup (display);
 
@@ -1136,30 +1136,30 @@ char *status_get_time_estimated_relative (const hashcat_ctx_t *hashcat_ctx)
   return display;
 }
 
-u64 status_get_restore_point (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_restore_point (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   const u64 restore_point = status_ctx->words_cur;
 
   return restore_point;
 }
 
-u64 status_get_restore_total (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_restore_total (const hashdog_ctx_t *hashdog_ctx)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   const u64 restore_total = status_ctx->words_base;
 
   return restore_total;
 }
 
-double status_get_restore_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_restore_percent (const hashdog_ctx_t *hashdog_ctx)
 {
   double restore_percent = 0;
 
-  const u64 restore_point = status_get_restore_point (hashcat_ctx);
-  const u64 restore_total = status_get_restore_total (hashcat_ctx);
+  const u64 restore_point = status_get_restore_point (hashdog_ctx);
+  const u64 restore_total = status_get_restore_total (hashdog_ctx);
 
   if (restore_total > 0)
   {
@@ -1169,9 +1169,9 @@ double status_get_restore_percent (const hashcat_ctx_t *hashcat_ctx)
   return restore_percent;
 }
 
-int status_get_progress_mode (const hashcat_ctx_t *hashcat_ctx)
+int status_get_progress_mode (const hashdog_ctx_t *hashdog_ctx)
 {
-  const u64 progress_end_relative_skip = status_get_progress_end_relative_skip (hashcat_ctx);
+  const u64 progress_end_relative_skip = status_get_progress_end_relative_skip (hashdog_ctx);
 
   if (progress_end_relative_skip > 0)
   {
@@ -1180,10 +1180,10 @@ int status_get_progress_mode (const hashcat_ctx_t *hashcat_ctx)
   return PROGRESS_MODE_KEYSPACE_UNKNOWN;
 }
 
-double status_get_progress_finished_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_progress_finished_percent (const hashdog_ctx_t *hashdog_ctx)
 {
-  const u64 progress_cur_relative_skip = status_get_progress_cur_relative_skip (hashcat_ctx);
-  const u64 progress_end_relative_skip = status_get_progress_end_relative_skip (hashcat_ctx);
+  const u64 progress_cur_relative_skip = status_get_progress_cur_relative_skip (hashdog_ctx);
+  const u64 progress_end_relative_skip = status_get_progress_end_relative_skip (hashdog_ctx);
 
   double progress_finished_percent = 0;
 
@@ -1195,10 +1195,10 @@ double status_get_progress_finished_percent (const hashcat_ctx_t *hashcat_ctx)
   return progress_finished_percent;
 }
 
-u64 status_get_progress_done (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_done (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t     *hashes     = hashcat_ctx->hashes;
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const hashes_t     *hashes     = hashdog_ctx->hashes;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   u64 progress_done = 0;
 
@@ -1210,10 +1210,10 @@ u64 status_get_progress_done (const hashcat_ctx_t *hashcat_ctx)
   return progress_done;
 }
 
-u64 status_get_progress_rejected (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_rejected (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t     *hashes     = hashcat_ctx->hashes;
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const hashes_t     *hashes     = hashdog_ctx->hashes;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   u64 progress_rejected = 0;
 
@@ -1225,10 +1225,10 @@ u64 status_get_progress_rejected (const hashcat_ctx_t *hashcat_ctx)
   return progress_rejected;
 }
 
-double status_get_progress_rejected_percent (const hashcat_ctx_t *hashcat_ctx)
+double status_get_progress_rejected_percent (const hashdog_ctx_t *hashdog_ctx)
 {
-  const u64 progress_cur      = status_get_progress_cur      (hashcat_ctx);
-  const u64 progress_rejected = status_get_progress_rejected (hashcat_ctx);
+  const u64 progress_cur      = status_get_progress_cur      (hashdog_ctx);
+  const u64 progress_rejected = status_get_progress_rejected (hashdog_ctx);
 
   double percent_rejected = 0;
 
@@ -1240,10 +1240,10 @@ double status_get_progress_rejected_percent (const hashcat_ctx_t *hashcat_ctx)
   return percent_rejected;
 }
 
-u64 status_get_progress_restored (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_restored (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t     *hashes     = hashcat_ctx->hashes;
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const hashes_t     *hashes     = hashdog_ctx->hashes;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   u64 progress_restored = 0;
 
@@ -1255,23 +1255,23 @@ u64 status_get_progress_restored (const hashcat_ctx_t *hashcat_ctx)
   return progress_restored;
 }
 
-u64 status_get_progress_cur (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_cur (const hashdog_ctx_t *hashdog_ctx)
 {
-  const u64 progress_done     = status_get_progress_done     (hashcat_ctx);
-  const u64 progress_rejected = status_get_progress_rejected (hashcat_ctx);
-  const u64 progress_restored = status_get_progress_restored (hashcat_ctx);
+  const u64 progress_done     = status_get_progress_done     (hashdog_ctx);
+  const u64 progress_rejected = status_get_progress_rejected (hashdog_ctx);
+  const u64 progress_restored = status_get_progress_restored (hashdog_ctx);
 
   const u64 progress_cur = progress_done + progress_rejected + progress_restored;
 
   return progress_cur;
 }
 
-u64 status_get_progress_ignore (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_ignore (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t             *hashes             = hashcat_ctx->hashes;
-  const status_ctx_t         *status_ctx         = hashcat_ctx->status_ctx;
-  const user_options_t       *user_options       = hashcat_ctx->user_options;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const hashes_t             *hashes             = hashdog_ctx->hashes;
+  const status_ctx_t         *status_ctx         = hashdog_ctx->status_ctx;
+  const user_options_t       *user_options       = hashdog_ctx->user_options;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   if (user_options->attack_mode == ATTACK_MODE_ASSOCIATION)
   {
@@ -1285,9 +1285,9 @@ u64 status_get_progress_ignore (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->limit)
   {
-    const combinator_ctx_t *combinator_ctx = hashcat_ctx->combinator_ctx;
-    const mask_ctx_t       *mask_ctx       = hashcat_ctx->mask_ctx;
-    const straight_ctx_t   *straight_ctx   = hashcat_ctx->straight_ctx;
+    const combinator_ctx_t *combinator_ctx = hashdog_ctx->combinator_ctx;
+    const mask_ctx_t       *mask_ctx       = hashdog_ctx->mask_ctx;
+    const straight_ctx_t   *straight_ctx   = hashdog_ctx->straight_ctx;
 
     words_cnt = MIN (user_options->limit, status_ctx->words_base);
 
@@ -1323,12 +1323,12 @@ u64 status_get_progress_ignore (const hashcat_ctx_t *hashcat_ctx)
   return progress_ignore;
 }
 
-u64 status_get_progress_end (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_end (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t             *hashes             = hashcat_ctx->hashes;
-  const status_ctx_t         *status_ctx         = hashcat_ctx->status_ctx;
-  const user_options_t       *user_options       = hashcat_ctx->user_options;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const hashes_t             *hashes             = hashdog_ctx->hashes;
+  const status_ctx_t         *status_ctx         = hashdog_ctx->status_ctx;
+  const user_options_t       *user_options       = hashdog_ctx->user_options;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   u64 progress_end = status_ctx->words_cnt;
 
@@ -1343,9 +1343,9 @@ u64 status_get_progress_end (const hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->limit)
   {
-    const combinator_ctx_t *combinator_ctx = hashcat_ctx->combinator_ctx;
-    const mask_ctx_t       *mask_ctx       = hashcat_ctx->mask_ctx;
-    const straight_ctx_t   *straight_ctx   = hashcat_ctx->straight_ctx;
+    const combinator_ctx_t *combinator_ctx = hashdog_ctx->combinator_ctx;
+    const mask_ctx_t       *mask_ctx       = hashdog_ctx->mask_ctx;
+    const straight_ctx_t   *straight_ctx   = hashdog_ctx->straight_ctx;
 
     progress_end = MIN (user_options->limit, status_ctx->words_base);
 
@@ -1373,20 +1373,20 @@ u64 status_get_progress_end (const hashcat_ctx_t *hashcat_ctx)
   return progress_end;
 }
 
-u64 status_get_progress_skip (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_skip (const hashdog_ctx_t *hashdog_ctx)
 {
-  const hashes_t             *hashes             = hashcat_ctx->hashes;
-  const status_ctx_t         *status_ctx         = hashcat_ctx->status_ctx;
-  const user_options_t       *user_options       = hashcat_ctx->user_options;
-  const user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  const hashes_t             *hashes             = hashdog_ctx->hashes;
+  const status_ctx_t         *status_ctx         = hashdog_ctx->status_ctx;
+  const user_options_t       *user_options       = hashdog_ctx->user_options;
+  const user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   u64 progress_skip = 0;
 
   if (user_options->skip)
   {
-    const combinator_ctx_t *combinator_ctx = hashcat_ctx->combinator_ctx;
-    const mask_ctx_t       *mask_ctx       = hashcat_ctx->mask_ctx;
-    const straight_ctx_t   *straight_ctx   = hashcat_ctx->straight_ctx;
+    const combinator_ctx_t *combinator_ctx = hashdog_ctx->combinator_ctx;
+    const mask_ctx_t       *mask_ctx       = hashdog_ctx->mask_ctx;
+    const straight_ctx_t   *straight_ctx   = hashdog_ctx->straight_ctx;
 
     progress_skip = MIN (user_options->skip, status_ctx->words_base);
 
@@ -1414,10 +1414,10 @@ u64 status_get_progress_skip (const hashcat_ctx_t *hashcat_ctx)
   return progress_skip;
 }
 
-u64 status_get_progress_cur_relative_skip (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_cur_relative_skip (const hashdog_ctx_t *hashdog_ctx)
 {
-  const u64 progress_skip = status_get_progress_skip (hashcat_ctx);
-  const u64 progress_cur  = status_get_progress_cur  (hashcat_ctx);
+  const u64 progress_skip = status_get_progress_skip (hashdog_ctx);
+  const u64 progress_cur  = status_get_progress_cur  (hashdog_ctx);
 
   u64 progress_cur_relative_skip = 0;
 
@@ -1429,10 +1429,10 @@ u64 status_get_progress_cur_relative_skip (const hashcat_ctx_t *hashcat_ctx)
   return progress_cur_relative_skip;
 }
 
-u64 status_get_progress_end_relative_skip (const hashcat_ctx_t *hashcat_ctx)
+u64 status_get_progress_end_relative_skip (const hashdog_ctx_t *hashdog_ctx)
 {
-  const u64 progress_skip = status_get_progress_skip (hashcat_ctx);
-  const u64 progress_end  = status_get_progress_end  (hashcat_ctx);
+  const u64 progress_skip = status_get_progress_skip (hashdog_ctx);
+  const u64 progress_end  = status_get_progress_end  (hashdog_ctx);
 
   u64 progress_end_relative_skip = 0;
 
@@ -1444,23 +1444,23 @@ u64 status_get_progress_end_relative_skip (const hashcat_ctx_t *hashcat_ctx)
   return progress_end_relative_skip;
 }
 
-double status_get_hashes_msec_all (const hashcat_ctx_t *hashcat_ctx)
+double status_get_hashes_msec_all (const hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   double hashes_all_msec = 0;
 
   for (int backend_devices_idx = 0; backend_devices_idx < backend_ctx->backend_devices_cnt; backend_devices_idx++)
   {
-    hashes_all_msec += status_get_hashes_msec_dev (hashcat_ctx, backend_devices_idx);
+    hashes_all_msec += status_get_hashes_msec_dev (hashdog_ctx, backend_devices_idx);
   }
 
   return hashes_all_msec;
 }
 
-double status_get_hashes_msec_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+double status_get_hashes_msec_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   u64    speed_cnt  = 0;
   double speed_msec = 0;
@@ -1491,11 +1491,11 @@ double status_get_hashes_msec_dev (const hashcat_ctx_t *hashcat_ctx, const int b
   return hashes_dev_msec;
 }
 
-double status_get_hashes_msec_dev_benchmark (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+double status_get_hashes_msec_dev_benchmark (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
   // this function increases accuracy for benchmark modes
 
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   u64    speed_cnt  = 0;
   double speed_msec = 0;
@@ -1520,23 +1520,23 @@ double status_get_hashes_msec_dev_benchmark (const hashcat_ctx_t *hashcat_ctx, c
   return hashes_dev_msec;
 }
 
-double status_get_exec_msec_all (const hashcat_ctx_t *hashcat_ctx)
+double status_get_exec_msec_all (const hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   double exec_all_msec = 0;
 
   for (int backend_devices_idx = 0; backend_devices_idx < backend_ctx->backend_devices_cnt; backend_devices_idx++)
   {
-    exec_all_msec += status_get_exec_msec_dev (hashcat_ctx, backend_devices_idx);
+    exec_all_msec += status_get_exec_msec_dev (hashdog_ctx, backend_devices_idx);
   }
 
   return exec_all_msec;
 }
 
-double status_get_exec_msec_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+double status_get_exec_msec_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1550,9 +1550,9 @@ double status_get_exec_msec_dev (const hashcat_ctx_t *hashcat_ctx, const int bac
   return exec_dev_msec;
 }
 
-char *status_get_speed_sec_all (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_speed_sec_all (const hashdog_ctx_t *hashdog_ctx)
 {
-  const double hashes_msec_all = status_get_hashes_msec_all (hashcat_ctx);
+  const double hashes_msec_all = status_get_hashes_msec_all (hashdog_ctx);
 
   char *display = (char *) hcmalloc (HCBUFSIZ_TINY);
 
@@ -1561,9 +1561,9 @@ char *status_get_speed_sec_all (const hashcat_ctx_t *hashcat_ctx)
   return display;
 }
 
-char *status_get_speed_sec_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_speed_sec_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const double hashes_msec_dev = status_get_hashes_msec_dev (hashcat_ctx, backend_devices_idx);
+  const double hashes_msec_dev = status_get_hashes_msec_dev (hashdog_ctx, backend_devices_idx);
 
   char *display = (char *) hcmalloc (HCBUFSIZ_TINY);
 
@@ -1572,10 +1572,10 @@ char *status_get_speed_sec_dev (const hashcat_ctx_t *hashcat_ctx, const int back
   return display;
 }
 
-int status_get_cpt_cur_min (const hashcat_ctx_t *hashcat_ctx)
+int status_get_cpt_cur_min (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t    *cpt_ctx    = hashcat_ctx->cpt_ctx;
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const cpt_ctx_t    *cpt_ctx    = hashdog_ctx->cpt_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   if (status_ctx->accessible == false) return 0;
 
@@ -1597,10 +1597,10 @@ int status_get_cpt_cur_min (const hashcat_ctx_t *hashcat_ctx)
   return cpt_cur_min;
 }
 
-int status_get_cpt_cur_hour (const hashcat_ctx_t *hashcat_ctx)
+int status_get_cpt_cur_hour (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t    *cpt_ctx    = hashcat_ctx->cpt_ctx;
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const cpt_ctx_t    *cpt_ctx    = hashdog_ctx->cpt_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   if (status_ctx->accessible == false) return 0;
 
@@ -1622,10 +1622,10 @@ int status_get_cpt_cur_hour (const hashcat_ctx_t *hashcat_ctx)
   return cpt_cur_hour;
 }
 
-int status_get_cpt_cur_day (const hashcat_ctx_t *hashcat_ctx)
+int status_get_cpt_cur_day (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t    *cpt_ctx    = hashcat_ctx->cpt_ctx;
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const cpt_ctx_t    *cpt_ctx    = hashdog_ctx->cpt_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   if (status_ctx->accessible == false) return 0;
 
@@ -1647,11 +1647,11 @@ int status_get_cpt_cur_day (const hashcat_ctx_t *hashcat_ctx)
   return cpt_cur_day;
 }
 
-double status_get_cpt_avg_min (const hashcat_ctx_t *hashcat_ctx)
+double status_get_cpt_avg_min (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t *cpt_ctx = hashcat_ctx->cpt_ctx;
+  const cpt_ctx_t *cpt_ctx = hashdog_ctx->cpt_ctx;
 
-  const double msec_real = status_get_msec_real (hashcat_ctx);
+  const double msec_real = status_get_msec_real (hashdog_ctx);
 
   const double min_real = (msec_real / 1000) / 60;
 
@@ -1665,11 +1665,11 @@ double status_get_cpt_avg_min (const hashcat_ctx_t *hashcat_ctx)
   return cpt_avg_min;
 }
 
-double status_get_cpt_avg_hour (const hashcat_ctx_t *hashcat_ctx)
+double status_get_cpt_avg_hour (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t *cpt_ctx = hashcat_ctx->cpt_ctx;
+  const cpt_ctx_t *cpt_ctx = hashdog_ctx->cpt_ctx;
 
-  const double msec_real = status_get_msec_real (hashcat_ctx);
+  const double msec_real = status_get_msec_real (hashdog_ctx);
 
   const double hour_real = (msec_real / 1000) / (60 * 60);
 
@@ -1683,11 +1683,11 @@ double status_get_cpt_avg_hour (const hashcat_ctx_t *hashcat_ctx)
   return cpt_avg_hour;
 }
 
-double status_get_cpt_avg_day (const hashcat_ctx_t *hashcat_ctx)
+double status_get_cpt_avg_day (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t *cpt_ctx = hashcat_ctx->cpt_ctx;
+  const cpt_ctx_t *cpt_ctx = hashdog_ctx->cpt_ctx;
 
-  const double msec_real = status_get_msec_real (hashcat_ctx);
+  const double msec_real = status_get_msec_real (hashdog_ctx);
 
   const double day_real = (msec_real / 1000) / (60 * 60 * 24);
 
@@ -1701,21 +1701,21 @@ double status_get_cpt_avg_day (const hashcat_ctx_t *hashcat_ctx)
   return cpt_avg_day;
 }
 
-char *status_get_cpt (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_cpt (const hashdog_ctx_t *hashdog_ctx)
 {
-  const cpt_ctx_t *cpt_ctx = hashcat_ctx->cpt_ctx;
+  const cpt_ctx_t *cpt_ctx = hashdog_ctx->cpt_ctx;
 
   const time_t now = time (NULL);
 
   char *cpt;
 
-  const int cpt_cur_min  = status_get_cpt_cur_min  (hashcat_ctx);
-  const int cpt_cur_hour = status_get_cpt_cur_hour (hashcat_ctx);
-  const int cpt_cur_day  = status_get_cpt_cur_day  (hashcat_ctx);
+  const int cpt_cur_min  = status_get_cpt_cur_min  (hashdog_ctx);
+  const int cpt_cur_hour = status_get_cpt_cur_hour (hashdog_ctx);
+  const int cpt_cur_day  = status_get_cpt_cur_day  (hashdog_ctx);
 
-  const double cpt_avg_min  = status_get_cpt_avg_min  (hashcat_ctx);
-  const double cpt_avg_hour = status_get_cpt_avg_hour (hashcat_ctx);
-  const double cpt_avg_day  = status_get_cpt_avg_day  (hashcat_ctx);
+  const double cpt_avg_min  = status_get_cpt_avg_min  (hashdog_ctx);
+  const double cpt_avg_hour = status_get_cpt_avg_hour (hashdog_ctx);
+  const double cpt_avg_day  = status_get_cpt_avg_day  (hashdog_ctx);
 
   if ((cpt_ctx->cpt_start + (60 * 60 * 24)) < now)
   {
@@ -1749,9 +1749,9 @@ char *status_get_cpt (const hashcat_ctx_t *hashcat_ctx)
   return cpt;
 }
 
-int status_get_salt_pos_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_salt_pos_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1765,9 +1765,9 @@ int status_get_salt_pos_dev (const hashcat_ctx_t *hashcat_ctx, const int backend
   return salt_pos;
 }
 
-int status_get_innerloop_pos_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_innerloop_pos_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1781,9 +1781,9 @@ int status_get_innerloop_pos_dev (const hashcat_ctx_t *hashcat_ctx, const int ba
   return innerloop_pos;
 }
 
-int status_get_innerloop_left_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_innerloop_left_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1797,9 +1797,9 @@ int status_get_innerloop_left_dev (const hashcat_ctx_t *hashcat_ctx, const int b
   return innerloop_left;
 }
 
-int status_get_iteration_pos_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_iteration_pos_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1813,9 +1813,9 @@ int status_get_iteration_pos_dev (const hashcat_ctx_t *hashcat_ctx, const int ba
   return iteration_pos;
 }
 
-int status_get_iteration_left_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_iteration_left_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1830,9 +1830,9 @@ int status_get_iteration_left_dev (const hashcat_ctx_t *hashcat_ctx, const int b
 }
 
 #ifdef WITH_BRAIN
-int status_get_brain_link_client_id_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_brain_link_client_id_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1846,9 +1846,9 @@ int status_get_brain_link_client_id_dev (const hashcat_ctx_t *hashcat_ctx, const
   return brain_client_id;
 }
 
-int status_get_brain_link_status_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_brain_link_status_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1864,9 +1864,9 @@ int status_get_brain_link_status_dev (const hashcat_ctx_t *hashcat_ctx, const in
   return brain_link_status_dev;
 }
 
-char *status_get_brain_link_recv_bytes_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_brain_link_recv_bytes_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1884,9 +1884,9 @@ char *status_get_brain_link_recv_bytes_dev (const hashcat_ctx_t *hashcat_ctx, co
   return display;
 }
 
-char *status_get_brain_rx_all (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_brain_rx_all (const hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
   double brain_rx_all = 0;
 
   for (int backend_devices_idx = 0; backend_devices_idx < backend_ctx->backend_devices_cnt; backend_devices_idx++)
@@ -1907,9 +1907,9 @@ char *status_get_brain_rx_all (const hashcat_ctx_t *hashcat_ctx)
 
 }
 
-char *status_get_brain_link_send_bytes_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_brain_link_send_bytes_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1927,9 +1927,9 @@ char *status_get_brain_link_send_bytes_dev (const hashcat_ctx_t *hashcat_ctx, co
   return display;
 }
 
-char *status_get_brain_tx_all (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_brain_tx_all (const hashdog_ctx_t *hashdog_ctx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
   double brain_tx_all = 0;
 
   for (int backend_devices_idx = 0; backend_devices_idx < backend_ctx->backend_devices_cnt; backend_devices_idx++)
@@ -1950,9 +1950,9 @@ char *status_get_brain_tx_all (const hashcat_ctx_t *hashcat_ctx)
 
 }
 
-char *status_get_brain_link_recv_bytes_sec_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_brain_link_recv_bytes_sec_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -1977,9 +1977,9 @@ char *status_get_brain_link_recv_bytes_sec_dev (const hashcat_ctx_t *hashcat_ctx
   return display;
 }
 
-char *status_get_brain_link_send_bytes_sec_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_brain_link_send_bytes_sec_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2006,15 +2006,15 @@ char *status_get_brain_link_send_bytes_sec_dev (const hashcat_ctx_t *hashcat_ctx
 #endif
 
 #if defined(__APPLE__)
-char *status_get_hwmon_fan_dev (const hashcat_ctx_t *hashcat_ctx)
+char *status_get_hwmon_fan_dev (const hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   char *fanspeed_str = (char *) hcmalloc (HCBUFSIZ_TINY);
 
   hc_thread_mutex_lock (status_ctx->mux_hwmon);
 
-  hm_get_fanspeed_apple ((hashcat_ctx_t *) hashcat_ctx, fanspeed_str);
+  hm_get_fanspeed_apple ((hashdog_ctx_t *) hashdog_ctx, fanspeed_str);
 
   hc_thread_mutex_unlock (status_ctx->mux_hwmon);
 
@@ -2022,9 +2022,9 @@ char *status_get_hwmon_fan_dev (const hashcat_ctx_t *hashcat_ctx)
 }
 #endif
 
-char *status_get_hwmon_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+char *status_get_hwmon_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2035,16 +2035,16 @@ char *status_get_hwmon_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_
   if (device_param->skipped == true) return output_buf;
   if (device_param->skipped_warning == true) return output_buf;
 
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   hc_thread_mutex_lock (status_ctx->mux_hwmon);
 
-  const int num_temperature = hm_get_temperature_with_devices_idx ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
-  const int num_fanspeed    = hm_get_fanspeed_with_devices_idx    ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
-  const int num_utilization = hm_get_utilization_with_devices_idx ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
-  const int num_corespeed   = hm_get_corespeed_with_devices_idx   ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
-  const int num_memoryspeed = hm_get_memoryspeed_with_devices_idx ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
-  const int num_buslanes    = hm_get_buslanes_with_devices_idx    ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
+  const int num_temperature = hm_get_temperature_with_devices_idx ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
+  const int num_fanspeed    = hm_get_fanspeed_with_devices_idx    ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
+  const int num_utilization = hm_get_utilization_with_devices_idx ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
+  const int num_corespeed   = hm_get_corespeed_with_devices_idx   ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
+  const int num_memoryspeed = hm_get_memoryspeed_with_devices_idx ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
+  const int num_buslanes    = hm_get_buslanes_with_devices_idx    ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
 
   int output_len = 0;
 
@@ -2094,49 +2094,49 @@ char *status_get_hwmon_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_
   return output_buf;
 }
 
-int status_get_corespeed_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_corespeed_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
   if (device_param->skipped == true) return -1;
   if (device_param->skipped_warning == true) return -1;
 
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   hc_thread_mutex_lock (status_ctx->mux_hwmon);
 
-  const int num_corespeed = hm_get_corespeed_with_devices_idx ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
+  const int num_corespeed = hm_get_corespeed_with_devices_idx ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
 
   hc_thread_mutex_unlock (status_ctx->mux_hwmon);
 
   return num_corespeed;
 }
 
-int status_get_memoryspeed_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_memoryspeed_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
   if (device_param->skipped == true) return -1;
   if (device_param->skipped_warning == true) return -1;
 
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   hc_thread_mutex_lock (status_ctx->mux_hwmon);
 
-  const int num_memoryspeed = hm_get_memoryspeed_with_devices_idx ((hashcat_ctx_t *) hashcat_ctx, backend_devices_idx);
+  const int num_memoryspeed = hm_get_memoryspeed_with_devices_idx ((hashdog_ctx_t *) hashdog_ctx, backend_devices_idx);
 
   hc_thread_mutex_unlock (status_ctx->mux_hwmon);
 
   return num_memoryspeed;
 }
 
-u64 status_get_progress_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+u64 status_get_progress_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2146,9 +2146,9 @@ u64 status_get_progress_dev (const hashcat_ctx_t *hashcat_ctx, const int backend
   return device_param->outerloop_left;
 }
 
-double status_get_runtime_msec_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+double status_get_runtime_msec_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2158,9 +2158,9 @@ double status_get_runtime_msec_dev (const hashcat_ctx_t *hashcat_ctx, const int 
   return device_param->outerloop_msec;
 }
 
-int status_get_kernel_accel_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_kernel_accel_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2172,9 +2172,9 @@ int status_get_kernel_accel_dev (const hashcat_ctx_t *hashcat_ctx, const int bac
   return device_param->kernel_accel;
 }
 
-int status_get_kernel_loops_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_kernel_loops_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2186,9 +2186,9 @@ int status_get_kernel_loops_dev (const hashcat_ctx_t *hashcat_ctx, const int bac
   return device_param->kernel_loops;
 }
 
-int status_get_kernel_threads_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_kernel_threads_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2200,9 +2200,9 @@ int status_get_kernel_threads_dev (const hashcat_ctx_t *hashcat_ctx, const int b
   return device_param->kernel_threads;
 }
 
-int status_get_vector_width_dev (const hashcat_ctx_t *hashcat_ctx, const int backend_devices_idx)
+int status_get_vector_width_dev (const hashdog_ctx_t *hashdog_ctx, const int backend_devices_idx)
 {
-  const backend_ctx_t *backend_ctx = hashcat_ctx->backend_ctx;
+  const backend_ctx_t *backend_ctx = hashdog_ctx->backend_ctx;
 
   hc_device_param_t *device_param = &backend_ctx->devices_param[backend_devices_idx];
 
@@ -2212,10 +2212,10 @@ int status_get_vector_width_dev (const hashcat_ctx_t *hashcat_ctx, const int bac
   return device_param->vector_width;
 }
 
-int status_progress_init (hashcat_ctx_t *hashcat_ctx)
+int status_progress_init (hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
-  hashes_t     *hashes     = hashcat_ctx->hashes;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
+  hashes_t     *hashes     = hashdog_ctx->hashes;
 
   status_ctx->words_progress_done     = (u64 *) hccalloc (hashes->salts_cnt, sizeof (u64));
   status_ctx->words_progress_rejected = (u64 *) hccalloc (hashes->salts_cnt, sizeof (u64));
@@ -2224,9 +2224,9 @@ int status_progress_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void status_progress_destroy (hashcat_ctx_t *hashcat_ctx)
+void status_progress_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   hcfree (status_ctx->words_progress_done);
   hcfree (status_ctx->words_progress_rejected);
@@ -2237,19 +2237,19 @@ void status_progress_destroy (hashcat_ctx_t *hashcat_ctx)
   status_ctx->words_progress_restored = NULL;
 }
 
-void status_progress_reset (hashcat_ctx_t *hashcat_ctx)
+void status_progress_reset (hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
-  hashes_t     *hashes     = hashcat_ctx->hashes;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
+  hashes_t     *hashes     = hashdog_ctx->hashes;
 
   memset (status_ctx->words_progress_done,     0, hashes->salts_cnt * sizeof (u64));
   memset (status_ctx->words_progress_rejected, 0, hashes->salts_cnt * sizeof (u64));
   memset (status_ctx->words_progress_restored, 0, hashes->salts_cnt * sizeof (u64));
 }
 
-int status_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int status_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   status_ctx->devices_status = STATUS_INIT;
 
@@ -2265,7 +2265,7 @@ int status_ctx_init (hashcat_ctx_t *hashcat_ctx)
   status_ctx->checkpoint_shutdown = false;
   status_ctx->finish_shutdown     = false;
 
-  status_ctx->hashcat_status_final = (hashcat_status_t *) hcmalloc (sizeof (hashcat_status_t));
+  status_ctx->hashdog_status_final = (hashdog_status_t *) hcmalloc (sizeof (hashdog_status_t));
 
   hc_thread_mutex_init (status_ctx->mux_dispatcher);
   hc_thread_mutex_init (status_ctx->mux_counter);
@@ -2275,65 +2275,65 @@ int status_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void status_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void status_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   hc_thread_mutex_delete (status_ctx->mux_dispatcher);
   hc_thread_mutex_delete (status_ctx->mux_counter);
   hc_thread_mutex_delete (status_ctx->mux_display);
   hc_thread_mutex_delete (status_ctx->mux_hwmon);
 
-  hcfree (status_ctx->hashcat_status_final);
+  hcfree (status_ctx->hashdog_status_final);
 
   memset (status_ctx, 0, sizeof (status_ctx_t));
 }
 
-void status_status_destroy (hashcat_ctx_t *hashcat_ctx, hashcat_status_t *hashcat_status)
+void status_status_destroy (hashdog_ctx_t *hashdog_ctx, hashdog_status_t *hashdog_status)
 {
-  const status_ctx_t *status_ctx = hashcat_ctx->status_ctx;
+  const status_ctx_t *status_ctx = hashdog_ctx->status_ctx;
 
   if (status_ctx == NULL) return;
 
   if (status_ctx->accessible == false) return;
 
-  hcfree (hashcat_status->hash_target);
-  hcfree (hashcat_status->hash_name);
-  hcfree (hashcat_status->session);
-  hcfree (hashcat_status->time_estimated_absolute);
-  hcfree (hashcat_status->time_estimated_relative);
-  hcfree (hashcat_status->time_started_absolute);
-  hcfree (hashcat_status->time_started_relative);
-  hcfree (hashcat_status->speed_sec_all);
-  hcfree (hashcat_status->guess_base);
-  hcfree (hashcat_status->guess_mod);
-  hcfree (hashcat_status->guess_charset);
-  hcfree (hashcat_status->cpt);
+  hcfree (hashdog_status->hash_target);
+  hcfree (hashdog_status->hash_name);
+  hcfree (hashdog_status->session);
+  hcfree (hashdog_status->time_estimated_absolute);
+  hcfree (hashdog_status->time_estimated_relative);
+  hcfree (hashdog_status->time_started_absolute);
+  hcfree (hashdog_status->time_started_relative);
+  hcfree (hashdog_status->speed_sec_all);
+  hcfree (hashdog_status->guess_base);
+  hcfree (hashdog_status->guess_mod);
+  hcfree (hashdog_status->guess_charset);
+  hcfree (hashdog_status->cpt);
   #ifdef WITH_BRAIN
-  hcfree (hashcat_status->brain_rx_all);
-  hcfree (hashcat_status->brain_tx_all);
+  hcfree (hashdog_status->brain_rx_all);
+  hcfree (hashdog_status->brain_tx_all);
   #endif
 
-  hashcat_status->hash_target             = NULL;
-  hashcat_status->hash_name               = NULL;
-  hashcat_status->session                 = NULL;
-  hashcat_status->time_estimated_absolute = NULL;
-  hashcat_status->time_estimated_relative = NULL;
-  hashcat_status->time_started_absolute   = NULL;
-  hashcat_status->time_started_relative   = NULL;
-  hashcat_status->speed_sec_all           = NULL;
-  hashcat_status->guess_base              = NULL;
-  hashcat_status->guess_mod               = NULL;
-  hashcat_status->guess_charset           = NULL;
-  hashcat_status->cpt                     = NULL;
+  hashdog_status->hash_target             = NULL;
+  hashdog_status->hash_name               = NULL;
+  hashdog_status->session                 = NULL;
+  hashdog_status->time_estimated_absolute = NULL;
+  hashdog_status->time_estimated_relative = NULL;
+  hashdog_status->time_started_absolute   = NULL;
+  hashdog_status->time_started_relative   = NULL;
+  hashdog_status->speed_sec_all           = NULL;
+  hashdog_status->guess_base              = NULL;
+  hashdog_status->guess_mod               = NULL;
+  hashdog_status->guess_charset           = NULL;
+  hashdog_status->cpt                     = NULL;
   #ifdef WITH_BRAIN
-  hashcat_status->brain_rx_all            = NULL;
-  hashcat_status->brain_tx_all            = NULL;
+  hashdog_status->brain_rx_all            = NULL;
+  hashdog_status->brain_tx_all            = NULL;
   #endif
 
-  for (int device_id = 0; device_id < hashcat_status->device_info_cnt; device_id++)
+  for (int device_id = 0; device_id < hashdog_status->device_info_cnt; device_id++)
   {
-    device_info_t *device_info = hashcat_status->device_info_buf + device_id;
+    device_info_t *device_info = hashdog_status->device_info_buf + device_id;
 
     hcfree (device_info->speed_sec_dev);
     hcfree (device_info->guess_candidates_dev);

@@ -490,7 +490,7 @@ typedef enum attack_exec
 
 typedef enum hlfmt_name
 {
-  HLFMT_HASHCAT  = 0,
+  HLFMT_hashdog  = 0,
   HLFMT_PWDUMP   = 1,
   HLFMT_PASSWD   = 2,
   HLFMT_SHADOW   = 3,
@@ -2599,7 +2599,7 @@ typedef struct device_info
 
 } device_info_t;
 
-typedef struct hashcat_status
+typedef struct hashdog_status
 {
   char       *hash_target;
   char       *hash_name;
@@ -2668,7 +2668,7 @@ typedef struct hashcat_status
   double  exec_msec_all;
   char   *speed_sec_all;
 
-} hashcat_status_t;
+} hashdog_status_t;
 
 typedef struct status_ctx
 {
@@ -2684,7 +2684,7 @@ typedef struct status_ctx
    * full (final) status snapshot
    */
 
-  hashcat_status_t *hashcat_status_final;
+  hashdog_status_t *hashdog_status_final;
 
   /**
    * thread control
@@ -2745,7 +2745,7 @@ typedef struct status_ctx
 
 } status_ctx_t;
 
-typedef struct hashcat_user
+typedef struct hashdog_user
 {
   // use this for context specific data
   // see main.c as how this example is used
@@ -2753,7 +2753,7 @@ typedef struct hashcat_user
   int          outer_threads_cnt;
   hc_thread_t *outer_threads;
 
-} hashcat_user_t;
+} hashdog_user_t;
 
 typedef struct cache_hit
 {
@@ -2903,7 +2903,7 @@ typedef struct module_ctx
 
 } module_ctx_t;
 
-typedef struct hashcat_ctx
+typedef struct hashdog_ctx
 {
   brain_ctx_t           *brain_ctx;
   bitmap_ctx_t          *bitmap_ctx;
@@ -2913,7 +2913,7 @@ typedef struct hashcat_ctx
   dictstat_ctx_t        *dictstat_ctx;
   event_ctx_t           *event_ctx;
   folder_config_t       *folder_config;
-  hashcat_user_t        *hashcat_user;
+  hashdog_user_t        *hashdog_user;
   hashconfig_t          *hashconfig;
   hashes_t              *hashes;
   hwmon_ctx_t           *hwmon_ctx;
@@ -2935,15 +2935,15 @@ typedef struct hashcat_ctx
   user_options_t        *user_options;
   wl_data_t             *wl_data;
 
-  void (*event) (const u32, struct hashcat_ctx *, const void *, const size_t);
+  void (*event) (const u32, struct hashdog_ctx *, const void *, const size_t);
 
-} hashcat_ctx_t;
+} hashdog_ctx_t;
 
 typedef struct thread_param
 {
   u32 tid;
 
-  hashcat_ctx_t *hashcat_ctx;
+  hashdog_ctx_t *hashdog_ctx;
 
 } thread_param_t;
 

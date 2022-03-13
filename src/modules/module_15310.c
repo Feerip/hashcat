@@ -27,7 +27,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_INIT2
                                   | OPTS_TYPE_LOOP2;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$DPAPImk$1*3*S-15-21-407415836-404165111-436049749-1915*des3*sha1*14825*3e86e7d8437c4d5582ff668a83632cb2*208*96ad763b59e67c9f5c3d925e42bbe28a1412b919d1dc4abf03b2bed4c5c244056c14931d94d441117529b7171dfd6ebbe6eecf5d958b65574c293778fbadb892351cc59d5c65d65d2fcda73f5b056548a4a5550106d03d0c39d3cca7e5cdc0d521f48ac9e51cecc5";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
@@ -92,8 +92,8 @@ salt_t *module_benchmark_salt (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYB
 bool module_unstable_warning (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra, MAYBE_UNUSED const hc_device_param_t *device_param)
 {
   // amdgpu-pro-20.50-1234664-ubuntu-20.04 (legacy)
-  // test_1619943729/test_report.log:! unhandled return code 255, cmdline : cat test_1619943729/15300_passwords.txt | ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 1 -a 0 -m 15300 test_1619943729/15300_hashes.txt
-  // test_1619955152/test_report.log:! unhandled return code 255, cmdline : cat test_1619955152/15300_passwords.txt | ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 0 -m 15300 test_1619955152/15300_hashes.txt
+  // test_1619943729/test_report.log:! unhandled return code 255, cmdline : cat test_1619943729/15300_passwords.txt | ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 1 -a 0 -m 15300 test_1619943729/15300_hashes.txt
+  // test_1619955152/test_report.log:! unhandled return code 255, cmdline : cat test_1619955152/15300_passwords.txt | ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 0 -m 15300 test_1619955152/15300_hashes.txt
   if ((device_param->opencl_device_vendor_id == VENDOR_ID_AMD) && (device_param->has_vperm == false))
   {
     return true;

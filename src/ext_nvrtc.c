@@ -32,9 +32,9 @@ int nvrtc_make_options_array_from_string (char *string, char **options)
 
 // NVRTC
 
-int nvrtc_init (void *hashcat_ctx)
+int nvrtc_init (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -102,9 +102,9 @@ int nvrtc_init (void *hashcat_ctx)
   return 0;
 }
 
-void nvrtc_close (void *hashcat_ctx)
+void nvrtc_close (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -121,9 +121,9 @@ void nvrtc_close (void *hashcat_ctx)
   }
 }
 
-int hc_nvrtcCreateProgram (void *hashcat_ctx, nvrtcProgram *prog, const char *src, const char *name, int numHeaders, const char * const *headers, const char * const *includeNames)
+int hc_nvrtcCreateProgram (void *hashdog_ctx, nvrtcProgram *prog, const char *src, const char *name, int numHeaders, const char * const *headers, const char * const *includeNames)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -131,7 +131,7 @@ int hc_nvrtcCreateProgram (void *hashcat_ctx, nvrtcProgram *prog, const char *sr
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcCreateProgram(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcCreateProgram(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -139,9 +139,9 @@ int hc_nvrtcCreateProgram (void *hashcat_ctx, nvrtcProgram *prog, const char *sr
   return 0;
 }
 
-int hc_nvrtcDestroyProgram (void *hashcat_ctx, nvrtcProgram *prog)
+int hc_nvrtcDestroyProgram (void *hashdog_ctx, nvrtcProgram *prog)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -149,7 +149,7 @@ int hc_nvrtcDestroyProgram (void *hashcat_ctx, nvrtcProgram *prog)
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcDestroyProgram(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcDestroyProgram(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -157,9 +157,9 @@ int hc_nvrtcDestroyProgram (void *hashcat_ctx, nvrtcProgram *prog)
   return 0;
 }
 
-int hc_nvrtcCompileProgram (void *hashcat_ctx, nvrtcProgram prog, int numOptions, const char * const *options)
+int hc_nvrtcCompileProgram (void *hashdog_ctx, nvrtcProgram prog, int numOptions, const char * const *options)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -167,7 +167,7 @@ int hc_nvrtcCompileProgram (void *hashcat_ctx, nvrtcProgram prog, int numOptions
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcCompileProgram(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcCompileProgram(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -175,9 +175,9 @@ int hc_nvrtcCompileProgram (void *hashcat_ctx, nvrtcProgram prog, int numOptions
   return 0;
 }
 
-int hc_nvrtcGetProgramLogSize (void *hashcat_ctx, nvrtcProgram prog, size_t *logSizeRet)
+int hc_nvrtcGetProgramLogSize (void *hashdog_ctx, nvrtcProgram prog, size_t *logSizeRet)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -185,7 +185,7 @@ int hc_nvrtcGetProgramLogSize (void *hashcat_ctx, nvrtcProgram prog, size_t *log
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcGetProgramLogSize(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcGetProgramLogSize(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -193,9 +193,9 @@ int hc_nvrtcGetProgramLogSize (void *hashcat_ctx, nvrtcProgram prog, size_t *log
   return 0;
 }
 
-int hc_nvrtcGetProgramLog (void *hashcat_ctx, nvrtcProgram prog, char *log)
+int hc_nvrtcGetProgramLog (void *hashdog_ctx, nvrtcProgram prog, char *log)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -203,7 +203,7 @@ int hc_nvrtcGetProgramLog (void *hashcat_ctx, nvrtcProgram prog, char *log)
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcGetProgramLog(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcGetProgramLog(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -211,9 +211,9 @@ int hc_nvrtcGetProgramLog (void *hashcat_ctx, nvrtcProgram prog, char *log)
   return 0;
 }
 
-int hc_nvrtcGetPTXSize (void *hashcat_ctx, nvrtcProgram prog, size_t *ptxSizeRet)
+int hc_nvrtcGetPTXSize (void *hashdog_ctx, nvrtcProgram prog, size_t *ptxSizeRet)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -221,7 +221,7 @@ int hc_nvrtcGetPTXSize (void *hashcat_ctx, nvrtcProgram prog, size_t *ptxSizeRet
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcGetPTXSize(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcGetPTXSize(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -229,9 +229,9 @@ int hc_nvrtcGetPTXSize (void *hashcat_ctx, nvrtcProgram prog, size_t *ptxSizeRet
   return 0;
 }
 
-int hc_nvrtcGetPTX (void *hashcat_ctx, nvrtcProgram prog, char *ptx)
+int hc_nvrtcGetPTX (void *hashdog_ctx, nvrtcProgram prog, char *ptx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -239,7 +239,7 @@ int hc_nvrtcGetPTX (void *hashcat_ctx, nvrtcProgram prog, char *ptx)
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcGetPTX(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcGetPTX(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }
@@ -247,9 +247,9 @@ int hc_nvrtcGetPTX (void *hashcat_ctx, nvrtcProgram prog, char *ptx)
   return 0;
 }
 
-int hc_nvrtcVersion (void *hashcat_ctx, int *major, int *minor)
+int hc_nvrtcVersion (void *hashdog_ctx, int *major, int *minor)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   NVRTC_PTR *nvrtc = (NVRTC_PTR *) backend_ctx->nvrtc;
 
@@ -257,7 +257,7 @@ int hc_nvrtcVersion (void *hashcat_ctx, int *major, int *minor)
 
   if (NVRTC_err != NVRTC_SUCCESS)
   {
-    event_log_error (hashcat_ctx, "nvrtcVersion(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
+    event_log_error (hashdog_ctx, "nvrtcVersion(): %s", nvrtc->nvrtcGetErrorString (NVRTC_err));
 
     return -1;
   }

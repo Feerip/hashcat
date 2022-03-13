@@ -17,7 +17,7 @@
 /*                                                                      */
 /* -------------------------------------------------------------------- */
 /*                                                                      */
-/* Cleaned and optimized for GPU use with hashcat by Jens Steube        */
+/* Cleaned and optimized for GPU use with hashdog by Jens Steube        */
 /* Added 192-bit functions by Gabriele Gristina                         */
 
 #include "inc_vendor.h"

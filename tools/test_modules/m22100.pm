@@ -171,7 +171,7 @@ sub module_generate_hash
   my $salt = shift;
   my $iv   = shift // random_bytes (12);
   my $data = shift; # if not set, we're going to "generate"/fake it below
-  my $type = shift // random_number (0, 1); # if set to 1: check also the MAC in hashcat
+  my $type = shift // random_number (0, 1); # if set to 1: check also the MAC in hashdog
 
 
   # key generation (KDF):

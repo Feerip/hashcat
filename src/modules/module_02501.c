@@ -895,7 +895,7 @@ int module_hash_encode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
 
 const char *module_deprecated_notice (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra)
 {
-  const char *deprecated_notice = "The plugin 2501 is deprecated and was replaced with plugin 22001. For more details, please read: https://hashcat.net/forum/thread-10253.html";
+  const char *deprecated_notice = "The plugin 2501 is deprecated and was replaced with plugin 22001. For more details, please read: https://hashdog.net/forum/thread-10253.html";
 
   return deprecated_notice;
 }

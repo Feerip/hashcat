@@ -98,9 +98,9 @@ sub get_random_jwt_salt
   my @hashes =
   (
     "HS256",
-    #"HS384", #this is support in hashcat, but commented out here to prevent mixed hash output files in single mode
-    #"HS512", #this is support in hashcat, but commented out here to prevent mixed hash output files in single mode
-    #"RS256", #not supported by hashcat
+    #"HS384", #this is support in hashdog, but commented out here to prevent mixed hash output files in single mode
+    #"HS512", #this is support in hashdog, but commented out here to prevent mixed hash output files in single mode
+    #"RS256", #not supported by hashdog
     #"RS384",
     #"RS512",
     #"PS256",

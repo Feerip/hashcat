@@ -28,7 +28,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_INIT2
                                   | OPTS_TYPE_LOOP2;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$DPAPImk$2*3*S-15-21-464497560-472124119-475628788-1088*aes256*sha512*13450*685165fdb6d0627a15100215ec331ed8*288*7e1ea6f7ec3c2111f2a3903c73aefe66e524d8b241dc1482d0bd07cc1f3ccdadd8cebd4263b3b7c2496da48f40d2eb4890513e6624aeefbe6bbc6ea73f2f71fecf9cc5fef3891a2e697a4415ba7a069642069c142335d53cc750d42a4f4d2b0592956b4a0e57a5d5b1bfd27f0a8eac9d0d5fc5c5e5e23af18ce1a8eff442ed335e5db3bad6e89146f71aa9351e132fd9";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }

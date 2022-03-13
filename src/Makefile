@@ -23,7 +23,7 @@ USE_SYSTEM_UNRAR        ?= 0
 
 UNAME                   := $(shell uname -s)
 
-# we need to strip the windows version number to be able to build hashcat on cygwin hosts
+# we need to strip the windows version number to be able to build hashdog on cygwin hosts
 UNAME                   := $(patsubst CYGWIN_NT-%,CYGWIN,$(UNAME))
 
 # same for msys
@@ -106,11 +106,11 @@ PREFIX                  ?= /usr/local
 
 INSTALL_FOLDER          ?= $(PREFIX)/bin
 SHARED_ROOT_FOLDER      ?= $(PREFIX)/share
-SHARED_FOLDER           ?= $(SHARED_ROOT_FOLDER)/hashcat
-DOCUMENT_FOLDER         ?= $(SHARED_ROOT_FOLDER)/doc/hashcat
+SHARED_FOLDER           ?= $(SHARED_ROOT_FOLDER)/hashdog
+DOCUMENT_FOLDER         ?= $(SHARED_ROOT_FOLDER)/doc/hashdog
 LIBRARY_FOLDER          ?= $(PREFIX)/lib
 LIBRARY_DEV_ROOT_FOLDER ?= $(PREFIX)/include
-LIBRARY_DEV_FOLDER      ?= $(LIBRARY_DEV_ROOT_FOLDER)/hashcat
+LIBRARY_DEV_FOLDER      ?= $(LIBRARY_DEV_ROOT_FOLDER)/hashdog
 
 ##
 ## Dependencies paths
@@ -152,21 +152,21 @@ endif
 ## Filenames for library and frontend
 ##
 
-HASHCAT_FRONTEND        := hashcat
-HASHCAT_LIBRARY         := libhashcat.so.$(VERSION_PURE)
+hashdog_FRONTEND        := hashdog
+hashdog_LIBRARY         := libhashdog.so.$(VERSION_PURE)
 
 ifeq ($(UNAME),Darwin)
-HASHCAT_LIBRARY         := libhashcat.$(VERSION_PURE).dylib
+hashdog_LIBRARY         := libhashdog.$(VERSION_PURE).dylib
 endif # Darwin
 
 ifeq ($(UNAME),CYGWIN)
-HASHCAT_FRONTEND        := hashcat.exe
-HASHCAT_LIBRARY         := hashcat.dll
+hashdog_FRONTEND        := hashdog.exe
+hashdog_LIBRARY         := hashdog.dll
 endif # CYGWIN
 
 ifeq ($(UNAME),MSYS2)
-HASHCAT_FRONTEND        := hashcat.exe
-HASHCAT_LIBRARY         := hashcat.dll
+hashdog_FRONTEND        := hashdog.exe
+hashdog_LIBRARY         := hashdog.dll
 endif # MSYS2
 
 ##
@@ -395,7 +395,7 @@ EMU_OBJS_ALL            += emu_inc_rp emu_inc_rp_optimized
 EMU_OBJS_ALL            += emu_inc_hash_md4 emu_inc_hash_md5 emu_inc_hash_ripemd160 emu_inc_hash_sha1 emu_inc_hash_sha256 emu_inc_hash_sha384 emu_inc_hash_sha512 emu_inc_hash_streebog256 emu_inc_hash_streebog512 emu_inc_ecc_secp256k1
 EMU_OBJS_ALL            += emu_inc_cipher_aes emu_inc_cipher_camellia emu_inc_cipher_des emu_inc_cipher_kuznyechik emu_inc_cipher_serpent emu_inc_cipher_twofish
 
-OBJS_ALL                := affinity autotune backend benchmark bitmap bitops combinator common convert cpt cpu_crc32 debugfile dictstat dispatch dynloader event ext_ADL ext_cuda ext_hip ext_nvapi ext_nvml ext_nvrtc ext_hiprtc ext_OpenCL ext_sysfs_amdgpu ext_sysfs_cpu ext_iokit ext_lzma filehandling folder hashcat hashes hlfmt hwmon induct interface keyboard_layout locking logfile loopback memory monitor mpsp outfile_check outfile pidfile potfile restore rp rp_cpu selftest slow_candidates shared status stdout straight terminal thread timer tuningdb usage user_options wordlist $(EMU_OBJS_ALL)
+OBJS_ALL                := affinity autotune backend benchmark bitmap bitops combinator common convert cpt cpu_crc32 debugfile dictstat dispatch dynloader event ext_ADL ext_cuda ext_hip ext_nvapi ext_nvml ext_nvrtc ext_hiprtc ext_OpenCL ext_sysfs_amdgpu ext_sysfs_cpu ext_iokit ext_lzma filehandling folder hashdog hashes hlfmt hwmon induct interface keyboard_layout locking logfile loopback memory monitor mpsp outfile_check outfile pidfile potfile restore rp rp_cpu selftest slow_candidates shared status stdout straight terminal thread timer tuningdb usage user_options wordlist $(EMU_OBJS_ALL)
 
 ifeq ($(UNAME),Darwin)
 OBJS_ALL                += ext_metal
@@ -450,12 +450,12 @@ endif
 ##
 
 .PHONY: default
-default: $(HASHCAT_FRONTEND) modules
+default: $(hashdog_FRONTEND) modules
 
 .PHONY: clean
 clean:
-	$(RM) -f $(HASHCAT_FRONTEND)
-	$(RM) -f $(HASHCAT_LIBRARY)
+	$(RM) -f $(hashdog_FRONTEND)
+	$(RM) -f $(hashdog_LIBRARY)
 	$(RM) -rf modules/*.dSYM
 	$(RM) -f modules/*.dll
 	$(RM) -f modules/*.so
@@ -478,7 +478,7 @@ distclean: clean
 	$(RM) -f *.restore
 	$(RM) -f *.potfile
 	$(RM) -f *.out
-	$(RM) -f hashcat.dictstat2
+	$(RM) -f hashdog.dictstat2
 	$(RM) -f brain.*
 	$(RM) -rf test_[0-9]*
 	$(RM) -rf tools/luks_tests
@@ -502,9 +502,9 @@ endif
 
 .PHONY: install
 ifeq ($(SHARED),1)
-install: install_docs install_shared install_library install_library_dev install_kernels install_modules install_hashcat
+install: install_docs install_shared install_library install_library_dev install_kernels install_modules install_hashdog
 else
-install: install_docs install_shared                                     install_kernels install_modules install_hashcat
+install: install_docs install_shared                                     install_kernels install_modules install_hashdog
 endif
 
 # we need this extra target to make sure that for parallel builds (i.e. 2+ Makefile targets could possible run at the same time)
@@ -535,7 +535,7 @@ install_docs: install_make_shared_root
 	$(INSTALL) -m 755 example0.sh                                           $(DESTDIR)$(DOCUMENT_FOLDER)/
 	$(INSTALL) -m 755 example400.sh                                         $(DESTDIR)$(DOCUMENT_FOLDER)/
 	$(INSTALL) -m 755 example500.sh                                         $(DESTDIR)$(DOCUMENT_FOLDER)/
-	$(INSTALL) -m 644 extra/tab_completion/hashcat.sh                       $(DESTDIR)$(DOCUMENT_FOLDER)/extra/tab_completion/
+	$(INSTALL) -m 644 extra/tab_completion/hashdog.sh                       $(DESTDIR)$(DOCUMENT_FOLDER)/extra/tab_completion/
 	$(INSTALL) -m 644 extra/tab_completion/howto.txt                        $(DESTDIR)$(DOCUMENT_FOLDER)/extra/tab_completion/
 	$(INSTALL) -m 755 extra/tab_completion/install                          $(DESTDIR)$(DOCUMENT_FOLDER)/extra/tab_completion/
 	$(FIND) charsets/ -type d -exec $(INSTALL) -m 755 -d                    $(DESTDIR)$(DOCUMENT_FOLDER)/{} \;
@@ -548,15 +548,15 @@ install_docs: install_make_shared_root
 	$(FIND) masks/    -type f -exec $(INSTALL) -m 644 {}                    $(DESTDIR)$(DOCUMENT_FOLDER)/{} \;
 	$(FIND) rules/    -type d -exec $(INSTALL) -m 755 -d                    $(DESTDIR)$(DOCUMENT_FOLDER)/{} \;
 	$(FIND) rules/    -type f -exec $(INSTALL) -m 644 {}                    $(DESTDIR)$(DOCUMENT_FOLDER)/{} \;
-	$(SED) $(SED_IN_PLACE) 's/\.\/hashcat/hashcat/'                         $(DESTDIR)$(DOCUMENT_FOLDER)/example0.sh
-	$(SED) $(SED_IN_PLACE) 's/\.\/hashcat/hashcat/'                         $(DESTDIR)$(DOCUMENT_FOLDER)/example400.sh
-	$(SED) $(SED_IN_PLACE) 's/\.\/hashcat/hashcat/'                         $(DESTDIR)$(DOCUMENT_FOLDER)/example500.sh
+	$(SED) $(SED_IN_PLACE) 's/\.\/hashdog/hashdog/'                         $(DESTDIR)$(DOCUMENT_FOLDER)/example0.sh
+	$(SED) $(SED_IN_PLACE) 's/\.\/hashdog/hashdog/'                         $(DESTDIR)$(DOCUMENT_FOLDER)/example400.sh
+	$(SED) $(SED_IN_PLACE) 's/\.\/hashdog/hashdog/'                         $(DESTDIR)$(DOCUMENT_FOLDER)/example500.sh
 
 .PHONY: install_shared
 install_shared: install_make_shared_root
 	$(INSTALL) -m 755 -d                                                    $(DESTDIR)$(SHARED_FOLDER)
-	$(INSTALL) -m 644 hashcat.hctune                                        $(DESTDIR)$(SHARED_FOLDER)/
-	$(INSTALL) -m 644 hashcat.hcstat2                                       $(DESTDIR)$(SHARED_FOLDER)/
+	$(INSTALL) -m 644 hashdog.hctune                                        $(DESTDIR)$(SHARED_FOLDER)/
+	$(INSTALL) -m 644 hashdog.hcstat2                                       $(DESTDIR)$(SHARED_FOLDER)/
 
 .PHONY: install_kernels
 install_kernels: install_shared
@@ -571,9 +571,9 @@ install_modules: install_shared modules
 	$(FIND) modules/  -mindepth 1 -type f -execdir $(INSTALL) -m 644 {}     $(DESTDIR)$(SHARED_FOLDER)/modules/{} \;
 
 .PHONY: install_library
-install_library: $(HASHCAT_LIBRARY)
+install_library: $(hashdog_LIBRARY)
 	$(INSTALL) -m 755 -d                                                    $(DESTDIR)$(LIBRARY_FOLDER)
-	$(INSTALL) -m 755 $(HASHCAT_LIBRARY)                                    $(DESTDIR)$(LIBRARY_FOLDER)/
+	$(INSTALL) -m 755 $(hashdog_LIBRARY)                                    $(DESTDIR)$(LIBRARY_FOLDER)/
 
 .PHONY: install_library_dev
 install_library_dev: install_make_library_dev_root
@@ -581,21 +581,21 @@ install_library_dev: install_make_library_dev_root
 	$(FIND) include/  -mindepth 1 -type d -execdir $(INSTALL) -m 755 -d     $(DESTDIR)$(LIBRARY_DEV_FOLDER)/{} \;
 	$(FIND) include/  -mindepth 1 -type f -execdir $(INSTALL) -m 644 {}     $(DESTDIR)$(LIBRARY_DEV_FOLDER)/{} \;
 
-.PHONY: install_hashcat
-install_hashcat: $(HASHCAT_FRONTEND)
+.PHONY: install_hashdog
+install_hashdog: $(hashdog_FRONTEND)
 	$(INSTALL) -m 755 -d                                                    $(DESTDIR)$(INSTALL_FOLDER)
-	$(INSTALL) -m 755 $(HASHCAT_FRONTEND)                                   $(DESTDIR)$(INSTALL_FOLDER)/
+	$(INSTALL) -m 755 $(hashdog_FRONTEND)                                   $(DESTDIR)$(INSTALL_FOLDER)/
 
 .PHONY: uninstall
 uninstall:
-	$(RM) -f  $(DESTDIR)$(INSTALL_FOLDER)/$(HASHCAT_FRONTEND)
-	$(RM) -f  $(DESTDIR)$(LIBRARY_FOLDER)/$(HASHCAT_LIBRARY)
+	$(RM) -f  $(DESTDIR)$(INSTALL_FOLDER)/$(hashdog_FRONTEND)
+	$(RM) -f  $(DESTDIR)$(LIBRARY_FOLDER)/$(hashdog_LIBRARY)
 	$(RM) -rf $(DESTDIR)$(LIBRARY_DEV_FOLDER)
 	$(RM) -rf $(DESTDIR)$(SHARED_FOLDER)
 	$(RM) -rf $(DESTDIR)$(DOCUMENT_FOLDER)
 
 ##
-## native compiled hashcat library and frontend
+## native compiled hashdog library and frontend
 ##
 
 obj/%.NATIVE.o: src/%.c
@@ -632,18 +632,18 @@ obj/combined.NATIVE.a: $(NATIVE_OBJS)
 	$(AR) rcs $@ $^
 
 ifeq ($(UNAME),Darwin)
-$(HASHCAT_LIBRARY): $(NATIVE_OBJS)
-	$(CC)                     $^ -o $@                    $(LFLAGS_NATIVE) -shared -install_name $(DESTDIR)$(LIBRARY_FOLDER)/$(HASHCAT_LIBRARY) -current_version $(VERSION_PURE) -compatibility_version $(VERSION_PURE)
+$(hashdog_LIBRARY): $(NATIVE_OBJS)
+	$(CC)                     $^ -o $@                    $(LFLAGS_NATIVE) -shared -install_name $(DESTDIR)$(LIBRARY_FOLDER)/$(hashdog_LIBRARY) -current_version $(VERSION_PURE) -compatibility_version $(VERSION_PURE)
 else
-$(HASHCAT_LIBRARY): $(NATIVE_OBJS)
-	$(CC)                     $^ -o $@                    $(LFLAGS_NATIVE) -shared -Wl,-soname,$(HASHCAT_LIBRARY)
+$(hashdog_LIBRARY): $(NATIVE_OBJS)
+	$(CC)                     $^ -o $@                    $(LFLAGS_NATIVE) -shared -Wl,-soname,$(hashdog_LIBRARY)
 endif
 
 ifeq ($(SHARED),1)
-$(HASHCAT_FRONTEND): src/main.c $(HASHCAT_LIBRARY)
-	$(CC)    $(CCFLAGS) $(CFLAGS_NATIVE) $^ -o $@ $(HASHCAT_LIBRARY) $(LFLAGS_NATIVE) -DCOMPTIME=$(COMPTIME) -DVERSION_TAG=\"$(VERSION_TAG)\" -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
+$(hashdog_FRONTEND): src/main.c $(hashdog_LIBRARY)
+	$(CC)    $(CCFLAGS) $(CFLAGS_NATIVE) $^ -o $@ $(hashdog_LIBRARY) $(LFLAGS_NATIVE) -DCOMPTIME=$(COMPTIME) -DVERSION_TAG=\"$(VERSION_TAG)\" -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 else
-$(HASHCAT_FRONTEND): src/main.c obj/combined.NATIVE.a
+$(hashdog_FRONTEND): src/main.c obj/combined.NATIVE.a
 	$(CC)    $(CCFLAGS) $(CFLAGS_NATIVE) $^ -o $@                    $(LFLAGS_NATIVE) -DCOMPTIME=$(COMPTIME) -DVERSION_TAG=\"$(VERSION_TAG)\" -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 endif
 
@@ -674,7 +674,7 @@ endif
 $(MODULES_DISABLE): ;
 
 ifeq ($(SHARED),1)
-modules/module_%.$(MODULE_SUFFIX): src/modules/module_%.c $(HASHCAT_LIBRARY)
+modules/module_%.$(MODULE_SUFFIX): src/modules/module_%.c $(hashdog_LIBRARY)
 	$(CC)    $(CCFLAGS) $(CFLAGS_NATIVE) $^ -o $@ $(LFLAGS_NATIVE) -shared -fPIC -D MODULE_INTERFACE_VERSION_CURRENT=$(MODULE_INTERFACE_VERSION)
 else
 modules/module_%.$(MODULE_SUFFIX): src/modules/module_%.c obj/combined.NATIVE.a
@@ -743,8 +743,8 @@ LFLAGS_CROSS_WIN        += -static -static-libgcc -static-libstdc++
 binaries: linux win
 
 .PHONY: host_linux host_win
-host_linux: hashcat.bin
-host_win:   hashcat.exe
+host_linux: hashdog.bin
+host_win:   hashdog.exe
 
 .PHONY: linux win
 linux: host_linux modules_linux
@@ -768,7 +768,7 @@ modules/module_%.dll: src/modules/module_%.c obj/combined.WIN.a
 	$(CC_WIN)    $(CCFLAGS) $(CFLAGS_CROSS_WIN)   $^ -o $@ $(LFLAGS_CROSS_WIN)   -shared -fPIC -D MODULE_INTERFACE_VERSION_CURRENT=$(MODULE_INTERFACE_VERSION)
 
 ##
-## cross compiled hashcat
+## cross compiled hashdog
 ##
 
 obj/%.LINUX.o: src/%.c
@@ -819,13 +819,13 @@ obj/combined.LINUX.a: $(LINUX_OBJS)
 obj/combined.WIN.a: $(WIN_OBJS)
 	$(AR_WIN) rcs $@ $^
 
-hashcat.bin: src/main.c obj/combined.LINUX.a
+hashdog.bin: src/main.c obj/combined.LINUX.a
 	$(CC_LINUX) $(CCFLAGS) $(CFLAGS_CROSS_LINUX)    -o $@ $^ $(LFLAGS_CROSS_LINUX) -DCOMPTIME=$(COMPTIME) -DVERSION_TAG=\"$(VERSION_TAG)\" -DINSTALL_FOLDER=\"$(INSTALL_FOLDER)\" -DSHARED_FOLDER=\"$(SHARED_FOLDER)\" -DDOCUMENT_FOLDER=\"$(DOCUMENT_FOLDER)\"
 
-hashcat.exe: src/main.c obj/combined.WIN.a $(WIN_ICONV)/lib/libiconv.a
+hashdog.exe: src/main.c obj/combined.WIN.a $(WIN_ICONV)/lib/libiconv.a
 	$(CC_WIN)   $(CCFLAGS) $(CFLAGS_CROSS_WIN)      -o $@ $^ $(LFLAGS_CROSS_WIN)   -DCOMPTIME=$(COMPTIME) -DVERSION_TAG=\"$(VERSION_TAG)\"
 
-hashcat.dll: src/main.c obj/combined.WIN.a $(WIN_ICONV)/lib/libiconv.a
+hashdog.dll: src/main.c obj/combined.WIN.a $(WIN_ICONV)/lib/libiconv.a
 	$(CC_WIN)   $(CCFLAGS) $(CFLAGS_CROSS_WIN)      -o $@ $^ $(LFLAGS_CROSS_WIN)   -DCOMPTIME=$(COMPTIME) -DVERSION_TAG=\"$(VERSION_TAG)\" -shared
 
 endif

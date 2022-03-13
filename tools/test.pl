@@ -159,7 +159,7 @@ sub single
       # possible if the requested length is not supported by algorithm
       next unless defined $hash;
 
-      my $format = "echo %-31s | ./hashcat \${OPTS} -a 0 -m %d '%s'\n";
+      my $format = "echo %-31s | ./hashdog \${OPTS} -a 0 -m %d '%s'\n";
 
       printf ($format, $word, $MODE, $hash);
     }
@@ -405,7 +405,7 @@ sub init_db_salt_rand
 
   if ($IS_OPTIMIZED == 1)
   {
-    # longer than 51 triggers a parser bug in old hashcat, have to leave this during migration phase
+    # longer than 51 triggers a parser bug in old hashdog, have to leave this during migration phase
     # #define SALT_MAX_OLD        51
     # salt_max = SALT_MAX_OLD;
 
@@ -447,7 +447,7 @@ sub init_db_salt_rand
   return $db_out;
 }
 
-# detect hashcat $HEX[...] notation and pack as binary
+# detect hashdog $HEX[...] notation and pack as binary
 sub pack_if_HEX_notation
 {
   my $string = shift;

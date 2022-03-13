@@ -12,7 +12,7 @@
 
 #define CHARSIZ       0x100
 
-#define SP_HCSTAT     "hashcat.hcstat2"
+#define SP_HCSTAT     "hashdog.hcstat2"
 #define SP_VERSION    (0x6863737461740000 | 0x0002)
 #define SP_PW_MIN     2
 #define SP_PW_MAX     256
@@ -26,9 +26,9 @@ u32   mp_get_length (const char *mask, const u32 opts_type);
 
 void  sp_exec (u64 ctx, char *pw_buf, cs_t *root_css_buf, cs_t *markov_css_buf, u32 start, u32 stop);
 
-int   mask_ctx_update_loop    (hashcat_ctx_t *hashcat_ctx);
-int   mask_ctx_init           (hashcat_ctx_t *hashcat_ctx);
-void  mask_ctx_destroy        (hashcat_ctx_t *hashcat_ctx);
-int   mask_ctx_parse_maskfile (hashcat_ctx_t *hashcat_ctx);
+int   mask_ctx_update_loop    (hashdog_ctx_t *hashdog_ctx);
+int   mask_ctx_init           (hashdog_ctx_t *hashdog_ctx);
+void  mask_ctx_destroy        (hashdog_ctx_t *hashdog_ctx);
+int   mask_ctx_parse_maskfile (hashdog_ctx_t *hashdog_ctx);
 
 #endif // _MPSP_H

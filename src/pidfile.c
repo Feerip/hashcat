@@ -10,9 +10,9 @@
 #include "shared.h"
 #include "pidfile.h"
 
-static int check_running_process (hashcat_ctx_t *hashcat_ctx)
+static int check_running_process (hashdog_ctx_t *hashdog_ctx)
 {
-  pidfile_ctx_t *pidfile_ctx = hashcat_ctx->pidfile_ctx;
+  pidfile_ctx_t *pidfile_ctx = hashdog_ctx->pidfile_ctx;
 
   char *pidfile_filename = pidfile_ctx->filename;
 
@@ -28,7 +28,7 @@ static int check_running_process (hashcat_ctx_t *hashcat_ctx)
 
   if (nread != 1)
   {
-    //event_log_error (hashcat_ctx, "Cannot read %s", pidfile_filename);
+    //event_log_error (hashdog_ctx, "Cannot read %s", pidfile_filename);
 
     hcfree (pd);
 
@@ -54,7 +54,7 @@ static int check_running_process (hashcat_ctx_t *hashcat_ctx)
     {
       if (strcmp (pidbin, pidbin2) == 0)
       {
-        event_log_error (hashcat_ctx, "Already an instance %s running on pid %d", pidbin2, pd->pid);
+        event_log_error (hashdog_ctx, "Already an instance %s running on pid %d", pidbin2, pd->pid);
 
         hcfree (pd);
 
@@ -98,7 +98,7 @@ static int check_running_process (hashcat_ctx_t *hashcat_ctx)
 
       if (r == 0)
       {
-        event_log_error (hashcat_ctx, "Already an instance '%s' running on pid %u", pidexe, pd->pid);
+        event_log_error (hashdog_ctx, "Already an instance '%s' running on pid %u", pidexe, pd->pid);
       }
 
       hcfree (selfexe);
@@ -124,15 +124,15 @@ static int check_running_process (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-static int init_pidfile (hashcat_ctx_t *hashcat_ctx)
+static int init_pidfile (hashdog_ctx_t *hashdog_ctx)
 {
-  pidfile_ctx_t *pidfile_ctx = hashcat_ctx->pidfile_ctx;
+  pidfile_ctx_t *pidfile_ctx = hashdog_ctx->pidfile_ctx;
 
   pidfile_data_t *pd = (pidfile_data_t *) hcmalloc (sizeof (pidfile_data_t));
 
   pidfile_ctx->pd = pd;
 
-  const int rc = check_running_process (hashcat_ctx);
+  const int rc = check_running_process (hashdog_ctx);
 
   if (rc == -1) return -1;
 
@@ -145,9 +145,9 @@ static int init_pidfile (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-static int write_pidfile (hashcat_ctx_t *hashcat_ctx)
+static int write_pidfile (hashdog_ctx_t *hashdog_ctx)
 {
-  const pidfile_ctx_t *pidfile_ctx = hashcat_ctx->pidfile_ctx;
+  const pidfile_ctx_t *pidfile_ctx = hashdog_ctx->pidfile_ctx;
 
   pidfile_data_t *pd = pidfile_ctx->pd;
 
@@ -157,7 +157,7 @@ static int write_pidfile (hashcat_ctx_t *hashcat_ctx)
 
   if (hc_fopen (&fp, pidfile_filename, "wb") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", pidfile_filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", pidfile_filename, strerror (errno));
 
     return -1;
   }
@@ -171,30 +171,30 @@ static int write_pidfile (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-int pidfile_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int pidfile_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  folder_config_t *folder_config = hashcat_ctx->folder_config;
-  pidfile_ctx_t   *pidfile_ctx   = hashcat_ctx->pidfile_ctx;
-  user_options_t  *user_options  = hashcat_ctx->user_options;
+  folder_config_t *folder_config = hashdog_ctx->folder_config;
+  pidfile_ctx_t   *pidfile_ctx   = hashdog_ctx->pidfile_ctx;
+  user_options_t  *user_options  = hashdog_ctx->user_options;
 
   hc_asprintf (&pidfile_ctx->filename, "%s/%s.pid", folder_config->session_dir, user_options->session);
 
   pidfile_ctx->pidfile_written = false;
 
-  const int rc_init_pidfile = init_pidfile (hashcat_ctx);
+  const int rc_init_pidfile = init_pidfile (hashdog_ctx);
 
   if (rc_init_pidfile == -1) return -1;
 
-  const int rc = write_pidfile (hashcat_ctx);
+  const int rc = write_pidfile (hashdog_ctx);
 
   if (rc == 0) pidfile_ctx->pidfile_written = true;
 
   return 0;
 }
 
-void pidfile_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void pidfile_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  pidfile_ctx_t *pidfile_ctx = hashcat_ctx->pidfile_ctx;
+  pidfile_ctx_t *pidfile_ctx = hashdog_ctx->pidfile_ctx;
 
   if (pidfile_ctx->pidfile_written == true)
   {

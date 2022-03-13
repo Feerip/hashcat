@@ -1,17 +1,17 @@
 /*
 
-PKZIP Kernels for Hashcat (c) 2018, European Union
+PKZIP Kernels for hashdog (c) 2018, European Union
 
-PKZIP Kernels for Hashcat has been developed by the Joint Research Centre of the European Commission.
+PKZIP Kernels for hashdog has been developed by the Joint Research Centre of the European Commission.
 It is released as open source software under the MIT License.
 
-PKZIP Kernels for Hashcat makes use of two primary external components, which continue to be subject
+PKZIP Kernels for hashdog makes use of two primary external components, which continue to be subject
 to the terms and conditions stipulated in the respective licences they have been released under. These
 external components include, but are not necessarily limited to, the following:
 
 -----
 
-1. Hashcat: MIT License
+1. hashdog: MIT License
 
 Copyright (c) 2015-2018 Jens Steube
 
@@ -57,7 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----
 
 The European Union disclaims all liability related to or arising out of the use made by third parties of
-any external components and dependencies which may be included with PKZIP Kernels for Hashcat.
+any external components and dependencies which may be included with PKZIP Kernels for hashdog.
 
 -----
 
@@ -104,7 +104,7 @@ static const u64   KERN_TYPE      = 17225;
 static const u32   OPTI_TYPE      = 0;
 static const u64   OPTS_TYPE      = OPTS_TYPE_NATIVE_THREADS;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$pkzip2$3*1*1*0*0*24*3e2c*3ef8*0619e9d17ff3f994065b99b1fa8aef41c056edf9fa4540919c109742dcb32f797fc90ce0*1*0*8*24*431a*3f26*18e2461c0dbad89bd9cc763067a020c89b5e16195b1ac5fa7fb13bd246d000b6833a2988*2*0*23*17*1e3c1a16*2e4*2f*0*23*1e3c*3f2d*54ea4dbc711026561485bbd191bf300ae24fa0997f3779b688cdad323985f8d3bb8b0c*$/pkzip2$";
 
 #define MAX_DATA (320 * 1024)

@@ -25,7 +25,7 @@ static const u32 OPTI_TYPE     = OPTI_TYPE_ZERO_BYTE
 static const u64 OPTS_TYPE     = OPTS_TYPE_PT_GENERATE_LE
                                | OPTS_TYPE_ST_BASE64;
 static const u32 SALT_TYPE     = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS     = "hashcat";
+static const char *ST_PASS     = "hashdog";
 static const char *ST_HASH     = "SCRAM-SHA-256$4096:IKfxzJ8Nq4PkLJCfgKcPmA==$"
                                  "iRw3qwTp18uaBnsTOEExbtgWdKeBMbSSnZvqD4sdqLQ=:"
                                  "hPciC1CcnBna3szR8Mf3MVc8t0W7QPbIHoMMrh4zRV0=";

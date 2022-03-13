@@ -27,7 +27,7 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_PT_GENERATE_LE
                                   | OPTS_TYPE_LOOP_PREPARE
                                   | OPTS_TYPE_SELF_TEST_DISABLE;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "SCRYPT:16384:8:1:OTEyNzU0ODg=:Cc8SPjRH1hFQhuIPCdF51uNGtJ2aOY/isuoMlMUsJ8c=";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
@@ -63,8 +63,8 @@ bool module_unstable_warning (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE
   }
 
   // amdgpu-pro-20.50-1234664-ubuntu-20.04 (legacy)
-  // test_1619943729/test_report.log:password not found, cmdline : cat test_1619943729/8900_passwords.txt | ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 1 -a 0 -m 8900 test_1619943729/8900_hashes.txt
-  // test_1619955152/test_report.log:password not found, cmdline : cat test_1619955152/8900_passwords.txt | ./hashcat --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 0 -m 8900 test_1619955152/8900_hashes.txt
+  // test_1619943729/test_report.log:password not found, cmdline : cat test_1619943729/8900_passwords.txt | ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -O -D 2 --backend-vector-width 1 -a 0 -m 8900 test_1619943729/8900_hashes.txt
+  // test_1619955152/test_report.log:password not found, cmdline : cat test_1619955152/8900_passwords.txt | ./hashdog --quiet --potfile-disable --runtime 400 --hwmon-disable -D 2 --backend-vector-width 4 -a 0 -m 8900 test_1619955152/8900_hashes.txt
   if ((device_param->opencl_device_vendor_id == VENDOR_ID_AMD) && (device_param->has_vperm == false))
   {
     return true;
@@ -397,11 +397,11 @@ Find the right -n value for your GPU:
 
 1. For example, to find the value for 8900, first create a valid hash for 8900 as follows:
 
-$ ./hashcat --example-hashes -m 8900 | grep Example.Hash | grep -v Format | cut -b 25- > tmp.hash.8900
+$ ./hashdog --example-hashes -m 8900 | grep Example.Hash | grep -v Format | cut -b 25- > tmp.hash.8900
 
 2. Now let it iterate through all -n values to a certain point. In this case, I'm using 200, but in general it's a value that is at least twice that of the multiprocessor. If you don't mind you can just leave it as it is, it just runs a little longer.
 
-$ export i=1; while [ $i -ne 201 ]; do echo $i; ./hashcat --quiet tmp.hash.8900 --keep-guessing --self-test-disable --markov-disable --restore-disable --outfile-autohex-disable --wordlist-autohex-disable --potfile-disable --logfile-disable --hwmon-disable --status --status-timer 1 --runtime 28 --machine-readable --optimized-kernel-enable --workload-profile 3 --hash-type 8900 --attack-mode 3 ?b?b?b?b?b?b?b --backend-devices 1 --force -n $i; i=$(($i+1)); done | tee x
+$ export i=1; while [ $i -ne 201 ]; do echo $i; ./hashdog --quiet tmp.hash.8900 --keep-guessing --self-test-disable --markov-disable --restore-disable --outfile-autohex-disable --wordlist-autohex-disable --potfile-disable --logfile-disable --hwmon-disable --status --status-timer 1 --runtime 28 --machine-readable --optimized-kernel-enable --workload-profile 3 --hash-type 8900 --attack-mode 3 ?b?b?b?b?b?b?b --backend-devices 1 --force -n $i; i=$(($i+1)); done | tee x
 
 3. Determine the highest measured H/s speed. But don't just use the highest value. Instead, use the number that seems most stable, usually at the beginning.
 

@@ -15,10 +15,10 @@
 #include "wordlist.h"
 #include "emu_inc_hash_sha1.h"
 
-size_t convert_from_hex (hashcat_ctx_t *hashcat_ctx, char *line_buf, const size_t line_len)
+size_t convert_from_hex (hashdog_ctx_t *hashdog_ctx, char *line_buf, const size_t line_len)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   if (line_len & 1) return (line_len); // not in hex
 
@@ -49,9 +49,9 @@ size_t convert_from_hex (hashcat_ctx_t *hashcat_ctx, char *line_buf, const size_
   return (line_len);
 }
 
-int load_segment (hashcat_ctx_t *hashcat_ctx, HCFILE *fp)
+int load_segment (hashdog_ctx_t *hashdog_ctx, HCFILE *fp)
 {
-  wl_data_t *wl_data = hashcat_ctx->wl_data;
+  wl_data_t *wl_data = hashdog_ctx->wl_data;
 
   // NOTE: use (never changing) ->incr here instead of ->avail otherwise the buffer gets bigger and bigger
 
@@ -268,11 +268,11 @@ void get_next_word_std (char *buf, u64 sz, u64 *len, u64 *off)
   *len = sz;
 }
 
-void get_next_word (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, char **out_buf, u32 *out_len)
+void get_next_word (hashdog_ctx_t *hashdog_ctx, HCFILE *fp, char **out_buf, u32 *out_len)
 {
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
-  wl_data_t            *wl_data            = hashcat_ctx->wl_data;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
+  wl_data_t            *wl_data            = hashdog_ctx->wl_data;
 
   while (wl_data->pos < wl_data->cnt)
   {
@@ -288,7 +288,7 @@ void get_next_word (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, char **out_buf, u32 
     // do the on-the-fly hex decode using original buffer
     // this is safe as length only decreases in size
 
-    len = (u32) convert_from_hex (hashcat_ctx, ptr, len);
+    len = (u32) convert_from_hex (hashdog_ctx, ptr, len);
 
     // do the on-the-fly encoding
     // needs to write into new buffer because size case both decrease and increase
@@ -338,9 +338,9 @@ void get_next_word (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, char **out_buf, u32 
     return;
   }
 
-  load_segment (hashcat_ctx, fp);
+  load_segment (hashdog_ctx, fp);
 
-  get_next_word (hashcat_ctx, fp, out_buf, out_len);
+  get_next_word (hashdog_ctx, fp, out_buf, out_len);
 }
 
 void pw_pre_add (hc_device_param_t *device_param, const u8 *pw_buf, const int pw_len, const u8 *base_buf, const int base_len, const int rule_idx)
@@ -423,15 +423,15 @@ void pw_add (hc_device_param_t *device_param, const u8 *pw_buf, const int pw_len
   }
 }
 
-int count_words (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, const char *dictfile, u64 *result)
+int count_words (hashdog_ctx_t *hashdog_ctx, HCFILE *fp, const char *dictfile, u64 *result)
 {
-  combinator_ctx_t     *combinator_ctx     = hashcat_ctx->combinator_ctx;
-  hashconfig_t         *hashconfig         = hashcat_ctx->hashconfig;
-  straight_ctx_t       *straight_ctx       = hashcat_ctx->straight_ctx;
-  mask_ctx_t           *mask_ctx           = hashcat_ctx->mask_ctx;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  wl_data_t            *wl_data            = hashcat_ctx->wl_data;
+  combinator_ctx_t     *combinator_ctx     = hashdog_ctx->combinator_ctx;
+  hashconfig_t         *hashconfig         = hashdog_ctx->hashconfig;
+  straight_ctx_t       *straight_ctx       = hashdog_ctx->straight_ctx;
+  mask_ctx_t           *mask_ctx           = hashdog_ctx->mask_ctx;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  wl_data_t            *wl_data            = hashdog_ctx->wl_data;
 
   //hc_signal (NULL);
 
@@ -490,7 +490,7 @@ int count_words (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, const char *dictfile, u
 
   memcpy (d.hash_filename, sha1_ctx.h, 16);
 
-  const u64 cached_cnt = dictstat_find (hashcat_ctx, &d);
+  const u64 cached_cnt = dictstat_find (hashdog_ctx, &d);
 
   if (run_rule_engine (user_options_extra->rule_len_l, user_options->rule_buf_l) == 0)
   {
@@ -548,7 +548,7 @@ int count_words (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, const char *dictfile, u
 
   while (!hc_feof (fp))
   {
-    load_segment (hashcat_ctx, fp);
+    load_segment (hashdog_ctx, fp);
 
     comp += wl_data->cnt;
 
@@ -568,7 +568,7 @@ int count_words (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, const char *dictfile, u
       // do the on-the-fly hex decode using original buffer
       // this is safe as length only decreases in size
 
-      len = (u32) convert_from_hex (hashcat_ctx, ptr, len);
+      len = (u32) convert_from_hex (hashdog_ctx, ptr, len);
 
       // do the on-the-fly encoding
 
@@ -666,7 +666,7 @@ int count_words (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, const char *dictfile, u
 
   EVENT_DATA (EVENT_WORDLIST_CACHE_GENERATE, &cache_generate, sizeof (cache_generate));
 
-  dictstat_append (hashcat_ctx, &d);
+  dictstat_append (hashdog_ctx, &d);
 
   //hc_signal (sigHandler_default);
 
@@ -675,11 +675,11 @@ int count_words (hashcat_ctx_t *hashcat_ctx, HCFILE *fp, const char *dictfile, u
   return 0;
 }
 
-int wl_data_init (hashcat_ctx_t *hashcat_ctx)
+int wl_data_init (hashdog_ctx_t *hashdog_ctx)
 {
-  wl_data_t      *wl_data      = hashcat_ctx->wl_data;
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  wl_data_t      *wl_data      = hashdog_ctx->wl_data;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   wl_data->enabled = false;
 
@@ -746,9 +746,9 @@ int wl_data_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void wl_data_destroy (hashcat_ctx_t *hashcat_ctx)
+void wl_data_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  wl_data_t *wl_data = hashcat_ctx->wl_data;
+  wl_data_t *wl_data = hashdog_ctx->wl_data;
 
   if (wl_data->enabled == false) return;
 

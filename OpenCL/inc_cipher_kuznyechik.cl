@@ -8,7 +8,7 @@
  *   Markku-Juhani O. Saarinen <mjos@iki.fi>                      *
  *   https://github.com/mjosaarinen/kuznechik                     *
  *                                                                *
- * Adapted for GPU use with hashcat by Ruslan Yushaev.            *
+ * Adapted for GPU use with hashdog by Ruslan Yushaev.            *
  *                                                                *
  */
 

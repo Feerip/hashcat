@@ -10,9 +10,9 @@
 #include "locking.h"
 #include "debugfile.h"
 
-static void debugfile_format_plain (hashcat_ctx_t *hashcat_ctx, const u8 *plain_ptr, const u32 plain_len)
+static void debugfile_format_plain (hashdog_ctx_t *hashdog_ctx, const u8 *plain_ptr, const u32 plain_len)
 {
-  debugfile_ctx_t *debugfile_ctx = hashcat_ctx->debugfile_ctx;
+  debugfile_ctx_t *debugfile_ctx = hashdog_ctx->debugfile_ctx;
 
   if (debugfile_ctx->enabled == false) return;
 
@@ -59,9 +59,9 @@ static void debugfile_format_plain (hashcat_ctx_t *hashcat_ctx, const u8 *plain_
   }
 }
 
-void debugfile_write_append (hashcat_ctx_t *hashcat_ctx, const u8 *rule_buf, const u32 rule_len, const u8 *mod_plain_ptr, const u32 mod_plain_len, const u8 *orig_plain_ptr, const u32 orig_plain_len)
+void debugfile_write_append (hashdog_ctx_t *hashdog_ctx, const u8 *rule_buf, const u32 rule_len, const u8 *mod_plain_ptr, const u32 mod_plain_len, const u8 *orig_plain_ptr, const u32 orig_plain_len)
 {
-  debugfile_ctx_t *debugfile_ctx = hashcat_ctx->debugfile_ctx;
+  debugfile_ctx_t *debugfile_ctx = hashdog_ctx->debugfile_ctx;
 
   if (debugfile_ctx->enabled == false) return;
 
@@ -69,7 +69,7 @@ void debugfile_write_append (hashcat_ctx_t *hashcat_ctx, const u8 *rule_buf, con
 
   if ((debug_mode == 2) || (debug_mode == 3) || (debug_mode == 4))
   {
-    debugfile_format_plain (hashcat_ctx, orig_plain_ptr, orig_plain_len);
+    debugfile_format_plain (hashdog_ctx, orig_plain_ptr, orig_plain_len);
 
     if ((debug_mode == 3) || (debug_mode == 4)) hc_fputc (':', &debugfile_ctx->fp);
   }
@@ -80,16 +80,16 @@ void debugfile_write_append (hashcat_ctx_t *hashcat_ctx, const u8 *rule_buf, con
   {
     hc_fputc (':', &debugfile_ctx->fp);
 
-    debugfile_format_plain (hashcat_ctx, mod_plain_ptr, mod_plain_len);
+    debugfile_format_plain (hashdog_ctx, mod_plain_ptr, mod_plain_len);
   }
 
   hc_fwrite (EOL, strlen (EOL), 1, &debugfile_ctx->fp);
 }
 
-int debugfile_init (hashcat_ctx_t *hashcat_ctx)
+int debugfile_init (hashdog_ctx_t *hashdog_ctx)
 {
-  debugfile_ctx_t *debugfile_ctx = hashcat_ctx->debugfile_ctx;
-  user_options_t  *user_options  = hashcat_ctx->user_options;
+  debugfile_ctx_t *debugfile_ctx = hashdog_ctx->debugfile_ctx;
+  user_options_t  *user_options  = hashdog_ctx->user_options;
 
   debugfile_ctx->enabled = false;
 
@@ -116,7 +116,7 @@ int debugfile_init (hashcat_ctx_t *hashcat_ctx)
   {
     if (hc_fopen (&debugfile_ctx->fp, debugfile_ctx->filename, "ab") == false)
     {
-      event_log_error (hashcat_ctx, "Could not open --debug-file file for writing.");
+      event_log_error (hashdog_ctx, "Could not open --debug-file file for writing.");
 
       return -1;
     }
@@ -125,7 +125,7 @@ int debugfile_init (hashcat_ctx_t *hashcat_ctx)
     {
       hc_fclose (&debugfile_ctx->fp);
 
-      event_log_error (hashcat_ctx, "%s: %s", debugfile_ctx->filename, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", debugfile_ctx->filename, strerror (errno));
 
       return -1;
     }
@@ -146,9 +146,9 @@ int debugfile_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void debugfile_destroy (hashcat_ctx_t *hashcat_ctx)
+void debugfile_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  debugfile_ctx_t *debugfile_ctx = hashcat_ctx->debugfile_ctx;
+  debugfile_ctx_t *debugfile_ctx = hashdog_ctx->debugfile_ctx;
 
   if (debugfile_ctx->enabled == false) return;
 

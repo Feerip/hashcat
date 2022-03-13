@@ -16,9 +16,9 @@
 #include <sys/cygwin.h>
 #endif
 
-int nvml_init (void *hashcat_ctx)
+int nvml_init (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -47,7 +47,7 @@ int nvml_init (void *hashcat_ctx)
       else
       {
         //if (user_options->quiet == false)
-        //  event_log_error (hashcat_ctx, "NVML library load failed. Proceeding without NVML HWMon enabled.");
+        //  event_log_error (hashdog_ctx, "NVML library load failed. Proceeding without NVML HWMon enabled.");
 
         return -1;
       }
@@ -57,7 +57,7 @@ int nvml_init (void *hashcat_ctx)
     else
     {
       //if (user_options->quiet == false)
-      //  event_log_error (hashcat_ctx, "NVML library load failed. Proceeding without NVML HWMon enabled.");
+      //  event_log_error (hashdog_ctx, "NVML library load failed. Proceeding without NVML HWMon enabled.");
 
       return -1;
     }
@@ -80,7 +80,7 @@ int nvml_init (void *hashcat_ctx)
     if (hc_fopen (&nvml_lib, "/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE/NVIDIA Corporation/Global/NVSMI/NVSMIPATH", "rb") == false)
     {
       //if (user_options->quiet == false)
-      //  event_log_error (hashcat_ctx, "NVML library load failed: %m. Proceeding without NVML HWMon enabled.");
+      //  event_log_error (hashdog_ctx, "NVML library load failed: %m. Proceeding without NVML HWMon enabled.");
 
       return -1;
     }
@@ -104,7 +104,7 @@ int nvml_init (void *hashcat_ctx)
     else
     {
       //if (user_options->quiet == false)
-      //  event_log_error (hashcat_ctx, "Could not find NVML on this system. Proceeding without NVML HWMon enabled.");
+      //  event_log_error (hashdog_ctx, "Could not find NVML on this system. Proceeding without NVML HWMon enabled.");
 
       return -1;
     }
@@ -128,7 +128,7 @@ int nvml_init (void *hashcat_ctx)
   if (!nvml->lib)
   {
     //if (user_options->quiet == false)
-    //  event_log_error (hashcat_ctx, "NVML library load failed. Proceeding without NVML HWMon enabled.");
+    //  event_log_error (hashdog_ctx, "NVML library load failed. Proceeding without NVML HWMon enabled.");
 
     return -1;
   }
@@ -153,9 +153,9 @@ int nvml_init (void *hashcat_ctx)
   return 0;
 }
 
-void nvml_close (void *hashcat_ctx)
+void nvml_close (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -173,9 +173,9 @@ const char *hm_NVML_nvmlErrorString (NVML_PTR *nvml, const nvmlReturn_t nvml_rc)
   return nvml->nvmlErrorString (nvml_rc);
 }
 
-int hm_NVML_nvmlInit (void *hashcat_ctx)
+int hm_NVML_nvmlInit (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -185,7 +185,7 @@ int hm_NVML_nvmlInit (void *hashcat_ctx)
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlInit(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlInit(): %s", string);
 
     return -1;
   }
@@ -193,9 +193,9 @@ int hm_NVML_nvmlInit (void *hashcat_ctx)
   return 0;
 }
 
-int hm_NVML_nvmlShutdown (void *hashcat_ctx)
+int hm_NVML_nvmlShutdown (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -205,7 +205,7 @@ int hm_NVML_nvmlShutdown (void *hashcat_ctx)
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlShutdown(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlShutdown(): %s", string);
 
     return -1;
   }
@@ -213,9 +213,9 @@ int hm_NVML_nvmlShutdown (void *hashcat_ctx)
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetCount (void *hashcat_ctx, unsigned int *deviceCount)
+int hm_NVML_nvmlDeviceGetCount (void *hashdog_ctx, unsigned int *deviceCount)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -225,7 +225,7 @@ int hm_NVML_nvmlDeviceGetCount (void *hashcat_ctx, unsigned int *deviceCount)
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetCount(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetCount(): %s", string);
 
     return -1;
   }
@@ -233,9 +233,9 @@ int hm_NVML_nvmlDeviceGetCount (void *hashcat_ctx, unsigned int *deviceCount)
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetHandleByIndex (void *hashcat_ctx, unsigned int device_index, nvmlDevice_t *device)
+int hm_NVML_nvmlDeviceGetHandleByIndex (void *hashdog_ctx, unsigned int device_index, nvmlDevice_t *device)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -245,7 +245,7 @@ int hm_NVML_nvmlDeviceGetHandleByIndex (void *hashcat_ctx, unsigned int device_i
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetHandleByIndex(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetHandleByIndex(): %s", string);
 
     return -1;
   }
@@ -253,9 +253,9 @@ int hm_NVML_nvmlDeviceGetHandleByIndex (void *hashcat_ctx, unsigned int device_i
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetTemperature (void *hashcat_ctx, nvmlDevice_t device, nvmlTemperatureSensors_t sensorType, unsigned int *temp)
+int hm_NVML_nvmlDeviceGetTemperature (void *hashdog_ctx, nvmlDevice_t device, nvmlTemperatureSensors_t sensorType, unsigned int *temp)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -265,7 +265,7 @@ int hm_NVML_nvmlDeviceGetTemperature (void *hashcat_ctx, nvmlDevice_t device, nv
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetTemperature(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetTemperature(): %s", string);
 
     return -1;
   }
@@ -273,9 +273,9 @@ int hm_NVML_nvmlDeviceGetTemperature (void *hashcat_ctx, nvmlDevice_t device, nv
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetFanSpeed (void *hashcat_ctx, nvmlDevice_t device, unsigned int *speed)
+int hm_NVML_nvmlDeviceGetFanSpeed (void *hashdog_ctx, nvmlDevice_t device, unsigned int *speed)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -285,7 +285,7 @@ int hm_NVML_nvmlDeviceGetFanSpeed (void *hashcat_ctx, nvmlDevice_t device, unsig
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetFanSpeed(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetFanSpeed(): %s", string);
 
     return -1;
   }
@@ -293,9 +293,9 @@ int hm_NVML_nvmlDeviceGetFanSpeed (void *hashcat_ctx, nvmlDevice_t device, unsig
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetUtilizationRates (void *hashcat_ctx, nvmlDevice_t device, nvmlUtilization_t *utilization)
+int hm_NVML_nvmlDeviceGetUtilizationRates (void *hashdog_ctx, nvmlDevice_t device, nvmlUtilization_t *utilization)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -305,7 +305,7 @@ int hm_NVML_nvmlDeviceGetUtilizationRates (void *hashcat_ctx, nvmlDevice_t devic
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetUtilizationRates(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetUtilizationRates(): %s", string);
 
     return -1;
   }
@@ -313,9 +313,9 @@ int hm_NVML_nvmlDeviceGetUtilizationRates (void *hashcat_ctx, nvmlDevice_t devic
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetClockInfo (void *hashcat_ctx, nvmlDevice_t device, nvmlClockType_t type, unsigned int *clockfreq)
+int hm_NVML_nvmlDeviceGetClockInfo (void *hashdog_ctx, nvmlDevice_t device, nvmlClockType_t type, unsigned int *clockfreq)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -325,7 +325,7 @@ int hm_NVML_nvmlDeviceGetClockInfo (void *hashcat_ctx, nvmlDevice_t device, nvml
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetClockInfo(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetClockInfo(): %s", string);
 
     return -1;
   }
@@ -333,9 +333,9 @@ int hm_NVML_nvmlDeviceGetClockInfo (void *hashcat_ctx, nvmlDevice_t device, nvml
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetTemperatureThreshold (void *hashcat_ctx, nvmlDevice_t device, nvmlTemperatureThresholds_t thresholdType, unsigned int *temp)
+int hm_NVML_nvmlDeviceGetTemperatureThreshold (void *hashdog_ctx, nvmlDevice_t device, nvmlTemperatureThresholds_t thresholdType, unsigned int *temp)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -345,7 +345,7 @@ int hm_NVML_nvmlDeviceGetTemperatureThreshold (void *hashcat_ctx, nvmlDevice_t d
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetTemperatureThreshold(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetTemperatureThreshold(): %s", string);
 
     return -1;
   }
@@ -353,9 +353,9 @@ int hm_NVML_nvmlDeviceGetTemperatureThreshold (void *hashcat_ctx, nvmlDevice_t d
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (void *hashcat_ctx, nvmlDevice_t device, unsigned int *currLinkWidth)
+int hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (void *hashdog_ctx, nvmlDevice_t device, unsigned int *currLinkWidth)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -365,7 +365,7 @@ int hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (void *hashcat_ctx, nvmlDevice_t devi
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetCurrPcieLinkWidth(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetCurrPcieLinkWidth(): %s", string);
 
     return -1;
   }
@@ -373,9 +373,9 @@ int hm_NVML_nvmlDeviceGetCurrPcieLinkWidth (void *hashcat_ctx, nvmlDevice_t devi
   return 0;
 }
 
-int hm_NVML_nvmlDeviceGetPciInfo (void *hashcat_ctx, nvmlDevice_t device, nvmlPciInfo_t *pci)
+int hm_NVML_nvmlDeviceGetPciInfo (void *hashdog_ctx, nvmlDevice_t device, nvmlPciInfo_t *pci)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVML_PTR *nvml = (NVML_PTR *) hwmon_ctx->hm_nvml;
 
@@ -385,7 +385,7 @@ int hm_NVML_nvmlDeviceGetPciInfo (void *hashcat_ctx, nvmlDevice_t device, nvmlPc
   {
     const char *string = hm_NVML_nvmlErrorString (nvml, nvml_rc);
 
-    event_log_error (hashcat_ctx, "nvmlDeviceGetPciInfo(): %s", string);
+    event_log_error (hashdog_ctx, "nvmlDeviceGetPciInfo(): %s", string);
 
     return -1;
   }

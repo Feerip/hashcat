@@ -717,9 +717,9 @@ bool kernel_rules_has_noop (const kernel_rule_t *kernel_rules_buf, const u32 ker
   return false;
 }
 
-int kernel_rules_load (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 *out_cnt)
+int kernel_rules_load (hashdog_ctx_t *hashdog_ctx, kernel_rule_t **out_buf, u32 *out_cnt)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   /**
    * load rules
@@ -756,7 +756,7 @@ int kernel_rules_load (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 
 
     if (hc_fopen (&fp, rp_file, "rb") == false)
     {
-      event_log_error (hashcat_ctx, "%s: %s", rp_file, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", rp_file, strerror (errno));
 
       hcfree (all_kernel_rules_cnt);
       hcfree (all_kernel_rules_buf);
@@ -793,14 +793,14 @@ int kernel_rules_load (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 
 
       if (result == -1)
       {
-        event_log_warning (hashcat_ctx, "Skipping invalid or unsupported rule in file %s on line %u: %s", rp_file, rule_line, rule_buf);
+        event_log_warning (hashdog_ctx, "Skipping invalid or unsupported rule in file %s on line %u: %s", rp_file, rule_line, rule_buf);
 
         continue;
       }
 
       if (cpu_rule_to_kernel_rule (rule_buf, rule_len, &kernel_rules_buf[kernel_rules_cnt]) == -1)
       {
-        event_log_warning (hashcat_ctx, "Cannot convert rule for use on OpenCL device in file %s on line %u: %s", rp_file, rule_line, rule_buf);
+        event_log_warning (hashdog_ctx, "Cannot convert rule for use on OpenCL device in file %s on line %u: %s", rp_file, rule_line, rule_buf);
 
         memset (&kernel_rules_buf[kernel_rules_cnt], 0, sizeof (kernel_rule_t)); // needs to be cleared otherwise we could have some remaining data
 
@@ -854,7 +854,7 @@ int kernel_rules_load (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 
       {
         if (out_pos == RULES_MAX - 1)
         {
-          // event_log_warning (hashcat_ctx, "Truncated chaining of rules %d and %d - maximum functions per rule exceeded.", i, in_off);
+          // event_log_warning (hashdog_ctx, "Truncated chaining of rules %d and %d - maximum functions per rule exceeded.", i, in_off);
 
           break;
         }
@@ -871,7 +871,7 @@ int kernel_rules_load (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 
 
   if (kernel_rules_cnt == 0)
   {
-    event_log_error (hashcat_ctx, "No valid rules left.");
+    event_log_error (hashdog_ctx, "No valid rules left.");
 
     hcfree (kernel_rules_buf);
 
@@ -884,9 +884,9 @@ int kernel_rules_load (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 
   return 0;
 }
 
-int kernel_rules_generate (hashcat_ctx_t *hashcat_ctx, kernel_rule_t **out_buf, u32 *out_cnt, const char *rp_gen_func_selection)
+int kernel_rules_generate (hashdog_ctx_t *hashdog_ctx, kernel_rule_t **out_buf, u32 *out_cnt, const char *rp_gen_func_selection)
 {
-  const user_options_t *user_options = hashcat_ctx->user_options;
+  const user_options_t *user_options = hashdog_ctx->user_options;
 
   u32            kernel_rules_cnt = 0;
   kernel_rule_t *kernel_rules_buf = (kernel_rule_t *) hccalloc (user_options->rp_gen, sizeof (kernel_rule_t));

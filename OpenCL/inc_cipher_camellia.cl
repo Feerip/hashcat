@@ -11,7 +11,7 @@
  *                                                                *
  *   Mitsubishi Electric Corp 2000-2001                           *
  *                                                                *
- * Adapted for GPU use with hashcat by Ruslan Yushaev.            *
+ * Adapted for GPU use with hashdog by Ruslan Yushaev.            *
  *                                                                *
  */
 

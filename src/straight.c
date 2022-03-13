@@ -14,16 +14,16 @@
 #include "wordlist.h"
 #include "straight.h"
 
-static int straight_ctx_add_wl (hashcat_ctx_t *hashcat_ctx, const char *dict)
+static int straight_ctx_add_wl (hashdog_ctx_t *hashdog_ctx, const char *dict)
 {
   if (hc_path_has_bom (dict) == true)
   {
-    event_log_warning (hashcat_ctx, "%s: Byte Order Mark (BOM) was detected", dict);
+    event_log_warning (hashdog_ctx, "%s: Byte Order Mark (BOM) was detected", dict);
 
     //return -1;
   }
 
-  straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+  straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
   if (straight_ctx->dicts_avail == straight_ctx->dicts_cnt)
   {
@@ -39,17 +39,17 @@ static int straight_ctx_add_wl (hashcat_ctx_t *hashcat_ctx, const char *dict)
   return 0;
 }
 
-int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
+int straight_ctx_update_loop (hashdog_ctx_t *hashdog_ctx)
 {
-  combinator_ctx_t     *combinator_ctx     = hashcat_ctx->combinator_ctx;
-  induct_ctx_t         *induct_ctx         = hashcat_ctx->induct_ctx;
-  hashes_t             *hashes             = hashcat_ctx->hashes;
-  logfile_ctx_t        *logfile_ctx        = hashcat_ctx->logfile_ctx;
-  mask_ctx_t           *mask_ctx           = hashcat_ctx->mask_ctx;
-  status_ctx_t         *status_ctx         = hashcat_ctx->status_ctx;
-  straight_ctx_t       *straight_ctx       = hashcat_ctx->straight_ctx;
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  combinator_ctx_t     *combinator_ctx     = hashdog_ctx->combinator_ctx;
+  induct_ctx_t         *induct_ctx         = hashdog_ctx->induct_ctx;
+  hashes_t             *hashes             = hashdog_ctx->hashes;
+  logfile_ctx_t        *logfile_ctx        = hashdog_ctx->logfile_ctx;
+  mask_ctx_t           *mask_ctx           = hashdog_ctx->mask_ctx;
+  status_ctx_t         *status_ctx         = hashdog_ctx->status_ctx;
+  straight_ctx_t       *straight_ctx       = hashdog_ctx->straight_ctx;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   if (user_options->attack_mode == ATTACK_MODE_STRAIGHT)
   {
@@ -75,18 +75,18 @@ int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
 
       if (hc_fopen (&fp, straight_ctx->dict, "rb") == false)
       {
-        event_log_error (hashcat_ctx, "%s: %s", straight_ctx->dict, strerror (errno));
+        event_log_error (hashdog_ctx, "%s: %s", straight_ctx->dict, strerror (errno));
 
         return -1;
       }
 
-      const int rc = count_words (hashcat_ctx, &fp, straight_ctx->dict, &status_ctx->words_cnt);
+      const int rc = count_words (hashdog_ctx, &fp, straight_ctx->dict, &status_ctx->words_cnt);
 
       hc_fclose (&fp);
 
       if (rc == -1)
       {
-        event_log_error (hashcat_ctx, "Integer overflow detected in keyspace of wordlist: %s", straight_ctx->dict);
+        event_log_error (hashdog_ctx, "Integer overflow detected in keyspace of wordlist: %s", straight_ctx->dict);
 
         return -1;
       }
@@ -110,18 +110,18 @@ int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
 
       if (hc_fopen (&fp, combinator_ctx->dict1, "rb") == false)
       {
-        event_log_error (hashcat_ctx, "%s: %s", combinator_ctx->dict1, strerror (errno));
+        event_log_error (hashdog_ctx, "%s: %s", combinator_ctx->dict1, strerror (errno));
 
         return -1;
       }
 
-      const int rc = count_words (hashcat_ctx, &fp, combinator_ctx->dict1, &status_ctx->words_cnt);
+      const int rc = count_words (hashdog_ctx, &fp, combinator_ctx->dict1, &status_ctx->words_cnt);
 
       hc_fclose (&fp);
 
       if (rc == -1)
       {
-        event_log_error (hashcat_ctx, "Integer overflow detected in keyspace of wordlist: %s", combinator_ctx->dict1);
+        event_log_error (hashdog_ctx, "Integer overflow detected in keyspace of wordlist: %s", combinator_ctx->dict1);
 
         return -1;
       }
@@ -132,18 +132,18 @@ int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
 
       if (hc_fopen (&fp, combinator_ctx->dict2, "rb") == false)
       {
-        event_log_error (hashcat_ctx, "%s: %s", combinator_ctx->dict2, strerror (errno));
+        event_log_error (hashdog_ctx, "%s: %s", combinator_ctx->dict2, strerror (errno));
 
         return -1;
       }
 
-      const int rc = count_words (hashcat_ctx, &fp, combinator_ctx->dict2, &status_ctx->words_cnt);
+      const int rc = count_words (hashdog_ctx, &fp, combinator_ctx->dict2, &status_ctx->words_cnt);
 
       hc_fclose (&fp);
 
       if (rc == -1)
       {
-        event_log_error (hashcat_ctx, "Integer overflow detected in keyspace of wordlist: %s", combinator_ctx->dict2);
+        event_log_error (hashdog_ctx, "Integer overflow detected in keyspace of wordlist: %s", combinator_ctx->dict2);
 
         return -1;
       }
@@ -178,18 +178,18 @@ int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
 
     if (hc_fopen (&fp, straight_ctx->dict, "rb") == false)
     {
-      event_log_error (hashcat_ctx, "%s: %s", straight_ctx->dict, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", straight_ctx->dict, strerror (errno));
 
       return -1;
     }
 
-    const int rc = count_words (hashcat_ctx, &fp, straight_ctx->dict, &status_ctx->words_cnt);
+    const int rc = count_words (hashdog_ctx, &fp, straight_ctx->dict, &status_ctx->words_cnt);
 
     hc_fclose (&fp);
 
     if (rc == -1)
     {
-      event_log_error (hashcat_ctx, "Integer overflow detected in keyspace of wordlist: %s", straight_ctx->dict);
+      event_log_error (hashdog_ctx, "Integer overflow detected in keyspace of wordlist: %s", straight_ctx->dict);
 
       return -1;
     }
@@ -218,26 +218,26 @@ int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
 
       if (hc_fopen (&fp, straight_ctx->dict, "rb") == false)
       {
-        event_log_error (hashcat_ctx, "%s: %s", straight_ctx->dict, strerror (errno));
+        event_log_error (hashdog_ctx, "%s: %s", straight_ctx->dict, strerror (errno));
 
         return -1;
       }
 
-      const int rc = count_words (hashcat_ctx, &fp, straight_ctx->dict, &status_ctx->words_cnt);
+      const int rc = count_words (hashdog_ctx, &fp, straight_ctx->dict, &status_ctx->words_cnt);
 
       hc_fclose (&fp);
 
       if (rc == -1)
       {
-        event_log_error (hashcat_ctx, "Integer overflow detected in keyspace of wordlist: %s", straight_ctx->dict);
+        event_log_error (hashdog_ctx, "Integer overflow detected in keyspace of wordlist: %s", straight_ctx->dict);
 
         return -1;
       }
 
       if ((status_ctx->words_cnt / straight_ctx->kernel_rules_cnt) != hashes->salts_cnt)
       {
-        event_log_error (hashcat_ctx, "Number of words in wordlist '%s' is not in sync with number of unique salts", straight_ctx->dict);
-        event_log_error (hashcat_ctx, "Words: %" PRIu64 ", salts: %d", status_ctx->words_cnt / straight_ctx->kernel_rules_cnt, hashes->salts_cnt);
+        event_log_error (hashdog_ctx, "Number of words in wordlist '%s' is not in sync with number of unique salts", straight_ctx->dict);
+        event_log_error (hashdog_ctx, "Words: %" PRIu64 ", salts: %d", status_ctx->words_cnt / straight_ctx->kernel_rules_cnt, hashes->salts_cnt);
 
         return -1;
       }
@@ -254,11 +254,11 @@ int straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int straight_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  straight_ctx_t       *straight_ctx       = hashcat_ctx->straight_ctx;
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  straight_ctx_t       *straight_ctx       = hashdog_ctx->straight_ctx;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   straight_ctx->enabled = false;
 
@@ -289,11 +289,11 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     if (user_options->rp_files_cnt)
     {
-      if (kernel_rules_load (hashcat_ctx, &straight_ctx->kernel_rules_buf, &straight_ctx->kernel_rules_cnt) == -1) return -1;
+      if (kernel_rules_load (hashdog_ctx, &straight_ctx->kernel_rules_buf, &straight_ctx->kernel_rules_cnt) == -1) return -1;
     }
     else if (user_options->rp_gen)
     {
-      if (kernel_rules_generate (hashcat_ctx, &straight_ctx->kernel_rules_buf, &straight_ctx->kernel_rules_cnt, user_options->rp_gen_func_sel) == -1) return -1;
+      if (kernel_rules_generate (hashdog_ctx, &straight_ctx->kernel_rules_buf, &straight_ctx->kernel_rules_cnt, user_options->rp_gen_func_sel) == -1) return -1;
     }
   }
 
@@ -327,7 +327,7 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
               if (hc_path_read (l1_filename) == false)
               {
-                event_log_error (hashcat_ctx, "%s: %s", l1_filename, strerror (errno));
+                event_log_error (hashdog_ctx, "%s: %s", l1_filename, strerror (errno));
 
                 hcfree (dictionary_files);
 
@@ -336,7 +336,7 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
               if (hc_path_is_file (l1_filename) == true)
               {
-                if (straight_ctx_add_wl (hashcat_ctx, l1_filename) == -1)
+                if (straight_ctx_add_wl (hashdog_ctx, l1_filename) == -1)
                 {
                   hcfree (dictionary_files);
 
@@ -350,13 +350,13 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
         }
         else
         {
-          if (straight_ctx_add_wl (hashcat_ctx, l0_filename) == -1) return -1;
+          if (straight_ctx_add_wl (hashdog_ctx, l0_filename) == -1) return -1;
         }
       }
 
       if (straight_ctx->dicts_cnt == 0)
       {
-        event_log_error (hashcat_ctx, "No usable dictionary file found.");
+        event_log_error (hashdog_ctx, "No usable dictionary file found.");
 
         return -1;
       }
@@ -394,7 +394,7 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
             if (hc_path_read (l1_filename) == false)
             {
-              event_log_error (hashcat_ctx, "%s: %s", l1_filename, strerror (errno));
+              event_log_error (hashdog_ctx, "%s: %s", l1_filename, strerror (errno));
 
               hcfree (dictionary_files);
 
@@ -403,7 +403,7 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
             if (hc_path_is_file (l1_filename) == true)
             {
-              if (straight_ctx_add_wl (hashcat_ctx, l1_filename) == -1)
+              if (straight_ctx_add_wl (hashdog_ctx, l1_filename) == -1)
               {
                 hcfree (dictionary_files);
 
@@ -417,13 +417,13 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
       }
       else
       {
-        if (straight_ctx_add_wl (hashcat_ctx, l0_filename) == -1) return -1;
+        if (straight_ctx_add_wl (hashdog_ctx, l0_filename) == -1) return -1;
       }
     }
 
     if (straight_ctx->dicts_cnt == 0)
     {
-      event_log_error (hashcat_ctx, "No usable dictionary file found.");
+      event_log_error (hashdog_ctx, "No usable dictionary file found.");
 
       return -1;
     }
@@ -452,7 +452,7 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
             if (hc_path_read (l1_filename) == false)
             {
-              event_log_error (hashcat_ctx, "%s: %s", l1_filename, strerror (errno));
+              event_log_error (hashdog_ctx, "%s: %s", l1_filename, strerror (errno));
 
               hcfree (dictionary_files);
 
@@ -461,7 +461,7 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
             if (hc_path_is_file (l1_filename) == true)
             {
-              if (straight_ctx_add_wl (hashcat_ctx, l1_filename) == -1)
+              if (straight_ctx_add_wl (hashdog_ctx, l1_filename) == -1)
               {
                 hcfree (dictionary_files);
 
@@ -475,13 +475,13 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
       }
       else
       {
-        if (straight_ctx_add_wl (hashcat_ctx, l0_filename) == -1) return -1;
+        if (straight_ctx_add_wl (hashdog_ctx, l0_filename) == -1) return -1;
       }
     }
 
     if (straight_ctx->dicts_cnt == 0)
     {
-      event_log_error (hashcat_ctx, "No usable dictionary file found.");
+      event_log_error (hashdog_ctx, "No usable dictionary file found.");
 
       return -1;
     }
@@ -490,9 +490,9 @@ int straight_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void straight_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void straight_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  straight_ctx_t *straight_ctx = hashcat_ctx->straight_ctx;
+  straight_ctx_t *straight_ctx = hashdog_ctx->straight_ctx;
 
   if (straight_ctx->enabled == false) return;
 

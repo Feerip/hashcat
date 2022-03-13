@@ -162,7 +162,7 @@ sub module_generate_hash
 
     my $compressed_data_len = length ($compressed_data);
 
-    if ($compressed_data_len < 64) # minimum length required by hashcat's tokenizer
+    if ($compressed_data_len < 64) # minimum length required by hashdog's tokenizer
     {
       next;
     }

@@ -74,16 +74,16 @@ void hc_signal (void (callback) (int));
 #endif
 */
 
-int mycracked (hashcat_ctx_t *hashcat_ctx);
-int myabort_runtime (hashcat_ctx_t *hashcat_ctx);
-int myabort_checkpoint (hashcat_ctx_t *hashcat_ctx);
-int myabort_finish (hashcat_ctx_t *hashcat_ctx);
-int myabort (hashcat_ctx_t *hashcat_ctx);
-int myquit (hashcat_ctx_t *hashcat_ctx);
-int bypass (hashcat_ctx_t *hashcat_ctx);
-int SuspendThreads (hashcat_ctx_t *hashcat_ctx);
-int ResumeThreads (hashcat_ctx_t *hashcat_ctx);
-int stop_at_checkpoint (hashcat_ctx_t *hashcat_ctx);
-int finish_after_attack (hashcat_ctx_t *hashcat_ctx);
+int mycracked (hashdog_ctx_t *hashdog_ctx);
+int myabort_runtime (hashdog_ctx_t *hashdog_ctx);
+int myabort_checkpoint (hashdog_ctx_t *hashdog_ctx);
+int myabort_finish (hashdog_ctx_t *hashdog_ctx);
+int myabort (hashdog_ctx_t *hashdog_ctx);
+int myquit (hashdog_ctx_t *hashdog_ctx);
+int bypass (hashdog_ctx_t *hashdog_ctx);
+int SuspendThreads (hashdog_ctx_t *hashdog_ctx);
+int ResumeThreads (hashdog_ctx_t *hashdog_ctx);
+int stop_at_checkpoint (hashdog_ctx_t *hashdog_ctx);
+int finish_after_attack (hashdog_ctx_t *hashdog_ctx);
 
 #endif // _THREAD_H

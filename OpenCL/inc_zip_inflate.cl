@@ -1,17 +1,17 @@
 /*
 
-PKZIP Kernels for Hashcat (c) 2018, European Union
+PKZIP Kernels for hashdog (c) 2018, European Union
 
-PKZIP Kernels for Hashcat has been developed by the Joint Research Centre of the European Commission.
+PKZIP Kernels for hashdog has been developed by the Joint Research Centre of the European Commission.
 It is released as open source software under the MIT License.
 
-PKZIP Kernels for Hashcat makes use of two primary external components, which continue to be subject
+PKZIP Kernels for hashdog makes use of two primary external components, which continue to be subject
 to the terms and conditions stipulated in the respective licences they have been released under. These
 external components include, but are not necessarily limited to, the following:
 
 -----
 
-1. Hashcat: MIT License
+1. hashdog: MIT License
 
 Copyright (c) 2015-2018 Jens Steube
 
@@ -57,7 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----
 
 The European Union disclaims all liability related to or arising out of the use made by third parties of
-any external components and dependencies which may be included with PKZIP Kernels for Hashcat.
+any external components and dependencies which may be included with PKZIP Kernels for hashdog.
 
 */
 
@@ -207,7 +207,7 @@ DECLSPEC void zlib_memset (u8 *s, const u8 c, u32 len)
 #define MZ_DEFAULT_WINDOW_BITS 15
 #define TINFL_LZ_DICT_SIZE 32768
 
-// hashcat-patched/hashcat-specific:
+// hashdog-patched/hashdog-specific:
 #ifdef CRC32_IN_INFLATE
 #define M_DICT_SIZE 1
 #define MAYBE_GLOBAL GLOBAL_AS
@@ -418,7 +418,7 @@ typedef struct
     tinfl_decompressor m_decomp;
     mz_uint m_dict_ofs, m_dict_avail, m_first_call, m_has_flushed;
     int m_window_bits;
-    // hashcat-patched: we do not need m_dict in case of CRC32 checksums,
+    // hashdog-patched: we do not need m_dict in case of CRC32 checksums,
     // because we have our own output buffer:
     mz_uint8 m_dict[M_DICT_SIZE];
     tinfl_status m_last_status;
@@ -456,7 +456,7 @@ typedef struct mz_stream_s
 
 typedef mz_stream *mz_streamp;
 
-// hashcat-patched: not needed functions:
+// hashdog-patched: not needed functions:
 // void miniz_def_free_func(void *opaque, void *address);
 // void *miniz_def_alloc_func(void *opaque, size_t items, size_t size);
 DECLSPEC int mz_inflate(mz_streamp pStream, int flush);
@@ -466,7 +466,7 @@ DECLSPEC int mz_inflateEnd(mz_streamp pStream);
 
 DECLSPEC int mz_inflateInit2(mz_streamp pStream, int window_bits, inflate_state*);
 
-// hashcat-patched/hashcat-specific:
+// hashdog-patched/hashdog-specific:
 DECLSPEC mz_uint8 pIn_xor_byte (const mz_uint8 c, mz_streamp pStream)
 {
   #ifdef CRC32_IN_INFLATE
@@ -1128,7 +1128,7 @@ DECLSPEC int mz_inflate(mz_streamp pStream, int flush)
     return ((status == TINFL_STATUS_DONE) && (!pState->m_dict_avail)) ? MZ_STREAM_END : MZ_OK;
 }
 
-// hashcat-patched: helper function for shifted u32
+// hashdog-patched: helper function for shifted u32
 
 DECLSPEC u32 GETSHIFTEDINT (u32 *a, const int n)
 {
@@ -1142,7 +1142,7 @@ DECLSPEC u32 GETSHIFTEDINT (u32 *a, const int n)
   return l32_from_64_S (tmp);
 }
 
-// hashcat-patched: faster zlib_memcpy for our large (TINFL_LZ_DICT_SIZE) move of bytes from the old output to the window/lookup table
+// hashdog-patched: faster zlib_memcpy for our large (TINFL_LZ_DICT_SIZE) move of bytes from the old output to the window/lookup table
 
 DECLSPEC void hc_shift_inflate_dict (u8 *buf, const u32 offset, const u32 len)
 {
@@ -1162,7 +1162,7 @@ DECLSPEC void hc_shift_inflate_dict (u8 *buf, const u32 offset, const u32 len)
   ptr[j] = (buf[offset + i + 3] << 24) | (buf[offset + i + 2] << 16) | (buf[offset + i + 1] << 8) | buf[offset + i];
 }
 
-// hashcat-patched: the mz_inflate () function from above doesn't work for us because we need to allow larger input/output and
+// hashdog-patched: the mz_inflate () function from above doesn't work for us because we need to allow larger input/output and
 // we only need the crc32 checksum actually
 
 DECLSPEC int hc_inflate (mz_streamp pStream)

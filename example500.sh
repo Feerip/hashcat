@@ -1,1 +1,1 @@
-./hashcat -m 500 example500.hash example.dict
+./hashdog -m 500 example500.hash example.dict

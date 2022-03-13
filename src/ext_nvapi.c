@@ -11,9 +11,9 @@
 
 #include "dynloader.h"
 
-int nvapi_init (void *hashcat_ctx)
+int nvapi_init (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -46,7 +46,7 @@ int nvapi_init (void *hashcat_ctx)
   if (!nvapi->lib)
   {
     //if (user_options->quiet == false)
-    //  event_log_error (hashcat_ctx, "Load of NVAPI library failed. Proceeding without NVAPI HWMon enabled.");
+    //  event_log_error (hashdog_ctx, "Load of NVAPI library failed. Proceeding without NVAPI HWMon enabled.");
 
     return -1;
   }
@@ -64,9 +64,9 @@ int nvapi_init (void *hashcat_ctx)
   return 0;
 }
 
-void nvapi_close (void *hashcat_ctx)
+void nvapi_close (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -84,9 +84,9 @@ void hm_NvAPI_GetErrorMessage (NVAPI_PTR *nvapi, const NvAPI_Status NvAPI_rc, Nv
   nvapi->NvAPI_GetErrorMessage (NvAPI_rc, string);
 }
 
-int hm_NvAPI_Initialize (void *hashcat_ctx)
+int hm_NvAPI_Initialize (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -100,7 +100,7 @@ int hm_NvAPI_Initialize (void *hashcat_ctx)
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_Initialize(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_Initialize(): %s", string);
 
     return -1;
   }
@@ -108,9 +108,9 @@ int hm_NvAPI_Initialize (void *hashcat_ctx)
   return 0;
 }
 
-int hm_NvAPI_Unload (void *hashcat_ctx)
+int hm_NvAPI_Unload (void *hashdog_ctx)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -122,7 +122,7 @@ int hm_NvAPI_Unload (void *hashcat_ctx)
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_Unload(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_Unload(): %s", string);
 
     return -1;
   }
@@ -130,9 +130,9 @@ int hm_NvAPI_Unload (void *hashcat_ctx)
   return 0;
 }
 
-int hm_NvAPI_EnumPhysicalGPUs (void *hashcat_ctx, NvPhysicalGpuHandle nvGPUHandle[NVAPI_MAX_PHYSICAL_GPUS], NvU32 *pGpuCount)
+int hm_NvAPI_EnumPhysicalGPUs (void *hashdog_ctx, NvPhysicalGpuHandle nvGPUHandle[NVAPI_MAX_PHYSICAL_GPUS], NvU32 *pGpuCount)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -144,7 +144,7 @@ int hm_NvAPI_EnumPhysicalGPUs (void *hashcat_ctx, NvPhysicalGpuHandle nvGPUHandl
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_EnumPhysicalGPUs(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_EnumPhysicalGPUs(): %s", string);
 
     return -1;
   }
@@ -152,9 +152,9 @@ int hm_NvAPI_EnumPhysicalGPUs (void *hashcat_ctx, NvPhysicalGpuHandle nvGPUHandl
   return 0;
 }
 
-int hm_NvAPI_GPU_GetPerfPoliciesInfo (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalGpu, NV_GPU_PERF_POLICIES_INFO_PARAMS_V1 *perfPolicies_info)
+int hm_NvAPI_GPU_GetPerfPoliciesInfo (void *hashdog_ctx, NvPhysicalGpuHandle hPhysicalGpu, NV_GPU_PERF_POLICIES_INFO_PARAMS_V1 *perfPolicies_info)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -166,7 +166,7 @@ int hm_NvAPI_GPU_GetPerfPoliciesInfo (void *hashcat_ctx, NvPhysicalGpuHandle hPh
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_GPU_GetPerfPoliciesInfo(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_GPU_GetPerfPoliciesInfo(): %s", string);
 
     return -1;
   }
@@ -174,9 +174,9 @@ int hm_NvAPI_GPU_GetPerfPoliciesInfo (void *hashcat_ctx, NvPhysicalGpuHandle hPh
   return 0;
 }
 
-int hm_NvAPI_GPU_GetPerfPoliciesStatus (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalGpu, NV_GPU_PERF_POLICIES_STATUS_PARAMS_V1 *perfPolicies_status)
+int hm_NvAPI_GPU_GetPerfPoliciesStatus (void *hashdog_ctx, NvPhysicalGpuHandle hPhysicalGpu, NV_GPU_PERF_POLICIES_STATUS_PARAMS_V1 *perfPolicies_status)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -188,7 +188,7 @@ int hm_NvAPI_GPU_GetPerfPoliciesStatus (void *hashcat_ctx, NvPhysicalGpuHandle h
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_GPU_GetPerfPoliciesStatus(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_GPU_GetPerfPoliciesStatus(): %s", string);
 
     return -1;
   }
@@ -196,9 +196,9 @@ int hm_NvAPI_GPU_GetPerfPoliciesStatus (void *hashcat_ctx, NvPhysicalGpuHandle h
   return 0;
 }
 
-int hm_NvAPI_GPU_GetBusId (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalGpu, NvU32 *pBusId)
+int hm_NvAPI_GPU_GetBusId (void *hashdog_ctx, NvPhysicalGpuHandle hPhysicalGpu, NvU32 *pBusId)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -210,7 +210,7 @@ int hm_NvAPI_GPU_GetBusId (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalGpu, 
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_GPU_GetBusId(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_GPU_GetBusId(): %s", string);
 
     return -1;
   }
@@ -218,9 +218,9 @@ int hm_NvAPI_GPU_GetBusId (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalGpu, 
   return 0;
 }
 
-int hm_NvAPI_GPU_GetBusSlotId (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalGpu, NvU32 *pBusSlotId)
+int hm_NvAPI_GPU_GetBusSlotId (void *hashdog_ctx, NvPhysicalGpuHandle hPhysicalGpu, NvU32 *pBusSlotId)
 {
-  hwmon_ctx_t *hwmon_ctx = ((hashcat_ctx_t *) hashcat_ctx)->hwmon_ctx;
+  hwmon_ctx_t *hwmon_ctx = ((hashdog_ctx_t *) hashdog_ctx)->hwmon_ctx;
 
   NVAPI_PTR *nvapi = (NVAPI_PTR *) hwmon_ctx->hm_nvapi;
 
@@ -232,7 +232,7 @@ int hm_NvAPI_GPU_GetBusSlotId (void *hashcat_ctx, NvPhysicalGpuHandle hPhysicalG
 
     hm_NvAPI_GetErrorMessage (nvapi, NvAPI_rc, string);
 
-    event_log_error (hashcat_ctx, "NvAPI_GPU_GetBusSlotId(): %s", string);
+    event_log_error (hashdog_ctx, "NvAPI_GPU_GetBusSlotId(): %s", string);
 
     return -1;
   }

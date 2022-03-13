@@ -25,7 +25,7 @@ BEGIN
 }
 
 
-my $hashcat     = "./hashcat";
+my $hashdog     = "./hashdog";
 my $OPTS        = "--stdout --force";
 my $CURRENT_DIR = dirname (__FILE__);
 my $OUT_DIR     = $CURRENT_DIR . "/". "rules-test";
@@ -92,7 +92,7 @@ sub run_case_mode1
   my $input_file = input_to_file ($case, $rule);
 
   my $quoted_rule   = quotemeta ($rule);
-  my $actual_output = qx($hashcat $OPTS -j $quoted_rule $input_file);
+  my $actual_output = qx($hashdog $OPTS -j $quoted_rule $input_file);
 
   eq_or_diff ($actual_output, $case->{expected_cpu}, $rule . " - mode 1");
 }
@@ -111,7 +111,7 @@ sub run_case_mode2
   my $rule_file  = rule_to_file ($rule);
 
   my $quoted_rule   = quotemeta ($rule);
-  my $actual_output = qx($hashcat $OPTS -r $rule_file $input_file);
+  my $actual_output = qx($hashdog $OPTS -r $rule_file $input_file);
 
   eq_or_diff ($actual_output, $case->{expected_opencl}, $rule . " - mode 2");
 }

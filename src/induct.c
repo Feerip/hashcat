@@ -31,11 +31,11 @@ static int sort_by_mtime (const void *p1, const void *p2)
   return 0;
 }
 
-int induct_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int induct_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  folder_config_t *folder_config = hashcat_ctx->folder_config;
-  induct_ctx_t    *induct_ctx    = hashcat_ctx->induct_ctx;
-  user_options_t  *user_options  = hashcat_ctx->user_options;
+  folder_config_t *folder_config = hashdog_ctx->folder_config;
+  induct_ctx_t    *induct_ctx    = hashdog_ctx->induct_ctx;
+  user_options_t  *user_options  = hashdog_ctx->user_options;
 
   induct_ctx->enabled = false;
 
@@ -77,7 +77,7 @@ int induct_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
         if (rename (root_directory, root_directory_mv) != 0)
         {
-          event_log_error (hashcat_ctx, "Rename directory %s to %s: %s", root_directory, root_directory_mv, strerror (errno));
+          event_log_error (hashdog_ctx, "Rename directory %s to %s: %s", root_directory, root_directory_mv, strerror (errno));
 
           return -1;
         }
@@ -86,7 +86,7 @@ int induct_ctx_init (hashcat_ctx_t *hashcat_ctx)
       }
       else
       {
-        event_log_error (hashcat_ctx, "%s: %s", root_directory, strerror (errno));
+        event_log_error (hashdog_ctx, "%s: %s", root_directory, strerror (errno));
 
         return -1;
       }
@@ -94,7 +94,7 @@ int induct_ctx_init (hashcat_ctx_t *hashcat_ctx)
 
     if (hc_mkdir (root_directory, 0700) == -1)
     {
-      event_log_error (hashcat_ctx, "%s: %s", root_directory, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", root_directory, strerror (errno));
 
       return -1;
     }
@@ -109,9 +109,9 @@ int induct_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void induct_ctx_scan (hashcat_ctx_t *hashcat_ctx)
+void induct_ctx_scan (hashdog_ctx_t *hashdog_ctx)
 {
-  induct_ctx_t *induct_ctx = hashcat_ctx->induct_ctx;
+  induct_ctx_t *induct_ctx = hashdog_ctx->induct_ctx;
 
   if (induct_ctx->enabled == false) return;
 
@@ -122,9 +122,9 @@ void induct_ctx_scan (hashcat_ctx_t *hashcat_ctx)
   qsort (induct_ctx->induction_dictionaries, (size_t) induct_ctx->induction_dictionaries_cnt, sizeof (char *), sort_by_mtime);
 }
 
-void induct_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void induct_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  induct_ctx_t *induct_ctx = hashcat_ctx->induct_ctx;
+  induct_ctx_t *induct_ctx = hashdog_ctx->induct_ctx;
 
   if (induct_ctx->enabled == false) return;
 
@@ -140,7 +140,7 @@ void induct_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
     }
     else
     {
-      event_log_error (hashcat_ctx, "%s: %s", induct_ctx->root_directory, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", induct_ctx->root_directory, strerror (errno));
 
       //return -1;
     }

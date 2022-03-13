@@ -1,17 +1,17 @@
 /*
 
-PKZIP Kernels for Hashcat (c) 2018, European Union
+PKZIP Kernels for hashdog (c) 2018, European Union
 
-PKZIP Kernels for Hashcat has been developed by the Joint Research Centre of the European Commission.
+PKZIP Kernels for hashdog has been developed by the Joint Research Centre of the European Commission.
 It is released as open source software under the MIT License.
 
-PKZIP Kernels for Hashcat makes use of two primary external components, which continue to be subject
+PKZIP Kernels for hashdog makes use of two primary external components, which continue to be subject
 to the terms and conditions stipulated in the respective licences they have been released under. These
 external components include, but are not necessarily limited to, the following:
 
 -----
 
-1. Hashcat: MIT License
+1. hashdog: MIT License
 
 Copyright (c) 2015-2018 Jens Steube
 
@@ -57,7 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----
 
 The European Union disclaims all liability related to or arising out of the use made by third parties of
-any external components and dependencies which may be included with PKZIP Kernels for Hashcat.
+any external components and dependencies which may be included with PKZIP Kernels for hashdog.
 
 -----
 
@@ -104,7 +104,7 @@ static const u64   KERN_TYPE      = 17200;
 static const u32   OPTI_TYPE      = 0;
 static const u64   OPTS_TYPE      = OPTS_TYPE_NATIVE_THREADS;
 static const u32   SALT_TYPE      = SALT_TYPE_EMBEDDED;
-static const char *ST_PASS        = "hashcat";
+static const char *ST_PASS        = "hashdog";
 static const char *ST_HASH        = "$pkzip2$1*1*2*0*e3*1c5*eda7a8de*0*28*8*e3*eda7*5096*a9fc1f4e951c8fb3031a6f903e5f4e3211c8fdc4671547bf77f6f682afbfcc7475d83898985621a7af9bccd1349d1976500a68c48f630b7f22d7a0955524d768e34868880461335417ddd149c65a917c0eb0a4bf7224e24a1e04cf4ace5eef52205f4452e66ded937db9545f843a68b1e84a2e933cc05fb36d3db90e6c5faf1bee2249fdd06a7307849902a8bb24ec7e8a0886a4544ca47979a9dfeefe034bdfc5bd593904cfe9a5309dd199d337d3183f307c2cb39622549a5b9b8b485b7949a4803f63f67ca427a0640ad3793a519b2476c52198488e3e2e04cac202d624fb7d13c2*$/pkzip2$";
 
 #define MAX_DATA (320 * 1024)

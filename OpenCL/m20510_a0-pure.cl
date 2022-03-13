@@ -1,17 +1,17 @@
 /*
 
-PKZIP Kernels for Hashcat (c) 2018, European Union
+PKZIP Kernels for hashdog (c) 2018, European Union
 
-PKZIP Kernels for Hashcat has been developed by the Joint Research Centre of the European Commission.
+PKZIP Kernels for hashdog has been developed by the Joint Research Centre of the European Commission.
 It is released as open source software under the MIT License.
 
-PKZIP Kernels for Hashcat makes use of a primary external components, which continue to be subject
+PKZIP Kernels for hashdog makes use of a primary external components, which continue to be subject
 to the terms and conditions stipulated in the respective licences they have been released under. These
 external components include, but are not necessarily limited to, the following:
 
 -----
 
-1. Hashcat: MIT License
+1. hashdog: MIT License
 
 Copyright (c) 2015-2018 Jens Steube
 
@@ -33,7 +33,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----
 
 The European Union disclaims all liability related to or arising out of the use made by third parties of
-any external components and dependencies which may be included with PKZIP Kernels for Hashcat.
+any external components and dependencies which may be included with PKZIP Kernels for hashdog.
 
 -----
 

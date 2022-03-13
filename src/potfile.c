@@ -101,12 +101,12 @@ void pot_tree_destroy (pot_tree_entry_t *tree)
   }
 }
 
-int potfile_init (hashcat_ctx_t *hashcat_ctx)
+int potfile_init (hashdog_ctx_t *hashdog_ctx)
 {
-  const folder_config_t *folder_config = hashcat_ctx->folder_config;
-  const user_options_t  *user_options  = hashcat_ctx->user_options;
-  const hashconfig_t    *hashconfig    = hashcat_ctx->hashconfig;
-        potfile_ctx_t   *potfile_ctx   = hashcat_ctx->potfile_ctx;
+  const folder_config_t *folder_config = hashdog_ctx->folder_config;
+  const user_options_t  *user_options  = hashdog_ctx->user_options;
+  const hashconfig_t    *hashconfig    = hashdog_ctx->hashconfig;
+        potfile_ctx_t   *potfile_ctx   = hashdog_ctx->potfile_ctx;
 
   potfile_ctx->enabled = false;
 
@@ -128,7 +128,7 @@ int potfile_init (hashcat_ctx_t *hashcat_ctx)
 
   if (user_options->potfile_path == NULL)
   {
-    hc_asprintf (&potfile_ctx->filename, "%s/hashcat.potfile", folder_config->profile_dir);
+    hc_asprintf (&potfile_ctx->filename, "%s/hashdog.potfile", folder_config->profile_dir);
     potfile_ctx->fp.pfp   = NULL;
   }
   else
@@ -155,13 +155,13 @@ int potfile_init (hashcat_ctx_t *hashcat_ctx)
   {
     char *potfile_old;
 
-    hc_asprintf (&potfile_old, "%s/hashcat.pot", folder_config->profile_dir);
+    hc_asprintf (&potfile_old, "%s/hashdog.pot", folder_config->profile_dir);
 
     if (hc_path_exist (potfile_old) == true)
     {
-      event_log_warning (hashcat_ctx, "Old potfile detected: %s", potfile_old);
-      event_log_warning (hashcat_ctx, "New potfile is: %s ", potfile_ctx->filename);
-      event_log_warning (hashcat_ctx, NULL);
+      event_log_warning (hashdog_ctx, "Old potfile detected: %s", potfile_old);
+      event_log_warning (hashdog_ctx, "New potfile is: %s ", potfile_ctx->filename);
+      event_log_warning (hashdog_ctx, NULL);
     }
 
     hcfree (potfile_old);
@@ -170,9 +170,9 @@ int potfile_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void potfile_destroy (hashcat_ctx_t *hashcat_ctx)
+void potfile_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return;
 
@@ -183,10 +183,10 @@ void potfile_destroy (hashcat_ctx_t *hashcat_ctx)
   memset (potfile_ctx, 0, sizeof (potfile_ctx_t));
 }
 
-int potfile_read_open (hashcat_ctx_t *hashcat_ctx)
+int potfile_read_open (hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t  *hashconfig  = hashcat_ctx->hashconfig;
-        potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  const hashconfig_t  *hashconfig  = hashdog_ctx->hashconfig;
+        potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return 0;
 
@@ -194,7 +194,7 @@ int potfile_read_open (hashcat_ctx_t *hashcat_ctx)
 
   if (hc_fopen (&potfile_ctx->fp, potfile_ctx->filename, "rb") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", potfile_ctx->filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", potfile_ctx->filename, strerror (errno));
 
     return -1;
   }
@@ -202,10 +202,10 @@ int potfile_read_open (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void potfile_read_close (hashcat_ctx_t *hashcat_ctx)
+void potfile_read_close (hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t  *hashconfig  = hashcat_ctx->hashconfig;
-        potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  const hashconfig_t  *hashconfig  = hashdog_ctx->hashconfig;
+        potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return;
 
@@ -214,10 +214,10 @@ void potfile_read_close (hashcat_ctx_t *hashcat_ctx)
   hc_fclose (&potfile_ctx->fp);
 }
 
-int potfile_write_open (hashcat_ctx_t *hashcat_ctx)
+int potfile_write_open (hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t  *hashconfig  = hashcat_ctx->hashconfig;
-        potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  const hashconfig_t  *hashconfig  = hashdog_ctx->hashconfig;
+        potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return 0;
 
@@ -225,7 +225,7 @@ int potfile_write_open (hashcat_ctx_t *hashcat_ctx)
 
   if (hc_fopen (&potfile_ctx->fp, potfile_ctx->filename, "ab") == false)
   {
-    event_log_error (hashcat_ctx, "%s: %s", potfile_ctx->filename, strerror (errno));
+    event_log_error (hashdog_ctx, "%s: %s", potfile_ctx->filename, strerror (errno));
 
     return -1;
   }
@@ -233,10 +233,10 @@ int potfile_write_open (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void potfile_write_close (hashcat_ctx_t *hashcat_ctx)
+void potfile_write_close (hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t  *hashconfig  = hashcat_ctx->hashconfig;
-        potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  const hashconfig_t  *hashconfig  = hashdog_ctx->hashconfig;
+        potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return;
 
@@ -245,11 +245,11 @@ void potfile_write_close (hashcat_ctx_t *hashcat_ctx)
   hc_fclose (&potfile_ctx->fp);
 }
 
-void potfile_write_append (hashcat_ctx_t *hashcat_ctx, const char *out_buf, const int out_len, u8 *plain_ptr, unsigned int plain_len)
+void potfile_write_append (hashdog_ctx_t *hashdog_ctx, const char *out_buf, const int out_len, u8 *plain_ptr, unsigned int plain_len)
 {
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const user_options_t *user_options = hashcat_ctx->user_options;
-        potfile_ctx_t  *potfile_ctx  = hashcat_ctx->potfile_ctx;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const user_options_t *user_options = hashdog_ctx->user_options;
+        potfile_ctx_t  *potfile_ctx  = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return;
 
@@ -306,13 +306,13 @@ void potfile_write_append (hashcat_ctx_t *hashcat_ctx, const char *out_buf, cons
 
   if (hc_unlockfile (&potfile_ctx->fp))
   {
-    event_log_error (hashcat_ctx, "%s: Failed to unlock file.", potfile_ctx->filename);
+    event_log_error (hashdog_ctx, "%s: Failed to unlock file.", potfile_ctx->filename);
   }
 }
 
-void potfile_update_hash (hashcat_ctx_t *hashcat_ctx, hash_t *found, char *line_pw_buf, int line_pw_len)
+void potfile_update_hash (hashdog_ctx_t *hashdog_ctx, hash_t *found, char *line_pw_buf, int line_pw_len)
 {
-  const loopback_ctx_t *loopback_ctx = hashcat_ctx->loopback_ctx;
+  const loopback_ctx_t *loopback_ctx = hashdog_ctx->loopback_ctx;
 
   if (found == NULL) return;
 
@@ -335,13 +335,13 @@ void potfile_update_hash (hashcat_ctx_t *hashcat_ctx, hash_t *found, char *line_
 
   if (loopback_ctx->fp.pfp != NULL)
   {
-    loopback_write_append (hashcat_ctx, (u8 *) pw_buf, (unsigned int) pw_len);
+    loopback_write_append (hashdog_ctx, (u8 *) pw_buf, (unsigned int) pw_len);
   }
 }
 
-void potfile_update_hashes (hashcat_ctx_t *hashcat_ctx, hash_t *hash_buf, char *line_pw_buf, int line_pw_len, pot_tree_entry_t *tree)
+void potfile_update_hashes (hashdog_ctx_t *hashdog_ctx, hash_t *hash_buf, char *line_pw_buf, int line_pw_len, pot_tree_entry_t *tree)
 {
-  hashconfig_t *hashconfig = hashcat_ctx->hashconfig;
+  hashconfig_t *hashconfig = hashdog_ctx->hashconfig;
 
   // the linked list node:
 
@@ -369,19 +369,19 @@ void potfile_update_hashes (hashcat_ctx_t *hashcat_ctx, hash_t *hash_buf, char *
 
     while (node)
     {
-      potfile_update_hash (hashcat_ctx, node->hash_buf, line_pw_buf, line_pw_len);
+      potfile_update_hash (hashdog_ctx, node->hash_buf, line_pw_buf, line_pw_len);
 
       node = node->next;
     }
   }
 }
 
-int potfile_remove_parse (hashcat_ctx_t *hashcat_ctx)
+int potfile_remove_parse (hashdog_ctx_t *hashdog_ctx)
 {
-  const hashconfig_t  *hashconfig   = hashcat_ctx->hashconfig;
-  const hashes_t      *hashes       = hashcat_ctx->hashes;
-  const module_ctx_t  *module_ctx   = hashcat_ctx->module_ctx;
-        potfile_ctx_t *potfile_ctx  = hashcat_ctx->potfile_ctx;
+  const hashconfig_t  *hashconfig   = hashdog_ctx->hashconfig;
+  const hashes_t      *hashes       = hashdog_ctx->hashes;
+  const module_ctx_t  *module_ctx   = hashdog_ctx->module_ctx;
+        potfile_ctx_t *potfile_ctx  = hashdog_ctx->potfile_ctx;
 
   if (potfile_ctx->enabled == false) return 0;
 
@@ -500,7 +500,7 @@ int potfile_remove_parse (hashcat_ctx_t *hashcat_ctx)
     }
   }
 
-  const int rc = potfile_read_open (hashcat_ctx);
+  const int rc = potfile_read_open (hashdog_ctx);
 
   if (rc == -1) return -1;
 
@@ -564,7 +564,7 @@ int potfile_remove_parse (hashcat_ctx_t *hashcat_ctx)
 
           if (cracked == true)
           {
-            potfile_update_hash (hashcat_ctx, &hashes_buf[hashes_pos], line_pw_buf, (u32) line_pw_len);
+            potfile_update_hash (hashdog_ctx, &hashes_buf[hashes_pos], line_pw_buf, (u32) line_pw_len);
           }
         }
 
@@ -583,14 +583,14 @@ int potfile_remove_parse (hashcat_ctx_t *hashcat_ctx)
 
       if (hashconfig->potfile_keep_all_hashes == true)
       {
-        potfile_update_hashes (hashcat_ctx, &hash_buf, line_pw_buf, (u32) line_pw_len, all_hashes_tree);
+        potfile_update_hashes (hashdog_ctx, &hash_buf, line_pw_buf, (u32) line_pw_len, all_hashes_tree);
 
         continue;
       }
 
       hash_t *found = (hash_t *) hc_bsearch_r (&hash_buf, hashes_buf, hashes_cnt, sizeof (hash_t), sort_by_hash, (void *) hashconfig);
 
-      potfile_update_hash (hashcat_ctx, found, line_pw_buf, (u32) line_pw_len);
+      potfile_update_hash (hashdog_ctx, found, line_pw_buf, (u32) line_pw_len);
     }
   }
 
@@ -601,7 +601,7 @@ int potfile_remove_parse (hashcat_ctx_t *hashcat_ctx)
     hcfree (tmps);
   }
 
-  potfile_read_close (hashcat_ctx);
+  potfile_read_close (hashdog_ctx);
 
   if (hashconfig->potfile_keep_all_hashes == true)
   {
@@ -631,11 +631,11 @@ int potfile_remove_parse (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-int potfile_handle_show (hashcat_ctx_t *hashcat_ctx)
+int potfile_handle_show (hashdog_ctx_t *hashdog_ctx)
 {
-  hashconfig_t  *hashconfig  = hashcat_ctx->hashconfig;
-  hashes_t      *hashes      = hashcat_ctx->hashes;
-  potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  hashconfig_t  *hashconfig  = hashdog_ctx->hashconfig;
+  hashes_t      *hashes      = hashdog_ctx->hashes;
+  potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   u32     salts_cnt  = hashes->salts_cnt;
   salt_t *salts_buf  = hashes->salts_buf;
@@ -690,11 +690,11 @@ int potfile_handle_show (hashcat_ctx_t *hashcat_ctx)
 
         u8 *out_buf = potfile_ctx->out_buf;
 
-        int out_len = hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf + 0, HCBUFSIZ_LARGE - 0, salt_idx, digest_idx);
+        int out_len = hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf + 0, HCBUFSIZ_LARGE - 0, salt_idx, digest_idx);
 
         if (hash2)
         {
-          out_len += hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf + 16, HCBUFSIZ_LARGE - 16, salt_idx, split_neighbor);
+          out_len += hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf + 16, HCBUFSIZ_LARGE - 16, salt_idx, split_neighbor);
         }
 
         out_buf[out_len] = 0;
@@ -752,7 +752,7 @@ int potfile_handle_show (hashcat_ctx_t *hashcat_ctx)
           }
         }
 
-        const int tmp_len = outfile_write (hashcat_ctx, (char *) out_buf, out_len, (u8 *) mixed_buf, mixed_len, 0, username, user_len, true, (char *) tmp_buf);
+        const int tmp_len = outfile_write (hashdog_ctx, (char *) out_buf, out_len, (u8 *) mixed_buf, mixed_len, 0, username, user_len, true, (char *) tmp_buf);
 
         //EVENT_DATA (EVENT_POTFILE_HASH_SHOW, tmp_buf, tmp_len);
 
@@ -788,7 +788,7 @@ int potfile_handle_show (hashcat_ctx_t *hashcat_ctx)
 
         u8 *out_buf = potfile_ctx->out_buf;
 
-        const int out_len = hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf, HCBUFSIZ_LARGE, salt_idx, digest_idx);
+        const int out_len = hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf, HCBUFSIZ_LARGE, salt_idx, digest_idx);
 
         out_buf[out_len] = 0;
 
@@ -836,11 +836,11 @@ int potfile_handle_show (hashcat_ctx_t *hashcat_ctx)
 
           const size_t pass_unhexified_len = exec_unhexify ((u8 *) hash->pw_buf, hash->pw_len, pass_unhexified, sizeof (pass_unhexified));
 
-          tmp_len = outfile_write (hashcat_ctx, (char *) out_buf, out_len, pass_unhexified, (u32) pass_unhexified_len, 0, username, user_len, true, (char *) tmp_buf);
+          tmp_len = outfile_write (hashdog_ctx, (char *) out_buf, out_len, pass_unhexified, (u32) pass_unhexified_len, 0, username, user_len, true, (char *) tmp_buf);
         }
         else
         {
-          tmp_len = outfile_write (hashcat_ctx, (char *) out_buf, out_len, (u8 *) hash->pw_buf, hash->pw_len, 0, username, user_len, true, (char *) tmp_buf);
+          tmp_len = outfile_write (hashdog_ctx, (char *) out_buf, out_len, (u8 *) hash->pw_buf, hash->pw_len, 0, username, user_len, true, (char *) tmp_buf);
         }
 
         //EVENT_DATA (EVENT_POTFILE_HASH_SHOW, tmp_buf, tmp_len);
@@ -872,12 +872,12 @@ int potfile_handle_show (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-int potfile_handle_left (hashcat_ctx_t *hashcat_ctx)
+int potfile_handle_left (hashdog_ctx_t *hashdog_ctx)
 {
-  hashconfig_t  *hashconfig  = hashcat_ctx->hashconfig;
-  hashes_t      *hashes      = hashcat_ctx->hashes;
-  module_ctx_t  *module_ctx  = hashcat_ctx->module_ctx;
-  potfile_ctx_t *potfile_ctx = hashcat_ctx->potfile_ctx;
+  hashconfig_t  *hashconfig  = hashdog_ctx->hashconfig;
+  hashes_t      *hashes      = hashdog_ctx->hashes;
+  module_ctx_t  *module_ctx  = hashdog_ctx->module_ctx;
+  potfile_ctx_t *potfile_ctx = hashdog_ctx->potfile_ctx;
 
   u32     salts_cnt  = hashes->salts_cnt;
   salt_t *salts_buf  = hashes->salts_buf;
@@ -932,11 +932,11 @@ int potfile_handle_left (hashcat_ctx_t *hashcat_ctx)
 
         u8 *out_buf = potfile_ctx->out_buf;
 
-        int out_len = hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf + 0, HCBUFSIZ_LARGE - 0, salt_idx, digest_idx);
+        int out_len = hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf + 0, HCBUFSIZ_LARGE - 0, salt_idx, digest_idx);
 
         if (hash2)
         {
-          out_len += hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf + 16, HCBUFSIZ_LARGE - 16, salt_idx, split_neighbor);
+          out_len += hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf + 16, HCBUFSIZ_LARGE - 16, salt_idx, split_neighbor);
         }
 
         out_buf[out_len] = 0;
@@ -961,7 +961,7 @@ int potfile_handle_left (hashcat_ctx_t *hashcat_ctx)
 
         tmp_buf[0] = 0;
 
-        const int tmp_len = outfile_write (hashcat_ctx, (char *) out_buf, out_len, NULL, 0, 0, username, user_len, true, (char *) tmp_buf);
+        const int tmp_len = outfile_write (hashdog_ctx, (char *) out_buf, out_len, NULL, 0, 0, username, user_len, true, (char *) tmp_buf);
 
         //EVENT_DATA (EVENT_POTFILE_HASH_LEFT, tmp_buf, tmp_len);
 
@@ -1016,7 +1016,7 @@ int potfile_handle_left (hashcat_ctx_t *hashcat_ctx)
         }
         else
         {
-          out_len = hash_encode (hashcat_ctx->hashconfig, hashcat_ctx->hashes, hashcat_ctx->module_ctx, (char *) out_buf, HCBUFSIZ_LARGE, salt_idx, digest_idx);
+          out_len = hash_encode (hashdog_ctx->hashconfig, hashdog_ctx->hashes, hashdog_ctx->module_ctx, (char *) out_buf, HCBUFSIZ_LARGE, salt_idx, digest_idx);
         }
 
         out_buf[out_len] = 0;
@@ -1048,7 +1048,7 @@ int potfile_handle_left (hashcat_ctx_t *hashcat_ctx)
 
         tmp_buf[0] = 0;
 
-        const int tmp_len = outfile_write (hashcat_ctx, (char *) out_buf, out_len, NULL, 0, 0, username, user_len, print_eol, (char *) tmp_buf);
+        const int tmp_len = outfile_write (hashdog_ctx, (char *) out_buf, out_len, NULL, 0, 0, username, user_len, print_eol, (char *) tmp_buf);
 
         //EVENT_DATA (EVENT_POTFILE_HASH_LEFT, tmp_buf, tmp_len);
 

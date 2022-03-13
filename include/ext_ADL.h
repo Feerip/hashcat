@@ -644,19 +644,19 @@ typedef hm_adl_lib_t ADL_PTR;
 
 void *HC_API_CALL ADL_Main_Memory_Alloc (const int iSize);
 
-int adl_init (void *hashcat_ctx);
-void adl_close (void *hashcat_ctx);
-int hm_ADL_Main_Control_Destroy (void *hashcat_ctx);
-int hm_ADL_Main_Control_Create (void *hashcat_ctx, ADL_MAIN_MALLOC_CALLBACK callback, int iEnumConnectedAdapters);
-int hm_ADL_Adapter_NumberOfAdapters_Get (void *hashcat_ctx, int *lpNumAdapters);
-int hm_ADL_Adapter_AdapterInfo_Get (void *hashcat_ctx, LPAdapterInfo lpInfo, int iInputSize);
-int hm_ADL_Overdrive5_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLTemperature *lpTemperature);
-int hm_ADL_Overdrive6_Temperature_Get (void *hashcat_ctx, int iAdapterIndex, int *iTemperature);
-int hm_ADL_Overdrive_CurrentActivity_Get (void *hashcat_ctx, int iAdapterIndex, ADLPMActivity *lpActivity);
-int hm_ADL_Overdrive5_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLFanSpeedValue *lpFanSpeedValue);
-int hm_ADL_Overdrive6_FanSpeed_Get (void *hashcat_ctx, int iAdapterIndex, ADLOD6FanSpeedInfo *lpFanSpeedInfo);
-int hm_ADL_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *od_supported, int *od_enabled, int *od_version);
-int hm_ADL2_Overdrive_Caps (void *hashcat_ctx, int iAdapterIndex, int *od_supported, int *od_enabled, int *od_version);
-int hm_ADL2_New_QueryPMLogData_Get (void *hashcat_ctx, int iAdapterIndex, ADLPMLogDataOutput *lpDataOutput);
+int adl_init (void *hashdog_ctx);
+void adl_close (void *hashdog_ctx);
+int hm_ADL_Main_Control_Destroy (void *hashdog_ctx);
+int hm_ADL_Main_Control_Create (void *hashdog_ctx, ADL_MAIN_MALLOC_CALLBACK callback, int iEnumConnectedAdapters);
+int hm_ADL_Adapter_NumberOfAdapters_Get (void *hashdog_ctx, int *lpNumAdapters);
+int hm_ADL_Adapter_AdapterInfo_Get (void *hashdog_ctx, LPAdapterInfo lpInfo, int iInputSize);
+int hm_ADL_Overdrive5_Temperature_Get (void *hashdog_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLTemperature *lpTemperature);
+int hm_ADL_Overdrive6_Temperature_Get (void *hashdog_ctx, int iAdapterIndex, int *iTemperature);
+int hm_ADL_Overdrive_CurrentActivity_Get (void *hashdog_ctx, int iAdapterIndex, ADLPMActivity *lpActivity);
+int hm_ADL_Overdrive5_FanSpeed_Get (void *hashdog_ctx, int iAdapterIndex, int iThermalControllerIndex, ADLFanSpeedValue *lpFanSpeedValue);
+int hm_ADL_Overdrive6_FanSpeed_Get (void *hashdog_ctx, int iAdapterIndex, ADLOD6FanSpeedInfo *lpFanSpeedInfo);
+int hm_ADL_Overdrive_Caps (void *hashdog_ctx, int iAdapterIndex, int *od_supported, int *od_enabled, int *od_version);
+int hm_ADL2_Overdrive_Caps (void *hashdog_ctx, int iAdapterIndex, int *od_supported, int *od_enabled, int *od_version);
+int hm_ADL2_New_QueryPMLogData_Get (void *hashdog_ctx, int iAdapterIndex, ADLPMLogDataOutput *lpDataOutput);
 
 #endif // _EXT_ADL_H

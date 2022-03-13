@@ -11,9 +11,9 @@
 
 #include "dynloader.h"
 
-int cuda_init (void *hashcat_ctx)
+int cuda_init (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -39,11 +39,11 @@ int cuda_init (void *hashcat_ctx)
       if ((noerr) != -1) { \
         if (!(ptr)->name) { \
           if ((noerr) == 1) { \
-            event_log_error (hashcat_ctx, "%s is missing from %s shared library.", #name, #libname); \
+            event_log_error (hashdog_ctx, "%s is missing from %s shared library.", #name, #libname); \
             return -1; \
           } \
           if ((noerr) != 1) { \
-            event_log_warning (hashcat_ctx, "%s is missing from %s shared library.", #name, #libname); \
+            event_log_warning (hashdog_ctx, "%s is missing from %s shared library.", #name, #libname); \
             return 0; \
           } \
         } \
@@ -117,9 +117,9 @@ int cuda_init (void *hashcat_ctx)
   return 0;
 }
 
-void cuda_close (void *hashcat_ctx)
+void cuda_close (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -136,9 +136,9 @@ void cuda_close (void *hashcat_ctx)
   }
 }
 
-int hc_cuInit (void *hashcat_ctx, unsigned int Flags)
+int hc_cuInit (void *hashdog_ctx, unsigned int Flags)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -150,11 +150,11 @@ int hc_cuInit (void *hashcat_ctx, unsigned int Flags)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuInit(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuInit(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuInit(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuInit(): %d", CU_err);
     }
 
     return -1;
@@ -163,9 +163,9 @@ int hc_cuInit (void *hashcat_ctx, unsigned int Flags)
   return 0;
 }
 
-int hc_cuDeviceGetAttribute (void *hashcat_ctx, int *pi, CUdevice_attribute attrib, CUdevice dev)
+int hc_cuDeviceGetAttribute (void *hashdog_ctx, int *pi, CUdevice_attribute attrib, CUdevice dev)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -177,11 +177,11 @@ int hc_cuDeviceGetAttribute (void *hashcat_ctx, int *pi, CUdevice_attribute attr
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuDeviceGetAttribute(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuDeviceGetAttribute(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuDeviceGetAttribute(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuDeviceGetAttribute(): %d", CU_err);
     }
 
     return -1;
@@ -190,9 +190,9 @@ int hc_cuDeviceGetAttribute (void *hashcat_ctx, int *pi, CUdevice_attribute attr
   return 0;
 }
 
-int hc_cuDeviceGetCount (void *hashcat_ctx, int *count)
+int hc_cuDeviceGetCount (void *hashdog_ctx, int *count)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -204,11 +204,11 @@ int hc_cuDeviceGetCount (void *hashcat_ctx, int *count)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuDeviceGetCount(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuDeviceGetCount(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuDeviceGetCount(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuDeviceGetCount(): %d", CU_err);
     }
 
     return -1;
@@ -217,9 +217,9 @@ int hc_cuDeviceGetCount (void *hashcat_ctx, int *count)
   return 0;
 }
 
-int hc_cuDeviceGet (void *hashcat_ctx, CUdevice* device, int ordinal)
+int hc_cuDeviceGet (void *hashdog_ctx, CUdevice* device, int ordinal)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -231,11 +231,11 @@ int hc_cuDeviceGet (void *hashcat_ctx, CUdevice* device, int ordinal)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuDeviceGet(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuDeviceGet(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuDeviceGet(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuDeviceGet(): %d", CU_err);
     }
 
     return -1;
@@ -244,9 +244,9 @@ int hc_cuDeviceGet (void *hashcat_ctx, CUdevice* device, int ordinal)
   return 0;
 }
 
-int hc_cuDeviceGetName (void *hashcat_ctx, char *name, int len, CUdevice dev)
+int hc_cuDeviceGetName (void *hashdog_ctx, char *name, int len, CUdevice dev)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -258,11 +258,11 @@ int hc_cuDeviceGetName (void *hashcat_ctx, char *name, int len, CUdevice dev)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuDeviceGetName(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuDeviceGetName(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuDeviceGetName(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuDeviceGetName(): %d", CU_err);
     }
 
     return -1;
@@ -271,9 +271,9 @@ int hc_cuDeviceGetName (void *hashcat_ctx, char *name, int len, CUdevice dev)
   return 0;
 }
 
-int hc_cuDeviceTotalMem (void *hashcat_ctx, size_t *bytes, CUdevice dev)
+int hc_cuDeviceTotalMem (void *hashdog_ctx, size_t *bytes, CUdevice dev)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -285,11 +285,11 @@ int hc_cuDeviceTotalMem (void *hashcat_ctx, size_t *bytes, CUdevice dev)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuDeviceTotalMem(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuDeviceTotalMem(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuDeviceTotalMem(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuDeviceTotalMem(): %d", CU_err);
     }
 
     return -1;
@@ -298,9 +298,9 @@ int hc_cuDeviceTotalMem (void *hashcat_ctx, size_t *bytes, CUdevice dev)
   return 0;
 }
 
-int hc_cuDriverGetVersion (void *hashcat_ctx, int *driverVersion)
+int hc_cuDriverGetVersion (void *hashdog_ctx, int *driverVersion)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -312,11 +312,11 @@ int hc_cuDriverGetVersion (void *hashcat_ctx, int *driverVersion)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuDriverGetVersion(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuDriverGetVersion(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuDriverGetVersion(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuDriverGetVersion(): %d", CU_err);
     }
 
     return -1;
@@ -325,9 +325,9 @@ int hc_cuDriverGetVersion (void *hashcat_ctx, int *driverVersion)
   return 0;
 }
 
-int hc_cuCtxCreate (void *hashcat_ctx, CUcontext *pctx, unsigned int flags, CUdevice dev)
+int hc_cuCtxCreate (void *hashdog_ctx, CUcontext *pctx, unsigned int flags, CUdevice dev)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -339,11 +339,11 @@ int hc_cuCtxCreate (void *hashcat_ctx, CUcontext *pctx, unsigned int flags, CUde
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxCreate(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxCreate(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxCreate(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxCreate(): %d", CU_err);
     }
 
     return -1;
@@ -352,9 +352,9 @@ int hc_cuCtxCreate (void *hashcat_ctx, CUcontext *pctx, unsigned int flags, CUde
   return 0;
 }
 
-int hc_cuCtxDestroy (void *hashcat_ctx, CUcontext ctx)
+int hc_cuCtxDestroy (void *hashdog_ctx, CUcontext ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -366,11 +366,11 @@ int hc_cuCtxDestroy (void *hashcat_ctx, CUcontext ctx)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxDestroy(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxDestroy(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxDestroy(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxDestroy(): %d", CU_err);
     }
 
     return -1;
@@ -379,9 +379,9 @@ int hc_cuCtxDestroy (void *hashcat_ctx, CUcontext ctx)
   return 0;
 }
 
-int hc_cuModuleLoadDataEx (void *hashcat_ctx, CUmodule *module, const void *image, unsigned int numOptions, CUjit_option *options, void **optionValues)
+int hc_cuModuleLoadDataEx (void *hashdog_ctx, CUmodule *module, const void *image, unsigned int numOptions, CUjit_option *options, void **optionValues)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -393,11 +393,11 @@ int hc_cuModuleLoadDataEx (void *hashcat_ctx, CUmodule *module, const void *imag
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuModuleLoadDataEx(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuModuleLoadDataEx(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuModuleLoadDataEx(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuModuleLoadDataEx(): %d", CU_err);
     }
 
     return -1;
@@ -406,9 +406,9 @@ int hc_cuModuleLoadDataEx (void *hashcat_ctx, CUmodule *module, const void *imag
   return 0;
 }
 
-int hc_cuModuleUnload (void *hashcat_ctx, CUmodule hmod)
+int hc_cuModuleUnload (void *hashdog_ctx, CUmodule hmod)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -420,11 +420,11 @@ int hc_cuModuleUnload (void *hashcat_ctx, CUmodule hmod)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuModuleUnload(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuModuleUnload(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuModuleUnload(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuModuleUnload(): %d", CU_err);
     }
 
     return -1;
@@ -433,9 +433,9 @@ int hc_cuModuleUnload (void *hashcat_ctx, CUmodule hmod)
   return 0;
 }
 
-int hc_cuCtxSetCurrent (void *hashcat_ctx, CUcontext ctx)
+int hc_cuCtxSetCurrent (void *hashdog_ctx, CUcontext ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -447,11 +447,11 @@ int hc_cuCtxSetCurrent (void *hashcat_ctx, CUcontext ctx)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxSetCurrent(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxSetCurrent(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxSetCurrent(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxSetCurrent(): %d", CU_err);
     }
 
     return -1;
@@ -460,9 +460,9 @@ int hc_cuCtxSetCurrent (void *hashcat_ctx, CUcontext ctx)
   return 0;
 }
 
-int hc_cuMemAlloc (void *hashcat_ctx, CUdeviceptr *dptr, size_t bytesize)
+int hc_cuMemAlloc (void *hashdog_ctx, CUdeviceptr *dptr, size_t bytesize)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -474,11 +474,11 @@ int hc_cuMemAlloc (void *hashcat_ctx, CUdeviceptr *dptr, size_t bytesize)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemAlloc(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemAlloc(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemAlloc(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemAlloc(): %d", CU_err);
     }
 
     return -1;
@@ -487,9 +487,9 @@ int hc_cuMemAlloc (void *hashcat_ctx, CUdeviceptr *dptr, size_t bytesize)
   return 0;
 }
 
-int hc_cuMemFree (void *hashcat_ctx, CUdeviceptr dptr)
+int hc_cuMemFree (void *hashdog_ctx, CUdeviceptr dptr)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -501,11 +501,11 @@ int hc_cuMemFree (void *hashcat_ctx, CUdeviceptr dptr)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemFree(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemFree(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemFree(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemFree(): %d", CU_err);
     }
 
     return -1;
@@ -514,9 +514,9 @@ int hc_cuMemFree (void *hashcat_ctx, CUdeviceptr dptr)
   return 0;
 }
 
-int hc_cuMemcpyDtoHAsync (void *hashcat_ctx, void *dstHost, CUdeviceptr srcDevice, size_t ByteCount, CUstream hStream)
+int hc_cuMemcpyDtoHAsync (void *hashdog_ctx, void *dstHost, CUdeviceptr srcDevice, size_t ByteCount, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -528,11 +528,11 @@ int hc_cuMemcpyDtoHAsync (void *hashcat_ctx, void *dstHost, CUdeviceptr srcDevic
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemcpyDtoHAsync(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemcpyDtoHAsync(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemcpyDtoHAsync(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemcpyDtoHAsync(): %d", CU_err);
     }
 
     return -1;
@@ -541,9 +541,9 @@ int hc_cuMemcpyDtoHAsync (void *hashcat_ctx, void *dstHost, CUdeviceptr srcDevic
   return 0;
 }
 
-int hc_cuMemcpyDtoDAsync (void *hashcat_ctx, CUdeviceptr dstDevice, CUdeviceptr srcDevice, size_t ByteCount, CUstream hStream)
+int hc_cuMemcpyDtoDAsync (void *hashdog_ctx, CUdeviceptr dstDevice, CUdeviceptr srcDevice, size_t ByteCount, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -555,11 +555,11 @@ int hc_cuMemcpyDtoDAsync (void *hashcat_ctx, CUdeviceptr dstDevice, CUdeviceptr 
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemcpyDtoDAsync(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemcpyDtoDAsync(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemcpyDtoDAsync(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemcpyDtoDAsync(): %d", CU_err);
     }
 
     return -1;
@@ -568,9 +568,9 @@ int hc_cuMemcpyDtoDAsync (void *hashcat_ctx, CUdeviceptr dstDevice, CUdeviceptr 
   return 0;
 }
 
-int hc_cuMemcpyHtoDAsync (void *hashcat_ctx, CUdeviceptr dstDevice, const void *srcHost, size_t ByteCount, CUstream hStream)
+int hc_cuMemcpyHtoDAsync (void *hashdog_ctx, CUdeviceptr dstDevice, const void *srcHost, size_t ByteCount, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -582,11 +582,11 @@ int hc_cuMemcpyHtoDAsync (void *hashcat_ctx, CUdeviceptr dstDevice, const void *
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemcpyHtoDAsync(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemcpyHtoDAsync(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemcpyHtoDAsync(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemcpyHtoDAsync(): %d", CU_err);
     }
 
     return -1;
@@ -595,9 +595,9 @@ int hc_cuMemcpyHtoDAsync (void *hashcat_ctx, CUdeviceptr dstDevice, const void *
   return 0;
 }
 
-int hc_cuMemsetD32Async (void *hashcat_ctx, CUdeviceptr dstDevice, unsigned int ui, size_t N, CUstream hStream)
+int hc_cuMemsetD32Async (void *hashdog_ctx, CUdeviceptr dstDevice, unsigned int ui, size_t N, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -609,11 +609,11 @@ int hc_cuMemsetD32Async (void *hashcat_ctx, CUdeviceptr dstDevice, unsigned int 
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemsetD32Async(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemsetD32Async(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemsetD32Async(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemsetD32Async(): %d", CU_err);
     }
 
     return -1;
@@ -622,9 +622,9 @@ int hc_cuMemsetD32Async (void *hashcat_ctx, CUdeviceptr dstDevice, unsigned int 
   return 0;
 }
 
-int hc_cuMemsetD8Async (void *hashcat_ctx, CUdeviceptr dstDevice, unsigned char uc, size_t N, CUstream hStream)
+int hc_cuMemsetD8Async (void *hashdog_ctx, CUdeviceptr dstDevice, unsigned char uc, size_t N, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -636,11 +636,11 @@ int hc_cuMemsetD8Async (void *hashcat_ctx, CUdeviceptr dstDevice, unsigned char 
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemsetD8Async(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemsetD8Async(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemsetD8Async(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemsetD8Async(): %d", CU_err);
     }
 
     return -1;
@@ -649,9 +649,9 @@ int hc_cuMemsetD8Async (void *hashcat_ctx, CUdeviceptr dstDevice, unsigned char 
   return 0;
 }
 
-int hc_cuModuleGetFunction (void *hashcat_ctx, CUfunction *hfunc, CUmodule hmod, const char *name)
+int hc_cuModuleGetFunction (void *hashdog_ctx, CUfunction *hfunc, CUmodule hmod, const char *name)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -663,11 +663,11 @@ int hc_cuModuleGetFunction (void *hashcat_ctx, CUfunction *hfunc, CUmodule hmod,
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuModuleGetFunction(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuModuleGetFunction(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuModuleGetFunction(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuModuleGetFunction(): %d", CU_err);
     }
 
     return -1;
@@ -676,9 +676,9 @@ int hc_cuModuleGetFunction (void *hashcat_ctx, CUfunction *hfunc, CUmodule hmod,
   return 0;
 }
 
-int hc_cuModuleGetGlobal (void *hashcat_ctx, CUdeviceptr *dptr, size_t *bytes, CUmodule hmod, const char *name)
+int hc_cuModuleGetGlobal (void *hashdog_ctx, CUdeviceptr *dptr, size_t *bytes, CUmodule hmod, const char *name)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -690,11 +690,11 @@ int hc_cuModuleGetGlobal (void *hashcat_ctx, CUdeviceptr *dptr, size_t *bytes, C
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuModuleGetGlobal(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuModuleGetGlobal(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuModuleGetGlobal(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuModuleGetGlobal(): %d", CU_err);
     }
 
     return -1;
@@ -703,9 +703,9 @@ int hc_cuModuleGetGlobal (void *hashcat_ctx, CUdeviceptr *dptr, size_t *bytes, C
   return 0;
 }
 
-int hc_cuMemGetInfo (void *hashcat_ctx, size_t *free, size_t *total)
+int hc_cuMemGetInfo (void *hashdog_ctx, size_t *free, size_t *total)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -717,11 +717,11 @@ int hc_cuMemGetInfo (void *hashcat_ctx, size_t *free, size_t *total)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuMemGetInfo(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuMemGetInfo(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuMemGetInfo(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuMemGetInfo(): %d", CU_err);
     }
 
     return -1;
@@ -730,9 +730,9 @@ int hc_cuMemGetInfo (void *hashcat_ctx, size_t *free, size_t *total)
   return 0;
 }
 
-int hc_cuFuncGetAttribute (void *hashcat_ctx, int *pi, CUfunction_attribute attrib, CUfunction hfunc)
+int hc_cuFuncGetAttribute (void *hashdog_ctx, int *pi, CUfunction_attribute attrib, CUfunction hfunc)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -744,11 +744,11 @@ int hc_cuFuncGetAttribute (void *hashcat_ctx, int *pi, CUfunction_attribute attr
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuFuncGetAttribute(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuFuncGetAttribute(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuFuncGetAttribute(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuFuncGetAttribute(): %d", CU_err);
     }
 
     return -1;
@@ -757,9 +757,9 @@ int hc_cuFuncGetAttribute (void *hashcat_ctx, int *pi, CUfunction_attribute attr
   return 0;
 }
 
-int hc_cuFuncSetAttribute (void *hashcat_ctx, CUfunction hfunc, CUfunction_attribute attrib, int value)
+int hc_cuFuncSetAttribute (void *hashdog_ctx, CUfunction hfunc, CUfunction_attribute attrib, int value)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -771,11 +771,11 @@ int hc_cuFuncSetAttribute (void *hashcat_ctx, CUfunction hfunc, CUfunction_attri
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuFuncSetAttribute(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuFuncSetAttribute(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuFuncSetAttribute(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuFuncSetAttribute(): %d", CU_err);
     }
 
     return -1;
@@ -784,9 +784,9 @@ int hc_cuFuncSetAttribute (void *hashcat_ctx, CUfunction hfunc, CUfunction_attri
   return 0;
 }
 
-int hc_cuStreamCreate (void *hashcat_ctx, CUstream *phStream, unsigned int Flags)
+int hc_cuStreamCreate (void *hashdog_ctx, CUstream *phStream, unsigned int Flags)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -798,11 +798,11 @@ int hc_cuStreamCreate (void *hashcat_ctx, CUstream *phStream, unsigned int Flags
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuStreamCreate(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuStreamCreate(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuStreamCreate(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuStreamCreate(): %d", CU_err);
     }
 
     return -1;
@@ -811,9 +811,9 @@ int hc_cuStreamCreate (void *hashcat_ctx, CUstream *phStream, unsigned int Flags
   return 0;
 }
 
-int hc_cuStreamDestroy (void *hashcat_ctx, CUstream hStream)
+int hc_cuStreamDestroy (void *hashdog_ctx, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -825,11 +825,11 @@ int hc_cuStreamDestroy (void *hashcat_ctx, CUstream hStream)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuStreamDestroy(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuStreamDestroy(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuStreamDestroy(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuStreamDestroy(): %d", CU_err);
     }
 
     return -1;
@@ -838,9 +838,9 @@ int hc_cuStreamDestroy (void *hashcat_ctx, CUstream hStream)
   return 0;
 }
 
-int hc_cuStreamSynchronize (void *hashcat_ctx, CUstream hStream)
+int hc_cuStreamSynchronize (void *hashdog_ctx, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -852,11 +852,11 @@ int hc_cuStreamSynchronize (void *hashcat_ctx, CUstream hStream)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuStreamSynchronize(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuStreamSynchronize(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuStreamSynchronize(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuStreamSynchronize(): %d", CU_err);
     }
 
     return -1;
@@ -865,9 +865,9 @@ int hc_cuStreamSynchronize (void *hashcat_ctx, CUstream hStream)
   return 0;
 }
 
-int hc_cuLaunchKernel (void *hashcat_ctx, CUfunction f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, CUstream hStream, void **kernelParams, void **extra)
+int hc_cuLaunchKernel (void *hashdog_ctx, CUfunction f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, CUstream hStream, void **kernelParams, void **extra)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -879,11 +879,11 @@ int hc_cuLaunchKernel (void *hashcat_ctx, CUfunction f, unsigned int gridDimX, u
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuLaunchKernel(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuLaunchKernel(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuLaunchKernel(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuLaunchKernel(): %d", CU_err);
     }
 
     return -1;
@@ -892,9 +892,9 @@ int hc_cuLaunchKernel (void *hashcat_ctx, CUfunction f, unsigned int gridDimX, u
   return 0;
 }
 
-int hc_cuCtxSynchronize (void *hashcat_ctx)
+int hc_cuCtxSynchronize (void *hashdog_ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -906,11 +906,11 @@ int hc_cuCtxSynchronize (void *hashcat_ctx)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxSynchronize(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxSynchronize(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxSynchronize(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxSynchronize(): %d", CU_err);
     }
 
     return -1;
@@ -919,9 +919,9 @@ int hc_cuCtxSynchronize (void *hashcat_ctx)
   return 0;
 }
 
-int hc_cuEventCreate (void *hashcat_ctx, CUevent *phEvent, unsigned int Flags)
+int hc_cuEventCreate (void *hashdog_ctx, CUevent *phEvent, unsigned int Flags)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -933,11 +933,11 @@ int hc_cuEventCreate (void *hashcat_ctx, CUevent *phEvent, unsigned int Flags)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuEventCreate(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuEventCreate(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuEventCreate(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuEventCreate(): %d", CU_err);
     }
 
     return -1;
@@ -946,9 +946,9 @@ int hc_cuEventCreate (void *hashcat_ctx, CUevent *phEvent, unsigned int Flags)
   return 0;
 }
 
-int hc_cuEventDestroy (void *hashcat_ctx, CUevent hEvent)
+int hc_cuEventDestroy (void *hashdog_ctx, CUevent hEvent)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -960,11 +960,11 @@ int hc_cuEventDestroy (void *hashcat_ctx, CUevent hEvent)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuEventDestroy(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuEventDestroy(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuEventDestroy(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuEventDestroy(): %d", CU_err);
     }
 
     return -1;
@@ -973,9 +973,9 @@ int hc_cuEventDestroy (void *hashcat_ctx, CUevent hEvent)
   return 0;
 }
 
-int hc_cuEventElapsedTime (void *hashcat_ctx, float *pMilliseconds, CUevent hStart, CUevent hEnd)
+int hc_cuEventElapsedTime (void *hashdog_ctx, float *pMilliseconds, CUevent hStart, CUevent hEnd)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -987,11 +987,11 @@ int hc_cuEventElapsedTime (void *hashcat_ctx, float *pMilliseconds, CUevent hSta
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuEventElapsedTime(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuEventElapsedTime(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuEventElapsedTime(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuEventElapsedTime(): %d", CU_err);
     }
 
     return -1;
@@ -1000,9 +1000,9 @@ int hc_cuEventElapsedTime (void *hashcat_ctx, float *pMilliseconds, CUevent hSta
   return 0;
 }
 
-int hc_cuEventQuery (void *hashcat_ctx, CUevent hEvent)
+int hc_cuEventQuery (void *hashdog_ctx, CUevent hEvent)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1014,11 +1014,11 @@ int hc_cuEventQuery (void *hashcat_ctx, CUevent hEvent)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuEventQuery(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuEventQuery(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuEventQuery(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuEventQuery(): %d", CU_err);
     }
 
     return -1;
@@ -1027,9 +1027,9 @@ int hc_cuEventQuery (void *hashcat_ctx, CUevent hEvent)
   return 0;
 }
 
-int hc_cuEventRecord (void *hashcat_ctx, CUevent hEvent, CUstream hStream)
+int hc_cuEventRecord (void *hashdog_ctx, CUevent hEvent, CUstream hStream)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1041,11 +1041,11 @@ int hc_cuEventRecord (void *hashcat_ctx, CUevent hEvent, CUstream hStream)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuEventRecord(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuEventRecord(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuEventRecord(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuEventRecord(): %d", CU_err);
     }
 
     return -1;
@@ -1054,9 +1054,9 @@ int hc_cuEventRecord (void *hashcat_ctx, CUevent hEvent, CUstream hStream)
   return 0;
 }
 
-int hc_cuEventSynchronize (void *hashcat_ctx, CUevent hEvent)
+int hc_cuEventSynchronize (void *hashdog_ctx, CUevent hEvent)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1068,11 +1068,11 @@ int hc_cuEventSynchronize (void *hashcat_ctx, CUevent hEvent)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuEventSynchronize(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuEventSynchronize(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuEventSynchronize(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuEventSynchronize(): %d", CU_err);
     }
 
     return -1;
@@ -1081,9 +1081,9 @@ int hc_cuEventSynchronize (void *hashcat_ctx, CUevent hEvent)
   return 0;
 }
 
-int hc_cuCtxSetCacheConfig (void *hashcat_ctx, CUfunc_cache config)
+int hc_cuCtxSetCacheConfig (void *hashdog_ctx, CUfunc_cache config)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1095,11 +1095,11 @@ int hc_cuCtxSetCacheConfig (void *hashcat_ctx, CUfunc_cache config)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxSetCacheConfig(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxSetCacheConfig(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxSetCacheConfig(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxSetCacheConfig(): %d", CU_err);
     }
 
     return -1;
@@ -1108,9 +1108,9 @@ int hc_cuCtxSetCacheConfig (void *hashcat_ctx, CUfunc_cache config)
   return 0;
 }
 
-int hc_cuCtxPushCurrent (void *hashcat_ctx, CUcontext ctx)
+int hc_cuCtxPushCurrent (void *hashdog_ctx, CUcontext ctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1122,11 +1122,11 @@ int hc_cuCtxPushCurrent (void *hashcat_ctx, CUcontext ctx)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxPushCurrent(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxPushCurrent(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxPushCurrent(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxPushCurrent(): %d", CU_err);
     }
 
     return -1;
@@ -1135,9 +1135,9 @@ int hc_cuCtxPushCurrent (void *hashcat_ctx, CUcontext ctx)
   return 0;
 }
 
-int hc_cuCtxPopCurrent (void *hashcat_ctx, CUcontext *pctx)
+int hc_cuCtxPopCurrent (void *hashdog_ctx, CUcontext *pctx)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1149,11 +1149,11 @@ int hc_cuCtxPopCurrent (void *hashcat_ctx, CUcontext *pctx)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuCtxPopCurrent(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuCtxPopCurrent(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuCtxPopCurrent(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuCtxPopCurrent(): %d", CU_err);
     }
 
     return -1;
@@ -1162,9 +1162,9 @@ int hc_cuCtxPopCurrent (void *hashcat_ctx, CUcontext *pctx)
   return 0;
 }
 
-int hc_cuLinkCreate (void *hashcat_ctx, unsigned int numOptions, CUjit_option *options, void **optionValues, CUlinkState *stateOut)
+int hc_cuLinkCreate (void *hashdog_ctx, unsigned int numOptions, CUjit_option *options, void **optionValues, CUlinkState *stateOut)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1176,11 +1176,11 @@ int hc_cuLinkCreate (void *hashcat_ctx, unsigned int numOptions, CUjit_option *o
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuLinkCreate(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuLinkCreate(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuLinkCreate(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuLinkCreate(): %d", CU_err);
     }
 
     return -1;
@@ -1189,9 +1189,9 @@ int hc_cuLinkCreate (void *hashcat_ctx, unsigned int numOptions, CUjit_option *o
   return 0;
 }
 
-int hc_cuLinkAddData (void *hashcat_ctx, CUlinkState state, CUjitInputType type, void *data, size_t size, const char *name, unsigned int numOptions, CUjit_option *options, void **optionValues)
+int hc_cuLinkAddData (void *hashdog_ctx, CUlinkState state, CUjitInputType type, void *data, size_t size, const char *name, unsigned int numOptions, CUjit_option *options, void **optionValues)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1203,11 +1203,11 @@ int hc_cuLinkAddData (void *hashcat_ctx, CUlinkState state, CUjitInputType type,
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuLinkAddData(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuLinkAddData(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuLinkAddData(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuLinkAddData(): %d", CU_err);
     }
 
     return -1;
@@ -1216,9 +1216,9 @@ int hc_cuLinkAddData (void *hashcat_ctx, CUlinkState state, CUjitInputType type,
   return 0;
 }
 
-int hc_cuLinkDestroy (void *hashcat_ctx, CUlinkState state)
+int hc_cuLinkDestroy (void *hashdog_ctx, CUlinkState state)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1230,11 +1230,11 @@ int hc_cuLinkDestroy (void *hashcat_ctx, CUlinkState state)
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuLinkDestroy(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuLinkDestroy(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuLinkDestroy(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuLinkDestroy(): %d", CU_err);
     }
 
     return -1;
@@ -1243,9 +1243,9 @@ int hc_cuLinkDestroy (void *hashcat_ctx, CUlinkState state)
   return 0;
 }
 
-int hc_cuLinkComplete (void *hashcat_ctx, CUlinkState state, void **cubinOut, size_t *sizeOut)
+int hc_cuLinkComplete (void *hashdog_ctx, CUlinkState state, void **cubinOut, size_t *sizeOut)
 {
-  backend_ctx_t *backend_ctx = ((hashcat_ctx_t *) hashcat_ctx)->backend_ctx;
+  backend_ctx_t *backend_ctx = ((hashdog_ctx_t *) hashdog_ctx)->backend_ctx;
 
   CUDA_PTR *cuda = (CUDA_PTR *) backend_ctx->cuda;
 
@@ -1257,11 +1257,11 @@ int hc_cuLinkComplete (void *hashcat_ctx, CUlinkState state, void **cubinOut, si
 
     if (cuda->cuGetErrorString (CU_err, &pStr) == CUDA_SUCCESS)
     {
-      event_log_error (hashcat_ctx, "cuLinkComplete(): %s", pStr);
+      event_log_error (hashdog_ctx, "cuLinkComplete(): %s", pStr);
     }
     else
     {
-      event_log_error (hashcat_ctx, "cuLinkComplete(): %d", CU_err);
+      event_log_error (hashdog_ctx, "cuLinkComplete(): %d", CU_err);
     }
 
     return -1;

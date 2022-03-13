@@ -15,12 +15,12 @@
 #include "slow_candidates.h"
 #include "shared.h"
 
-void slow_candidates_seek (hashcat_ctx_t *hashcat_ctx, void *extra_info, const u64 cur, const u64 end)
+void slow_candidates_seek (hashdog_ctx_t *hashdog_ctx, void *extra_info, const u64 cur, const u64 end)
 {
-  combinator_ctx_t     *combinator_ctx     = hashcat_ctx->combinator_ctx;
-  straight_ctx_t       *straight_ctx       = hashcat_ctx->straight_ctx;
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  combinator_ctx_t     *combinator_ctx     = hashdog_ctx->combinator_ctx;
+  straight_ctx_t       *straight_ctx       = hashdog_ctx->straight_ctx;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   const u32 attack_mode = user_options->attack_mode;
 
@@ -39,7 +39,7 @@ void slow_candidates_seek (hashcat_ctx_t *hashcat_ctx, void *extra_info, const u
         {
           HCFILE *fp = &extra_info_straight->fp;
 
-          get_next_word (hashcat_ctx, fp, &line_buf, &line_len);
+          get_next_word (hashdog_ctx, fp, &line_buf, &line_len);
 
           // post-process rule engine
 
@@ -88,7 +88,7 @@ void slow_candidates_seek (hashcat_ctx_t *hashcat_ctx, void *extra_info, const u
 
         while (true)
         {
-          get_next_word (hashcat_ctx, base_fp, &line_buf, &line_len);
+          get_next_word (hashdog_ctx, base_fp, &line_buf, &line_len);
 
           // post-process rule engine
 
@@ -125,7 +125,7 @@ void slow_candidates_seek (hashcat_ctx_t *hashcat_ctx, void *extra_info, const u
       {
         line_len = (u32) fgetl (combs_fp, line_buf, HCBUFSIZ_LARGE);
 
-        line_len = convert_from_hex (hashcat_ctx, line_buf, line_len);
+        line_len = convert_from_hex (hashdog_ctx, line_buf, line_len);
 
         // post-process rule engine
 
@@ -156,14 +156,14 @@ void slow_candidates_seek (hashcat_ctx_t *hashcat_ctx, void *extra_info, const u
   }
 }
 
-void slow_candidates_next (hashcat_ctx_t *hashcat_ctx, void *extra_info)
+void slow_candidates_next (hashdog_ctx_t *hashdog_ctx, void *extra_info)
 {
-  hashconfig_t         *hashconfig         = hashcat_ctx->hashconfig;
-  combinator_ctx_t     *combinator_ctx     = hashcat_ctx->combinator_ctx;
-  mask_ctx_t           *mask_ctx           = hashcat_ctx->mask_ctx;
-  straight_ctx_t       *straight_ctx       = hashcat_ctx->straight_ctx;
-  user_options_t       *user_options       = hashcat_ctx->user_options;
-  user_options_extra_t *user_options_extra = hashcat_ctx->user_options_extra;
+  hashconfig_t         *hashconfig         = hashdog_ctx->hashconfig;
+  combinator_ctx_t     *combinator_ctx     = hashdog_ctx->combinator_ctx;
+  mask_ctx_t           *mask_ctx           = hashdog_ctx->mask_ctx;
+  straight_ctx_t       *straight_ctx       = hashdog_ctx->straight_ctx;
+  user_options_t       *user_options       = hashdog_ctx->user_options;
+  user_options_extra_t *user_options_extra = hashdog_ctx->user_options_extra;
 
   const u32 attack_mode = user_options->attack_mode;
 
@@ -180,7 +180,7 @@ void slow_candidates_next (hashcat_ctx_t *hashcat_ctx, void *extra_info)
       {
         HCFILE *fp = &extra_info_straight->fp;
 
-        get_next_word (hashcat_ctx, fp, &line_buf, &line_len);
+        get_next_word (hashdog_ctx, fp, &line_buf, &line_len);
 
         // post-process rule engine
 
@@ -252,7 +252,7 @@ void slow_candidates_next (hashcat_ctx_t *hashcat_ctx, void *extra_info)
 
       while (true)
       {
-        get_next_word (hashcat_ctx, base_fp, &line_buf, &line_len);
+        get_next_word (hashdog_ctx, base_fp, &line_buf, &line_len);
 
         // post-process rule engine
 
@@ -293,7 +293,7 @@ void slow_candidates_next (hashcat_ctx_t *hashcat_ctx, void *extra_info)
     {
       line_len = (u32) fgetl (combs_fp, line_buf, HCBUFSIZ_LARGE);
 
-      line_len = convert_from_hex (hashcat_ctx, line_buf, line_len);
+      line_len = convert_from_hex (hashdog_ctx, line_buf, line_len);
 
       // post-process rule engine
 

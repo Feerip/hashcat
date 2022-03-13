@@ -10,8 +10,8 @@
 
 #define INCR_DICTS 1000
 
-int  straight_ctx_update_loop (hashcat_ctx_t *hashcat_ctx);
-int  straight_ctx_init        (hashcat_ctx_t *hashcat_ctx);
-void straight_ctx_destroy     (hashcat_ctx_t *hashcat_ctx);
+int  straight_ctx_update_loop (hashdog_ctx_t *hashdog_ctx);
+int  straight_ctx_init        (hashdog_ctx_t *hashdog_ctx);
+void straight_ctx_destroy     (hashdog_ctx_t *hashdog_ctx);
 
 #endif // _STRAIGHT_H

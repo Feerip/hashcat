@@ -210,7 +210,7 @@ DECLSPEC void orig_sha512_transform (PRIVATE_AS const u64 *w0, PRIVATE_AS const 
 #define WORDSZ384   128
 #define WORDSZ512   128
 
-#define PWMAXSZ     32        // hashcat password length limit
+#define PWMAXSZ     32        // hashdog password length limit
 #define BLMAXSZ     BLSZ512
 #define WORDMAXSZ   WORDSZ512
 

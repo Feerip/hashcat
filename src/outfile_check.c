@@ -19,16 +19,16 @@ static int sort_by_salt_buf (const void *v1, const void *v2, MAYBE_UNUSED void *
   return sort_by_salt (v1, v2);
 }
 
-static int outfile_remove (hashcat_ctx_t *hashcat_ctx)
+static int outfile_remove (hashdog_ctx_t *hashdog_ctx)
 {
   // some hash-dependent constants
 
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  hashes_t       *hashes       = hashcat_ctx->hashes;
-  module_ctx_t   *module_ctx   = hashcat_ctx->module_ctx;
-  outcheck_ctx_t *outcheck_ctx = hashcat_ctx->outcheck_ctx;
-  status_ctx_t   *status_ctx   = hashcat_ctx->status_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  hashes_t       *hashes       = hashdog_ctx->hashes;
+  module_ctx_t   *module_ctx   = hashdog_ctx->module_ctx;
+  outcheck_ctx_t *outcheck_ctx = hashdog_ctx->outcheck_ctx;
+  status_ctx_t   *status_ctx   = hashdog_ctx->status_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   const size_t dgst_size = hashconfig->dgst_size;
   const bool   is_salted = hashconfig->is_salted;
@@ -101,7 +101,7 @@ static int outfile_remove (hashcat_ctx_t *hashcat_ctx)
 
     if (stat (root_directory, &outfile_check_stat) == -1)
     {
-      event_log_error (hashcat_ctx, "%s: %s", root_directory, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", root_directory, strerror (errno));
 
       hcfree (out_files);
       hcfree (out_info);
@@ -280,7 +280,7 @@ static int outfile_remove (hashcat_ctx_t *hashcat_ctx)
 
               hashes->salts_done++;
 
-              if (hashes->salts_done == salts_cnt) mycracked (hashcat_ctx);
+              if (hashes->salts_done == salts_cnt) mycracked (hashdog_ctx);
             }
 
             break;
@@ -318,28 +318,28 @@ static int outfile_remove (hashcat_ctx_t *hashcat_ctx)
 
 HC_API_CALL void *thread_outfile_remove (void *p)
 {
-  hashcat_ctx_t *hashcat_ctx = (hashcat_ctx_t *) p;
+  hashdog_ctx_t *hashdog_ctx = (hashdog_ctx_t *) p;
 
-  const hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  const outcheck_ctx_t *outcheck_ctx = hashcat_ctx->outcheck_ctx;
+  const hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  const outcheck_ctx_t *outcheck_ctx = hashdog_ctx->outcheck_ctx;
 
   if (hashconfig->outfile_check_disable == true) return NULL;
 
   if (outcheck_ctx->enabled == false) return NULL;
 
-  const int rc = outfile_remove (hashcat_ctx);
+  const int rc = outfile_remove (hashdog_ctx);
 
   if (rc == -1) return NULL;
 
   return NULL;
 }
 
-int outcheck_ctx_init (hashcat_ctx_t *hashcat_ctx)
+int outcheck_ctx_init (hashdog_ctx_t *hashdog_ctx)
 {
-  const folder_config_t *folder_config = hashcat_ctx->folder_config;
-  const hashconfig_t    *hashconfig    = hashcat_ctx->hashconfig;
-        outcheck_ctx_t  *outcheck_ctx  = hashcat_ctx->outcheck_ctx;
-  const user_options_t  *user_options  = hashcat_ctx->user_options;
+  const folder_config_t *folder_config = hashdog_ctx->folder_config;
+  const hashconfig_t    *hashconfig    = hashdog_ctx->hashconfig;
+        outcheck_ctx_t  *outcheck_ctx  = hashdog_ctx->outcheck_ctx;
+  const user_options_t  *user_options  = hashdog_ctx->user_options;
 
   outcheck_ctx->enabled = false;
 
@@ -369,7 +369,7 @@ int outcheck_ctx_init (hashcat_ctx_t *hashcat_ctx)
   {
     if (hc_mkdir (outcheck_ctx->root_directory, 0700) == -1)
     {
-      event_log_error (hashcat_ctx, "%s: %s", outcheck_ctx->root_directory, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", outcheck_ctx->root_directory, strerror (errno));
 
       return -1;
     }
@@ -378,11 +378,11 @@ int outcheck_ctx_init (hashcat_ctx_t *hashcat_ctx)
   return 0;
 }
 
-void outcheck_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
+void outcheck_ctx_destroy (hashdog_ctx_t *hashdog_ctx)
 {
-  hashconfig_t   *hashconfig   = hashcat_ctx->hashconfig;
-  outcheck_ctx_t *outcheck_ctx = hashcat_ctx->outcheck_ctx;
-  user_options_t *user_options = hashcat_ctx->user_options;
+  hashconfig_t   *hashconfig   = hashdog_ctx->hashconfig;
+  outcheck_ctx_t *outcheck_ctx = hashdog_ctx->outcheck_ctx;
+  user_options_t *user_options = hashdog_ctx->user_options;
 
   if (outcheck_ctx->enabled == false)            return;
   if (hashconfig->outfile_check_disable == true) return;
@@ -399,7 +399,7 @@ void outcheck_ctx_destroy (hashcat_ctx_t *hashcat_ctx)
     }
     else
     {
-      event_log_error (hashcat_ctx, "%s: %s", outcheck_ctx->root_directory, strerror (errno));
+      event_log_error (hashdog_ctx, "%s: %s", outcheck_ctx->root_directory, strerror (errno));
 
       //return -1;
     }
