@@ -23,3 +23,6 @@ obj/*.o
 obj/*.a
 include/CL
 tools/luks_tests
+.vs
+.vs/hashcat
+.vs/hashcat/v17
